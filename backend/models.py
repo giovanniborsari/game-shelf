@@ -59,6 +59,7 @@ class Wishlist(Base):
     Models the user's Wishlist table in Game Shelf Application
 
     Attributes:
+        wishlist_id: Wishlist's unique id
         user_id: User's unique id linked to users table
         item_id: Items's unique id linked to items table
         price_usd: Item's price on Ebay, default = None means it is not 
@@ -68,8 +69,9 @@ class Wishlist(Base):
         rating: Users rating to the game (0 to 10)
     """
     __tablename__= "wishlist"
-    user_id = Column(Integer, ForeignKey("users.id"))
-    item_id = Column(Integer, ForeignKey("items.id"))
+    wishlist_id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.user_id"))
+    item_id = Column(Integer, ForeignKey("items.item_id"))
     price_usd = Column(Float, nullable= True, default= None)
     bought = Column(Boolean, nullable= True, default= False)
     rating = Column(Float, nullable= True, default= None)
@@ -79,6 +81,7 @@ class CollectionList(Base):
     Models the user's Collection table in Game Shelf Application
 
     Attributes:
+        collection_id: Collection's unique id
         user_id: User's unique id linked to users table
         item_id: Items's unique id linked to items table
         rating: Users rating to the game (0 to 10)
@@ -90,8 +93,9 @@ class CollectionList(Base):
     """
 
     __tablename__= "collection"
-    user_id = Column(Integer, ForeignKey('users.id'))
-    item_id = Column(Integer, ForeignKey('items.id'))
+    collection_id= Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.user_id"))
+    item_id = Column(Integer, ForeignKey("items.item_id"))
     rating = Column(Float, nullable= True, default= None)
     user_media = Column(String, nullable= True, default= None)
     condition = Column(String, nullable= True, default= None)
@@ -104,6 +108,7 @@ class PriceRecord(Base):
     Models the Price Record table in Game Shelf Application
 
     Attributes:
+        record_id: Price's Record unique id
         item_id: Items's unique id linked to items table
         date: Date when the price was recorded, current date by default 
         lowest_price_ebay: Lowest price of the day on Ebay
@@ -112,7 +117,8 @@ class PriceRecord(Base):
     """
          
     __tablename__= "price_record"
-    item_id = Column(Integer, ForeignKey('items.id'))
+    record_id = Column(Integer, primary_key= True)
+    item_id = Column(Integer, ForeignKey("items.item_id"))
     date = Column(DateTime, nullable= True, 
                       default= lambda: datetime.now(timezone.utc))
     lowest_price_ebay= Column(Float, nullable= True, default = None)
@@ -129,9 +135,10 @@ class Showcase(Base):
 
     """
          
-    __tablename__= "price_record"
-    user_id= Column(String, ForeignKey("users.id"))
-    item_id= Column(Integer, ForeignKey('items.id'))
+    __tablename__= "showcase"
+    showcase_id = Column(Integer, primary_key=True)
+    user_id= Column(Integer, ForeignKey("users.user_id"))
+    item_id= Column(Integer, ForeignKey("items.item_id"))
     position= Column(Integer, nullable=True, default = None)
     
 
