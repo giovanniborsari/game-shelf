@@ -20,9 +20,9 @@ class User(Base):
     user_id = Column(Integer, primary_key=True)
     username = Column(String(25), unique = True, nullable = False)
     email = Column(String(100), unique = True, nullable = False)
-    password_token = Column(String(255), nullable = False)
+    password_token = Column(String, nullable = False)
     user_bio = Column(String(300), nullable = True)
-    profile_picture = Column(String(255), nullable = True, 
+    profile_picture = Column(String, nullable = True, 
                              default = "unknown.jpg")
     created_at_utc = Column(DateTime, nullable = False, 
                             default= lambda: datetime.now(timezone.utc))
@@ -51,7 +51,7 @@ class Items(Base):
     genre = Column(String(50), nullable = True)    #Sports, Fighting, RPG, etc.
     region = Column(String(30), nullable = True, default= "International")
     variant = Column(String(50), nullable= True, default= "Standard")
-    media = Column(String(255), nullable= True, default= "default_item.jpg")
+    media = Column(String, nullable= True, default= "default_item.jpg")
     rating = Column(Float, nullable= True, default= None)
 
 class Wishlist(Base):
@@ -79,16 +79,16 @@ class CollectionList(Base):
     Models the user's Collection table in Game Shelf Application
 
     Attributes:
-        username_id: User's unique id linked to users table
-        item: Items's unique id linked to items table
+        user_id: User's unique id linked to users table
+        item_id: Items's unique id linked to items table
         rating: Users rating to the game (0 to 10)
         user_media: URL to uploaded media from the user to the item database
         condition: Condition of the user's item
         notes: User's description/review of the item
         price_paid: How much the user spent on the item
         date: Date the user acquired the item 
-
     """
+
     __tablename__= "collection"
     user_id = Column(Integer, ForeignKey('users.id'))
     item_id = Column(Integer, ForeignKey('items.id'))
@@ -99,4 +99,39 @@ class CollectionList(Base):
     price_paid = Column(Float, nullable= True, default= None)
     date = Column(DateTime, nullable= True, default= None)
 
+class PriceRecord(Base):
+    """ 
+    Models the Price Record table in Game Shelf Application
+
+    Attributes:
+        item_id: Items's unique id linked to items table
+        date: Date when the price was recorded, current date by default 
+        lowest_price_ebay: Lowest price of the day on Ebay
+        avg_price_ebay: Average price of the day on Ebay
+
+    """
+         
+    __tablename__= "price_record"
+    item_id = Column(Integer, ForeignKey('items.id'))
+    date = Column(DateTime, nullable= True, 
+                      default= lambda: datetime.now(timezone.utc))
+    lowest_price_ebay= Column(Float, nullable= True, default = None)
+    avg_price_ebay= Column(Float, nullable= True, default= None)
+
+class Showcase(Base):
+    """ 
+    Models the Profile Showcase in Game Shelf Application
+
+    Attributes:
+        user_id: User's unique id linked to its account
+        item_id: Items's unique id linked to items table
+        position: Postion of the item in the highlighted profile area
+
+    """
+         
+    __tablename__= "price_record"
+    user_id= Column(String, ForeignKey("users.id"))
+    item_id= Column(Integer, ForeignKey('items.id'))
+    position= Column(Integer, nullable=True, default = None)
+    
 
