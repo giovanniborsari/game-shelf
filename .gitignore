@@ -1,0 +1,14 @@
+#Python 
+__pycache__
+*.pyc
+venv/
+
+#Database
+*.db    #local database files
+
+#Environment Variables (Passwords and Secrets)
+.env #database password and api keys 
+
+#OS Files
+.DS_Store
+Thumbs.db
