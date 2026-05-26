@@ -4,4 +4,4 @@ app = FastAPI()
 
 @app.get("/")
 def root():
-    return {"message": "Game Shelf is running!"}
+    return {"message": "Game Shelf is running!"} 
