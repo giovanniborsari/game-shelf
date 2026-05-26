@@ -4,10 +4,10 @@ __pycache__
 venv/
 
 #Database
-*.db    #local database files
+*.db    
 
 #Environment Variables (Passwords and Secrets)
-.env #database password and api keys 
+.env 
 
 #OS Files
 .DS_Store
