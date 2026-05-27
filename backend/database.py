@@ -7,6 +7,9 @@ load_dotenv() #reads .env file and loads it to python
 
 DATABASE_URL = os.getenv("DATABASE_URL") #fetches the database URL from .env
 
+if DATABASE_URL is None:
+    raise ValueError("DATABASE_URL environment was not found")
+
 engine = create_engine(DATABASE_URL) #Creates the connection to PostSQL
 
 SessionLocal = sessionmaker(bind=engine) #Creates a communication between the database and python
