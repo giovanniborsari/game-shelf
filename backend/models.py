@@ -136,7 +136,7 @@ class Showcase(Base):
     """
          
     __tablename__= "showcase"
-    showcase_id = Column(Integer, primary_key=True)
+    showcase_id = Column(Integer, primary_key= True)
     user_id= Column(Integer, ForeignKey("users.user_id"))
     item_id= Column(Integer, ForeignKey("items.item_id"))
     position= Column(Integer, nullable=True, default = None)
