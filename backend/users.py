@@ -21,13 +21,16 @@ def add_user(username: str, email:str, password: str, bio:str, picture:str):
     database = SessionLocal()
 
     try:
-        #Look for username in the actual database, return False if search == None
-        search_user = database.query(User).filter(User.username == username).first() is not None
+        #Search username in the actual database, return False if search == None
+        search_user = database.query(User).filter(User.username == username)\
+            .first() is not None
         if search_user:
             return False, "Username already being used!"
         
-        #Look for email in the actual database, return False if search == None
-        search_email = database.query(User).filter(User.email == email).first() is not None
+        #Search email in the actual database, return False if search == None
+        search_email = database.query(User).filter(User.email == email)\
+            .first() is not None
+        
         if search_email:
             return False, "Email already being used!"
         
@@ -35,7 +38,7 @@ def add_user(username: str, email:str, password: str, bio:str, picture:str):
         new_user = User(
             username= username,
             email= email,
-            password_token = password, #TO DO Password Hashing
+            password_token = hash_pwd(password), 
             user_bio = bio,
             profile_picture = picture
         )
@@ -54,5 +57,4 @@ def add_user(username: str, email:str, password: str, bio:str, picture:str):
         #Closer the database
         database.close()
 
-result3 = add_user("username22","2142email@gmail.com", "passwordtest", "bio test","imagetest.jpg")
-print (result3)
+add_user("testpwd2", "bbb@gm.c","hashtest2*","", "")
