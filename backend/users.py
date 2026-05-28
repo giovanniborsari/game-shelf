@@ -21,8 +21,6 @@ def add_user(username: str, email:str, password: str, bio:str, picture:str):
     database = SessionLocal()
 
     try:
-        print("try")
-
         #Look for username in the actual database, return False if search == None
         search_user = database.query(User).filter(User.username == username).first() is not None
         if search_user:
@@ -46,7 +44,7 @@ def add_user(username: str, email:str, password: str, bio:str, picture:str):
         database.add(new_user)
         database.commit()
 
-        return True, (f"User {new_user} created!")
+        return True, (f"User {username} created!")
     
     #Catch an unexpect exceptio rollback the database keeping it clean
     except Exception as e:
@@ -55,12 +53,6 @@ def add_user(username: str, email:str, password: str, bio:str, picture:str):
     finally:
         #Closer the database
         database.close()
-        
 
-result1 = add_user("gio","123email@gmail.com", "passwordtest", "","")
-print (result1)
-
-result2 = add_user("username1","444email@gmail.com", "passwordtest", "bio test","imagetest.jpg")
-print(result2)
-
-#TO DO More tests
+result3 = add_user("username22","2142email@gmail.com", "passwordtest", "bio test","imagetest.jpg")
+print (result3)
