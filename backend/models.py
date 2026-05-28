@@ -14,6 +14,8 @@ class User(Base):
         user_bio: Optional short description/text in the user's profile 
         profile_picture: URL pointing to the user's profile picture
         created_at: Timestamp of when the account was created
+        password_attempts: Number of wrong password attempts
+        last_attempts: Date of the last attempt
     """
 
     __tablename__ = 'users'
@@ -25,7 +27,9 @@ class User(Base):
     profile_picture = Column(String, nullable = True, 
                              default = "unknown.jpg")
     created_at_utc = Column(DateTime, nullable = False, 
-                            default= lambda: datetime.now(timezone.utc))
+                            default= lambda: datetime.now(timezone.utc).replace(tzinfo=None))
+    password_attempts= Column(Integer, nullable=True, default=0)
+    last_attempt= Column(DateTime, nullable=True)
 
 class Items(Base):
     """ 
