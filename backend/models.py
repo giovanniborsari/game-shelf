@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float, Boolean
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float, Boolean,Text
 from datetime import datetime, timezone
 from database import Base 
+import textwrap
 
 class User(Base):
     """ 
@@ -43,20 +44,24 @@ class Items(Base):
         genre: Item's genres (Example: Puzzle)
         region: Region which the item was released
         variant: Item version/edition
-        media = URLs pointing to item's media
+        cover = URLs pointing to item's cover
         rating = Users' average rating
+        release_date = date item was released
     """
 
     __tablename__ = "items"
     item_id = Column(Integer, primary_key= True)
     item_name = Column(String(255), unique= True, nullable= False)
-    platform = Column(String(50), nullable= False)
-    categories = Column(String(50), nullable = False)   #Game, Console, etc.
-    genre = Column(String(50), nullable = True)    #Sports, Fighting, RPG, etc.
+    platform = Column(Text, nullable= False)
+    categories = Column(Text, nullable = False)   #Game, Console, etc.
+    genre = Column(Text, nullable = True)    #Sports, Fighting, RPG, etc.
     region = Column(String(30), nullable = True, default= "International")
     variant = Column(String(50), nullable= True, default= "Standard")
-    media = Column(String, nullable= True, default= "default_item.jpg")
+    cover = Column(String, nullable= True, default= "default_item.jpg")
     rating = Column(Float, nullable= True, default= None)
+    release_date = Column(DateTime, nullable= True)
+    description = Column(String, nullable= True)
+
 
 class Wishlist(Base):
     """ 

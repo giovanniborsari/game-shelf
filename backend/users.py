@@ -57,4 +57,3 @@ def add_user(username: str, email:str, password: str, bio:str, picture:str):
         #Closer the database
         database.close()
 
-add_user("testpwd2", "bbb@gm.c","hashtest2*","", "")

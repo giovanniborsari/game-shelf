@@ -98,7 +98,7 @@ def _account_lock(username) -> bool:
             return True
         
         #3 errors account locked for 15 minutes
-        elif user.password_attempts >= 3 and duration.total_seconds() < 900: #type: ignore
+        elif user.password_attempts == 3 and duration.total_seconds() < 900: #type: ignore
             unlock = user.last_attempt + timedelta(minutes=15) #type: ignore
             print(f"Account is locked until: {unlock}")
             return True
@@ -125,3 +125,4 @@ def count_special(password: str) -> int:
 
     return count
 
+_check_pwd("testpwd2","asadasfasf")
