@@ -2,8 +2,23 @@ from models import User
 from database import SessionLocal
 from password import hash_pwd
 
-def add_user(username: str, email:str, password: str, bio:str, picture:str): 
 
+def add_user(username: str, email:str, password: str, bio:str, picture:str): 
+    """ 
+    Adds a new user to the database after validating credentials
+
+    Args:
+        username (str): User's nickname. Must be at least 3 characters
+        email (str): Account's email address
+        password (str): Account's password (will be hashed before stored)
+        bio (str): Account's profile bio/short text
+        picture (str): URL link to the account's profile picture
+
+    Return:
+        tuple (bool, str): A tuple where the first item is a boolean indicating 
+        success (True). 
+        or failure (False), and the second item is a descriptive message.
+    """
     #Username and email check
     if username == None:
         return False, "Please enter an username" 
