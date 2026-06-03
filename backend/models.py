@@ -59,7 +59,7 @@ class Items(Base):
     variant = Column(String(50), nullable= True, default= "Standard")
     cover = Column(String, nullable= True, default= "default_item.jpg")
     rating = Column(Float, nullable= True, default= None)
-    release_date = Column(DateTime, nullable= True)
+    release_date = Column(DateTime, nullable= True, default = None)
     description = Column(String, nullable= True)
 
 
