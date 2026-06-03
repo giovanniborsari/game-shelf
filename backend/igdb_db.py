@@ -207,5 +207,3 @@ def _population_pre ():
                 #Always close the database
                 database.close() 
                
-           
-_population_pre()     
