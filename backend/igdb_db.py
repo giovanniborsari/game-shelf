@@ -15,6 +15,16 @@ client_sec = os.getenv("CLIENT_SECRET")
 
 def _get_access_token(client_id, secret_id):
 
+    """
+    Get an access token from twitch in order to access IGDB API
+
+    Args:
+        client_id: SECRET client id linked to my twitch account in order to use 
+        any API from them 
+        client-sec: SECRET client secret linked to my twitch account in order to 
+        use any API from them 
+    """
+
     auth_url = "https://id.twitch.tv/oauth2/token"
     params = {
         "client_id":client_id,
@@ -30,6 +40,11 @@ def _get_access_token(client_id, secret_id):
         raise Exception(f"Failed to authenticate: {response.text}")
 
 def _population_pre ():
+    """
+    Method used to get data from IGDB database and feed my own "game_shelf" 
+    database, this method is not supposed to be used often since it 
+    goes through all IGDB's data.
+    """
     database = SessionLocal()
 
     #Variable
@@ -39,6 +54,7 @@ def _population_pre ():
     # Fetching the token
     access_token = _get_access_token(client_id, client_sec)
 
+    #Uses my account information to allow access
     header = {
         "Client-ID":client_id,
         "Authorization": f"Bearer {access_token}",
@@ -48,16 +64,22 @@ def _population_pre ():
     # The endpoint for games list
     url = "https://api.igdb.com/v4/games"
 
+    #Keep searching IGDB's database while length games is higher than 0
     while True :
+
+        #Define what the method is going to get from IGDB database
         query_body = f"""
-        fields name, platforms.name, genres.name, total_rating, cover.url, summary, first_release_date;
+        fields name, platforms.name, genres.name, total_rating, cover.url, 
+                summary, first_release_date;
         offset {offset};
         limit {limit};
         """
         response = requests.post(url, headers = header, data = query_body)
 
+        #Response status equals 200 == success
         if response.status_code == 200:
             games= response.json()
+            #Print count of games received
             print(f"Games received: {len(games)}")
             try:
                 for game in games:
@@ -69,7 +91,8 @@ def _population_pre ():
                     category = "Game"
 
                     #Getting game platforms
-                    platform_data = game.get('platforms',[]) #Gets the list in 'platforms'
+                    #Gets the list in 'platforms'
+                    platform_data = game.get('platforms',[]) 
 
                     platform_names=[]
                     for p in platform_data:
@@ -88,8 +111,11 @@ def _population_pre ():
                     genre_names = []
 
                     for g in genres_data:
+                        #Check is 'g' is a dictionary and has a name key
                         if isinstance(g,dict) and g.get('name'):
+                            #Force it to be a string and append the platform name to it
                             genre_names.append(str(g.get('name')))
+                    #Join then together if there is a platform, unknown if not
                     if genre_names:
                         all_genres= ", ".join(genre_names)
                     else:
@@ -113,18 +139,21 @@ def _population_pre ():
                     date = game.get('first_release_date')
                     if date is not None:
                         try:
+                            #Convert data to datetime
                             date = datetime.fromtimestamp(date)
                         except (OSError, ValueError):
+                            #date is set to none if any exception is caught
                             date = None
-                        else:
-                            date = None
+                    else:
+                        date = None
 
                     #Description
                     desc = game.get('summary')
 
                     #Check if game already exists
-                    existing_game = database.query(Items).filter(Items.item_name == name).first()
-
+                    existing_game = database.query(Items).filter(Items.item_name
+                                                             == name).first()
+                    #Update item if it already exists
                     if existing_game:                   
                         #Append new platforms if any
                         cur_platforms = existing_game.platform.split(", ")
@@ -133,7 +162,7 @@ def _population_pre ():
                         final_platforms = ", ".join(final_platforms)
                         existing_game.platform = final_platforms #type: ignore
 
-                        #Append new genres
+                        #Append new genres if any
                         cur_genres = existing_game.genre.split(", ")
                         new_genres = all_genres.split(", ")
                         final_genres = set(cur_genres) | set(new_genres)
@@ -142,6 +171,7 @@ def _population_pre ():
                         database.commit()
         
                     else:
+                        #creates a new item if it is not present in the database
                         new_game= Items(
                             item_name = name,
                             categories = category,
@@ -153,21 +183,28 @@ def _population_pre ():
                             description = desc
                         
                         )
+
+                        #Add and commit new game
                         database.add(new_game)
                         database.commit()
+                #Break while if len games is smaller limit
                 if len(games) < limit:
                     break
-    
+                #Updates offset
                 offset += limit        
-                    
+        
             except Exception as e:
                 print(f"Error on game: {name}, skipping it!")
                 print(f"Error: {e}")
+
+                #Rollback database and coninue to the next item, so method can
+                #still looking for more items
                 database.rollback()
                 continue
             finally:
-                time.sleep(0.25) #Pauses for 1 seconds due to IGDB restrictions
+                time.sleep(0.25) #Pauses for 0.25 seconds due to IGDB restrictions
                 print("Round of games added")
+                #Always close the database
                 database.close() 
                
            
