@@ -25,6 +25,10 @@ class FormatedUserRegister(BaseModel):
     bio: str
     picture: str
 
+class FormatedPWDRequest(BaseModel):
+    username: str
+    password: str
+
 app = FastAPI()
 
 @app.get("/")
@@ -44,6 +48,13 @@ def register_user(request: FormatedUserRegister):
     return f"Success: {success}, message: {message}"
 
 @app.post("/auth/login")
+def user_login (request : FormatedPWDRequest):
+    success = _check_pwd(
+        request.username,
+        request.password
+    )
+
+    return f"{request.username} login success: {success}"
 
 @app.get("/items/")
 def get_items(page:int = 1, limit: int = 36):
