@@ -4,6 +4,8 @@ from models import *
 from pydantic import BaseModel
 from datetime import datetime
 import random
+from users import add_user
+from password import _check_pwd
 
 class FormatedItem(BaseModel):
     game_id: int
@@ -16,6 +18,13 @@ class FormatedItem(BaseModel):
     game_description: str | None
     game_cover: str | None
 
+class FormatedUserRegister(BaseModel):
+    username: str
+    email: str
+    password: str
+    bio: str
+    picture: str
+
 app = FastAPI()
 
 @app.get("/")
@@ -23,6 +32,16 @@ def root():
     return {"message": "Game Shelf is running!"} 
 
 @app.post("/auth/register")
+def register_user(request: FormatedUserRegister):
+
+    success, message = add_user(
+        request.username,
+        request.email,
+        request.password,
+        request.bio,
+        request.picture
+    )
+    return f"Success: {success}, message: {message}"
 
 @app.post("/auth/login")
 
