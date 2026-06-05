@@ -152,3 +152,41 @@ def get_item_search(search: str, page:int = 1, limit: int = 36):
             return "Item not found, do you want to add a new game to our database?"
     finally:
         database.close()                                                                             
+
+@app.get("/items/platform/{platform}")
+def get_item_platform(platform: str, page:int = 1, limit= 36):
+    database = SessionLocal()
+    skip = (page - 1) * limit
+    items = database.query(Items).filter(Items.platform == platform)\
+        .offset(skip).limit(limit).all()
+    formatted_items = []
+
+    try:
+        if items:
+            for item in items:
+                new_item = FormatedItem(
+                    game_id = item.item_id, #type:ignore
+                    game_title = item.item_name, #type: ignore
+                    game_platforms = item.platform, #type: ignore
+                    game_genre = item.genre, #type: ignore
+                    game_rating = item.rating, #type: ignore
+                    game_category = item.categories, #type: ignore
+                    game_release_date = item.release_date, #type: ignore
+                    game_description = item.description, #type: ignore
+                    game_cover = item.cover #type: ignore
+                )
+                formatted_items.append(new_item) #type: ignore
+
+            total = database.query(Items)\
+                .filter(Items.platform == platform).count()
+
+            return {
+            "items": formatted_items,
+            "total": total,
+            "page": page,
+            "pages": (total + limit - 1) // limit
+            }
+        else:
+            return "Item not found, do you want to add a new game to our database?"
+    finally:
+        database.close()    
