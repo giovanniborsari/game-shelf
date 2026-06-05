@@ -1,6 +1,7 @@
 from models import User
 from database import SessionLocal
 from password import hash_pwd
+import validators
 
 
 def add_user(username: str, email:str, password: str, bio:str, picture:str): 
@@ -19,18 +20,18 @@ def add_user(username: str, email:str, password: str, bio:str, picture:str):
         success (True). 
         or failure (False), and the second item is a descriptive message.
     """
-    #Username and email check
+    #Username check
     if username == None:
         return False, "Please enter an username" 
     elif len(username) < 3:
         return False, "Your username cannot be smaller than 3 characters"
     
+    #Check if email in None
     if email == None:
         return False, "Please enter an email address!"
-    elif email.count("@") != 1:
-        return False, "Invalid email address!" 
-    elif email.count(".") > 2 or email.count(".") < 1:
-        return False, "Invalid email address!"
+    #Check if email is valid
+    if not validators.email(email):
+        return False, "Please enter an valid email address!"
    
     #Open a session workspace
     database = SessionLocal()
