@@ -29,11 +29,15 @@ def encode_jwt(user_id: int) -> Dict[str,str]:
 
 def decode_jwt(token: str) -> dict:
     try:
+        #Decode token 
         decoded = jwt.decode(token, SECRET_JWT, algorithms=[SECRET_ALG]) #type: ignore
+
+        #Check if the token is still valid
         if decoded["expires"] >= time.time():
             return decoded
         else:
             return None #type: ignore
     except:
+        #Returns an empty token if something doesn't work, instead of crashing
         return {}
         

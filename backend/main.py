@@ -3,9 +3,9 @@ from database import SessionLocal
 from models import *
 from pydantic import BaseModel
 from datetime import datetime
-import random
 from users import add_user
 from password import _check_pwd
+from auth_handler import encode_jwt
 
 class FormatedItem(BaseModel):
     game_id: int
@@ -22,8 +22,8 @@ class FormatedUserRegister(BaseModel):
     username: str
     email: str
     password: str
-    bio: str
-    picture: str
+    bio: str | None = None
+    picture: str | None = None
 
 class FormatedPWDRequest(BaseModel):
     username: str
@@ -42,10 +42,21 @@ def register_user(request: FormatedUserRegister):
         request.username,
         request.email,
         request.password,
-        request.bio,
-        request.picture
+        request.bio, #type: ignore
+        request.picture #type: ignore
     )
-    return f"Success: {success}, message: {message}"
+
+    try:
+        database= SessionLocal()
+        if success:
+            user = database.query(User).filter(User.\
+                                        username == request.username).first()
+            return encode_jwt(user.user_id) #type: ignore
+        else:
+            return {"Error": f"{message}"}
+    finally:
+        database.close()
+
 
 @app.post("/auth/login")
 def user_login (request : FormatedPWDRequest):
@@ -54,7 +65,16 @@ def user_login (request : FormatedPWDRequest):
         request.password
     )
 
-    return f"{request.username} login success: {success}"
+    try:
+        database = SessionLocal()
+        if success:
+            user = database.query(User).filter(User.\
+                                        username == request.username).first()
+            return encode_jwt(user.user_id) #type: ignore
+        else:
+            return {"Error": "Wrong username or password. Try Again!"}
+    finally:
+        database.close()
 
 @app.get("/items/")
 def get_items(page:int = 1, limit: int = 36):
@@ -154,10 +174,10 @@ def get_item_search(search: str, page:int = 1, limit: int = 36):
         database.close()                                                                             
 
 @app.get("/items/platform/{platform}")
-def get_item_platform(platform: str, page:int = 1, limit= 36):
+def get_item_platform(desired_platform: str, page:int = 1, limit= 36):
     database = SessionLocal()
     skip = (page - 1) * limit
-    items = database.query(Items).filter(Items.platform == platform)\
+    items = database.query(Items.platform.ilike(f"%{desired_platform}%"))\
         .offset(skip).limit(limit).all()
     formatted_items = []
 
@@ -177,8 +197,8 @@ def get_item_platform(platform: str, page:int = 1, limit= 36):
                 )
                 formatted_items.append(new_item) #type: ignore
 
-            total = database.query(Items)\
-                .filter(Items.platform == platform).count()
+            total = database.query\
+                (Items.platform.ilike(f"%{desired_platform}%")).count()
 
             return {
             "items": formatted_items,
