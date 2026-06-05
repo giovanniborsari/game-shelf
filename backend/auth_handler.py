@@ -8,7 +8,7 @@ import binascii
 load_dotenv() #reads .env file and loads it to python
 
 SECRET_JWT = os.getenv("S_JWT")
-SECRET_ALG = os.getenv("S_ALGORITHM")
+SECRET_ALG = os.getenv("S_ALG")
 
 def ret_token(token: str):
     return {

@@ -145,7 +145,7 @@ def _account_lock(username) -> bool:
             
             #Calculate time difference between now nad last attempt
             duration = (datetime.now(timezone.utc) 
-                    - user.last_attempt) #type: ignore
+                    - user.last_attempt.replace(tzinfo= timezone.utc)) #type: ignore
             
             #Reset user attempts and last attempt if duration is larger than 1 hour
             if duration.total_seconds() > 3600:
