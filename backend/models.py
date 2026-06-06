@@ -75,7 +75,7 @@ class Wishlist(Base):
         available for purchase
         bought: Boolean that changes once the user buys the item, moving the 
         item to the user's collection
-        rating: Users rating to the game (0 to 10)
+        rating: Media rating to the game (0 to 100)
     """
     __tablename__= "wishlist"
     wishlist_id = Column(Integer, primary_key=True)
@@ -93,23 +93,21 @@ class CollectionList(Base):
         collection_id: Collection's unique id
         user_id: User's unique id linked to users table
         item_id: Items's unique id linked to items table
-        rating: Users rating to the game (0 to 10)
+        rating: Media rating to the game (0 to 100)
+        user_rating: Users rating to the game (0 to 100)
         user_media: URL to uploaded media from the user to the item database
-        condition: Condition of the user's item
         notes: User's description/review of the item
-        price_paid: How much the user spent on the item
-        date: Date the user acquired the item 
+        date: Date the user added the item to the collection
     """
 
     __tablename__= "collection"
     collection_id= Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.user_id"))
-    item_id = Column(Integer, ForeignKey("items.item_id"))
+    item_id = Column(Integer, nullable= False)
     rating = Column(Float, nullable= True, default= None)
-    user_media = Column(String, nullable= True, default= None)
-    condition = Column(String, nullable= True, default= None)
+    user_rating = Column(Float, nullable= True, default= None)
     notes = Column(String(300), nullable= True, default= None)
-    price_paid = Column(Float, nullable= True, default= None)
+    played = Column(Boolean, nullable= True, default= False)
     date = Column(DateTime, nullable= True, default= None)
 
 class PriceRecord(Base):

@@ -1,11 +1,14 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Depends
 from database import SessionLocal
 from models import *
 from pydantic import BaseModel
 from datetime import datetime
 from users import add_user
 from password import _check_pwd
-from auth_handler import encode_jwt
+from auth_handler import encode_jwt, get_user_id_from_token
+from jwt_bearer import GameShelfBearer
+from lists_methods import *
+
 
 class FormatedItem(BaseModel):
     game_id: int
@@ -28,6 +31,13 @@ class FormatedUserRegister(BaseModel):
 class FormatedPWDRequest(BaseModel):
     username: str
     password: str
+
+class FormatedAddItemCollection(BaseModel):
+    item_id: int
+    item_rating: int | None = None
+    notes: str | None = None
+    played: bool |None = False
+
 
 app = FastAPI()
 
@@ -177,7 +187,7 @@ def get_item_search(search: str, page:int = 1, limit: int = 36):
 def get_item_platform(desired_platform: str, page:int = 1, limit= 36):
     database = SessionLocal()
     skip = (page - 1) * limit
-    items = database.query(Items.platform.ilike(f"%{desired_platform}%"))\
+    items = database.query(Items.platform.ilike(f"{desired_platform}"))\
         .offset(skip).limit(limit).all()
     formatted_items = []
 
@@ -210,3 +220,14 @@ def get_item_platform(desired_platform: str, page:int = 1, limit= 36):
             return "Item not found, do you want to add a new game to our database?"
     finally:
         database.close()    
+
+@app.post("/collection/add", dependencies=[Depends(GameShelfBearer())])
+def add_to_collection(item: FormatedAddItemCollection, 
+                      token: str = Depends(GameShelfBearer())):
+    
+    user_id = get_user_id_from_token(token)
+    
+    success, message = add_item_collection(user_id, item.item_id,  #type: ignore
+                       item.item_rating, item.notes, item.played) #type: ignore
+    
+    return {"success": success, "message": message}

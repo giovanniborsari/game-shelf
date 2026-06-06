@@ -83,24 +83,6 @@ class GameShelfBearer(HTTPBearer):
             print(f"Something went wrong during token validation: {e}")
             return False
 
-    def get_user_id_from_token(self, token: str) -> int|None :
-        """
-        Gets the id of the user making the protected route request.
-
-        Args:
-            token(str): JWT token string
-        
-        Return: 
-            int: The user's ID if token is valid
-            None: If token is invalid or expired
-        """
-        #Decode the token
-        payload = decode_jwt(token)
-
-        if payload:
-            #Return user id if payload is not empty or None
-            return payload.get("user_id")
-        
-        return None
+   
 
         
