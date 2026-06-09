@@ -183,11 +183,11 @@ def get_item_search(search: str, page:int = 1, limit: int = 36):
     finally:
         database.close()                                                                             
 
-@app.get("/items/platform/{desired_platform}")
-def get_item_platform(desired_platform: str, page:int = 1, limit= 36):
+@app.get("/items/platform/{platform}")
+def get_item_platform(platform: str, page:int = 1, limit:int = 36):
     database = SessionLocal()
     skip = (page - 1) * limit
-    items = database.query(Items.platform.ilike(f"{desired_platform}"))\
+    items = database.query(Items).filter(Items.platform.ilike(f"%{platform}%"))\
         .offset(skip).limit(limit).all()
     formatted_items = []
 
@@ -207,8 +207,8 @@ def get_item_platform(desired_platform: str, page:int = 1, limit= 36):
                 )
                 formatted_items.append(new_item) #type: ignore
 
-            total = database.query\
-                (Items.platform.ilike(f"%{desired_platform}%")).count()
+            total = database.query(Items)\
+                .filter(Items.platform == platform).count()
 
             return {
             "items": formatted_items,

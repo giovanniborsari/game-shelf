@@ -91,6 +91,12 @@ def _population_pre ():
                     category = "Game"
 
                     #Getting game platforms
+
+                    #Rename PlayStation for filtering 
+                    PLATFORM_MAP = {
+                        "PlayStation": "PlayStation 1",
+                    }
+
                     #Gets the list in 'platforms'
                     platform_data = game.get('platforms',[]) 
 
@@ -98,6 +104,12 @@ def _population_pre ():
                     for p in platform_data:
                         #Check is 'p' is a dictionary and has a name key
                         if isinstance(p, dict) and p.get('name'): 
+
+                            #Rename PlayStation = PlayStation 1
+                            original_name = str(p.get("name"))
+                            renamed_name = PLATFORM_MAP.get\
+                                (original_name, original_name)
+                            
                             #Force it to be a string and append the platform name to it 
                             platform_names.append(str(p.get("name")))
                     #Join then together if there is a platform, unknown if not
