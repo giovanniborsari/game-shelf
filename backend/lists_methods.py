@@ -20,6 +20,12 @@ def add_item_collection(user_id:int, game_id:int,
         existing = database.query(CollectionList).filter(CollectionList.user_id 
                         == user_id,CollectionList.item_id == game_id).first()
 
+        raw_rating = game.rating
+        if raw_rating is not None:
+            game_rating = round(raw_rating) #type: ignore
+        else:
+            game_rating = None
+
         if existing:
             return False, "Game already in your collection!"
 
@@ -28,7 +34,7 @@ def add_item_collection(user_id:int, game_id:int,
         collection_item = CollectionList(
             item_id = game_id,
             user_id = user_id, 
-            rating = game.rating,
+            rating = game_rating,
             user_rating = user_rating,
             notes = user_notes,
             played = played, 
