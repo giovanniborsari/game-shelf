@@ -71,8 +71,7 @@ class Wishlist(Base):
         wishlist_id: Wishlist's unique id
         user_id: User's unique id linked to users table
         item_id: Items's unique id linked to items table
-        price_usd: Item's price on Ebay, default = None means it is not 
-        available for purchase
+        platform: Platform that the player want to play.
         bought: Boolean that changes once the user buys the item, moving the 
         item to the user's collection
         rating: Media rating to the game (0 to 100)
@@ -81,7 +80,7 @@ class Wishlist(Base):
     wishlist_id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.user_id"))
     item_id = Column(Integer, ForeignKey("items.item_id"))
-    price_usd = Column(Float, nullable= True, default= None)
+    platform = Column(String, nullable=True, default=None)
     bought = Column(Boolean, nullable= True, default= False)
     rating = Column(Float, nullable= True, default= None)
 
