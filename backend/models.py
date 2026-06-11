@@ -75,6 +75,7 @@ class Wishlist(Base):
         bought: Boolean that changes once the user buys the item, moving the 
         item to the user's collection
         rating: Media rating to the game (0 to 100)
+        date: Date the user added the item to the collection
     """
     __tablename__= "wishlist"
     wishlist_id = Column(Integer, primary_key=True)
@@ -83,6 +84,7 @@ class Wishlist(Base):
     platform = Column(String, nullable=True, default=None)
     bought = Column(Boolean, nullable= True, default= False)
     rating = Column(Float, nullable= True, default= None)
+    date = Column(DateTime, nullable= True, default= None)
 
 class CollectionList(Base):
     """ 

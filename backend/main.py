@@ -38,6 +38,11 @@ class FormatedAddItemCollection(BaseModel):
     notes: str | None = None
     played: bool |None = False
 
+class FormatedAddItemWishlist(BaseModel):
+    item_id: int
+    user_id: int
+    platform: str | None = None
+
 
 app = FastAPI()
 
@@ -229,5 +234,16 @@ def add_to_collection(item: FormatedAddItemCollection,
    
     success, message = add_item_collection(user_id, item.item_id,  #type: ignore
                        item.item_rating, item.notes, item.played) #type: ignore
+    
+    return {"success": success, "message": message}
+
+@app.post("/wishlist/add", dependencies=[Depends(GameShelfBearer())])
+def add_to_wishlist(item: FormatedAddItemWishlist, 
+                      token: str = Depends(GameShelfBearer())):
+    
+    user_id = get_user_id_from_token(token)
+   
+    success, message = add_item_wishlist(user_id, item.item_id,  #type: ignore
+                       item.platform) #type: ignore
     
     return {"success": success, "message": message}
