@@ -81,7 +81,8 @@ def add_item_wishlist(user_id:int, game_id:int, platform:str|None):
             item_id = game_id,
             platform = platform,
             rating = game_rating,
-            bought = False
+            bought = False,
+            date = date
         )
 
         database.add(wishlist_item)

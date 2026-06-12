@@ -10,7 +10,7 @@ from jwt_bearer import GameShelfBearer
 from lists_methods import *
 
 
-class FormatedItem(BaseModel):
+class FormattedItem(BaseModel):
     game_id: int
     game_title: str
     game_platforms: str | None
@@ -21,28 +21,36 @@ class FormatedItem(BaseModel):
     game_description: str | None
     game_cover: str | None
 
-class FormatedUserRegister(BaseModel):
+class FormattedUserRegister(BaseModel):
     username: str
     email: str
     password: str
     bio: str | None = None
     picture: str | None = None
 
-class FormatedPWDRequest(BaseModel):
+class FormattedPWDRequest(BaseModel):
     username: str
     password: str
 
-class FormatedAddItemCollection(BaseModel):
+class FormattedAddItemCollection(BaseModel):
     item_id: int
     item_rating: int | None = None
     notes: str | None = None
     played: bool |None = False
 
-class FormatedAddItemWishlist(BaseModel):
+class FormattedAddItemWishlist(BaseModel):
     item_id: int
     user_id: int
     platform: str | None = None
 
+class FormattedWishlistItem(BaseModel):
+    wishlist_user: str
+    item_name: str
+    item_cover: str | None
+    release: datetime | None = None
+    date: datetime | None = None
+    item_rating: float | None
+    bought: bool | None
 
 app = FastAPI()
 
@@ -51,7 +59,7 @@ def root():
     return {"message": "Game Shelf is running!"} 
 
 @app.post("/auth/register")
-def register_user(request: FormatedUserRegister):
+def register_user(request: FormattedUserRegister):
 
     success, message = add_user(
         request.username,
@@ -74,7 +82,7 @@ def register_user(request: FormatedUserRegister):
 
 
 @app.post("/auth/login")
-def user_login (request : FormatedPWDRequest):
+def user_login (request : FormattedPWDRequest):
     success = _check_pwd(
         request.username,
         request.password
@@ -100,7 +108,7 @@ def get_items(page:int = 1, limit: int = 36):
 
     try:
         for item in items:
-            new_item = FormatedItem(
+            new_item = FormattedItem(
                 game_id = item.item_id, #type:ignore
                 game_title = item.item_name, #type: ignore
                 game_platforms = item.platform, #type: ignore
@@ -132,7 +140,7 @@ def get_item_id(id: int):
 
     try:
         if item is not None:
-            desired_game = FormatedItem(
+            desired_game = FormattedItem(
                 game_id = item.item_id, #type:ignore
                 game_title = item.item_name, #type: ignore
                 game_platforms = item.platform, #type: ignore
@@ -160,7 +168,7 @@ def get_item_search(search: str, page:int = 1, limit: int = 36):
     try:
         if items: 
             for item in items:
-                new_item = FormatedItem(
+                new_item = FormattedItem(
                 game_id = item.item_id, #type:ignore
                 game_title = item.item_name, #type: ignore
                 game_platforms = item.platform, #type: ignore
@@ -199,7 +207,7 @@ def get_item_platform(platform: str, page:int = 1, limit:int = 36):
     try:
         if items:
             for item in items:
-                new_item = FormatedItem(
+                new_item = FormattedItem(
                     game_id = item.item_id, #type:ignore
                     game_title = item.item_name, #type: ignore
                     game_platforms = item.platform, #type: ignore
@@ -227,7 +235,7 @@ def get_item_platform(platform: str, page:int = 1, limit:int = 36):
         database.close()    
 
 @app.post("/collection/add", dependencies=[Depends(GameShelfBearer())])
-def add_to_collection(item: FormatedAddItemCollection, 
+def add_to_collection(item: FormattedAddItemCollection, 
                       token: str = Depends(GameShelfBearer())):
     
     user_id = get_user_id_from_token(token)
@@ -238,7 +246,7 @@ def add_to_collection(item: FormatedAddItemCollection,
     return {"success": success, "message": message}
 
 @app.post("/wishlist/add", dependencies=[Depends(GameShelfBearer())])
-def add_to_wishlist(item: FormatedAddItemWishlist, 
+def add_to_wishlist(item: FormattedAddItemWishlist, 
                       token: str = Depends(GameShelfBearer())):
     
     user_id = get_user_id_from_token(token)
@@ -247,3 +255,45 @@ def add_to_wishlist(item: FormatedAddItemWishlist,
                        item.platform) #type: ignore
     
     return {"success": success, "message": message}
+
+@app.get("/wishlist/me", dependencies=[Depends(GameShelfBearer())])
+def show_whishlist_me(token: str = Depends(GameShelfBearer())):
+
+    user_id = get_user_id_from_token(token)
+
+    database = SessionLocal()
+    wishlist = database.query(Wishlist).\
+            filter(Wishlist.user_id == user_id).all()
+    user = database.query(User).\
+            filter(User.user_id == user_id).first()    
+    
+    try:
+        user = database.query(User).\
+            filter(User.user_id == user_id).first() 
+        if not user:
+            return {"success": False, "message": "User not found"}
+        
+        wishlist = database.query(Wishlist).\
+            filter(Wishlist.user_id == user_id).all()
+        if not wishlist:
+            return {"success": False, "message": "Wishlist is empty"}
+        
+        formatted_wishlist = []
+        for game in wishlist:
+            item = database.query(Items).filter(Items.item_id == game.item_id).first()
+            
+            if item:
+                wishlist_game = FormattedWishlistItem(
+                    wishlist_user = user.username, #type:ignore
+                    item_name = item.item_name, #type:ignore
+                    item_cover = item.cover, #type:ignore
+                    item_rating = item.rating, #type:ignore
+                    release = item.release_date, #type:ignore
+                    bought = game.bought, #type:ignore
+                    date = game.date #type:ignore
+                )
+                formatted_wishlist.append(wishlist_game)
+
+        return {"wishlist": formatted_wishlist, "total": len(formatted_wishlist)}
+    finally:
+        database.close()
