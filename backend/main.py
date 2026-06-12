@@ -50,7 +50,17 @@ class FormattedWishlistItem(BaseModel):
     release: datetime | None = None
     date: datetime | None = None
     item_rating: float | None
-    bought: bool | None
+    bought: bool | None = False
+
+class FormattedCollectionItem(BaseModel):
+    collection_user: str
+    item_name: str
+    item_cover: str | None
+    release: datetime | None = None
+    date: datetime | None = None
+    item_rating: float | None
+    user_rating: float | None
+    played: bool | None = False
 
 app = FastAPI()
 
@@ -245,6 +255,45 @@ def add_to_collection(item: FormattedAddItemCollection,
     
     return {"success": success, "message": message}
 
+@app.get("/collection/me", dependencies=[Depends(GameShelfBearer())])
+def show_collection_me(token: str = Depends(GameShelfBearer())):
+
+    user_id = get_user_id_from_token(token)
+
+    database = SessionLocal()
+
+    try:
+        user = database.query(User).\
+            filter(User.user_id == user_id).first() 
+        if not user:
+            return {"success": False, "message": "User not found"}
+        
+        collection = database.query(CollectionList).\
+            filter(CollectionList.user_id == user_id).all()
+        if not collection:
+            return {"success": False, "message": "Wishlist is empty"}
+        
+        formatted_collection = []
+        for game in collection:
+            item = database.query(Items).filter(Items.item_id == game.item_id).first()
+            
+            if item:
+                collection_game = FormattedCollectionItem(
+                    collection_user = user.username, #type:ignore
+                    item_name = item.item_name, #type:ignore
+                    item_cover = item.cover, #type:ignore
+                    item_rating = item.rating, #type:ignore
+                    release = item.release_date, #type:ignore
+                    played = game.played, #type:ignore
+                    date = game.date, #type:ignore
+                    user_rating = game.user_rating, #type:ignore
+                )
+                formatted_collection.append(collection_game)
+
+        return {"wishlist": formatted_collection, "total": len(formatted_collection)}
+    finally:
+        database.close()
+
 @app.post("/wishlist/add", dependencies=[Depends(GameShelfBearer())])
 def add_to_wishlist(item: FormattedAddItemWishlist, 
                       token: str = Depends(GameShelfBearer())):
@@ -261,11 +310,7 @@ def show_whishlist_me(token: str = Depends(GameShelfBearer())):
 
     user_id = get_user_id_from_token(token)
 
-    database = SessionLocal()
-    wishlist = database.query(Wishlist).\
-            filter(Wishlist.user_id == user_id).all()
-    user = database.query(User).\
-            filter(User.user_id == user_id).first()    
+    database = SessionLocal()    
     
     try:
         user = database.query(User).\
