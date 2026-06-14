@@ -374,6 +374,7 @@ def user_me (token: str = Depends(GameShelfBearer())):
     finally:
         database.close()
 
+#--------------------------------Delete Methods---------------------------------
 @app.post("/user/me/delete" , dependencies= [Depends(GameShelfBearer())])
 def user_delete (token:str = Depends(GameShelfBearer())):
 
@@ -406,6 +407,28 @@ def user_delete (token:str = Depends(GameShelfBearer())):
 
         return f"User {user.username} deleted!"
     
+    finally:
+        database.close()
+
+@app.post("/wishlist/me/delete-all", dependencies= [Depends(GameShelfBearer())])
+def delete_wishlist(token: str = Depends(GameShelfBearer())):
+
+    user_id = get_user_id_from_token(token)
+
+    database = SessionLocal()
+
+    try:
+        wishlist = database.query(Wishlist).filter(Wishlist.user_id == user_id)\
+            .all()
+        
+        if not wishlist:
+            return {"success": False, "message": "Wishlist is empty!"}
+        
+        for game in wishlist:
+            database.delete(game)
+            database.commit()
+
+        return "Success, wishlist deleted!"
     finally:
         database.close()
     
