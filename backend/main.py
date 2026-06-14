@@ -62,6 +62,12 @@ class FormattedCollectionItem(BaseModel):
     user_rating: float | None
     played: bool | None = False
 
+class FormattedUser(BaseModel):
+    username: str
+    bio: str|None = None
+    profile_pic: str
+    created: datetime
+
 app = FastAPI()
 
 @app.get("/")
@@ -342,3 +348,29 @@ def show_whishlist_me(token: str = Depends(GameShelfBearer())):
         return {"wishlist": formatted_wishlist, "total": len(formatted_wishlist)}
     finally:
         database.close()
+
+@app.get("/user/me", dependencies=[Depends(GameShelfBearer())])
+def user_me (token: str = Depends(GameShelfBearer())):
+
+    user_id = get_user_id_from_token(token)
+
+    database = SessionLocal()
+
+    try:
+        user = database.query(User).filter(User.user_id == user_id).first()
+
+        if not user:
+            return {"success": False, "message": "User not found!"}
+        
+        user_info = FormattedUser(
+            username = user.username, #type: ignore
+            bio= user.user_bio, #type: ignore
+            profile_pic= user.profile_picture, #type: ignore
+            created= user.created_at_utc #type: ignore
+        )
+
+        return user_info
+    
+    finally:
+        database.close()
+    
