@@ -375,7 +375,7 @@ def user_me (token: str = Depends(GameShelfBearer())):
         database.close()
 
 #--------------------------------Delete Methods---------------------------------
-@app.post("/user/me/delete" , dependencies= [Depends(GameShelfBearer())])
+@app.delete("/user/me/delete" , dependencies= [Depends(GameShelfBearer())])
 def user_delete (token:str = Depends(GameShelfBearer())):
 
     user_id = get_user_id_from_token(token)
@@ -410,7 +410,7 @@ def user_delete (token:str = Depends(GameShelfBearer())):
     finally:
         database.close()
 
-@app.post("/wishlist/me/delete-all", dependencies= [Depends(GameShelfBearer())])
+@app.delete("/wishlist/me/delete-all", dependencies= [Depends(GameShelfBearer())])
 def delete_wishlist(token: str = Depends(GameShelfBearer())):
 
     user_id = get_user_id_from_token(token)
@@ -432,7 +432,7 @@ def delete_wishlist(token: str = Depends(GameShelfBearer())):
     finally:
         database.close()
     
-@app.post("/wishlist/me/delete/{game_id}", dependencies= [Depends(GameShelfBearer())])
+@app.delete("/wishlist/me/delete/{game_id}", dependencies= [Depends(GameShelfBearer())])
 def delete_wishlist_id(game_id: int, token: str = Depends(GameShelfBearer())):
 
     user_id = get_user_id_from_token(token)
@@ -457,7 +457,7 @@ def delete_wishlist_id(game_id: int, token: str = Depends(GameShelfBearer())):
     finally:
         database.close()
 
-@app.post("/collection/me/delete-all", dependencies= [Depends(GameShelfBearer())])
+@app.delete("/collection/me/delete-all", dependencies= [Depends(GameShelfBearer())])
 def delete_collection(token: str = Depends(GameShelfBearer())):
 
     user_id = get_user_id_from_token(token)
@@ -479,7 +479,7 @@ def delete_collection(token: str = Depends(GameShelfBearer())):
     finally:
         database.close()
     
-@app.post("/collection/me/delete/{game_id}", dependencies= [Depends(GameShelfBearer())])
+@app.delete("/collection/me/delete/{game_id}", dependencies= [Depends(GameShelfBearer())])
 def collection_delete_id(game_id: int, token: str = Depends(GameShelfBearer())):
 
     user_id = get_user_id_from_token(token)
