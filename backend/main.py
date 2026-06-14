@@ -432,3 +432,27 @@ def delete_wishlist(token: str = Depends(GameShelfBearer())):
     finally:
         database.close()
     
+@app.post("/wishlist/me/delete/{game_id}", dependencies= [Depends(GameShelfBearer())])
+def delete_wishlist_id(game_id: int, token: str = Depends(GameShelfBearer())):
+
+    user_id = get_user_id_from_token(token)
+
+    database = SessionLocal()
+
+    try:
+        wishlist_game = database.query(Wishlist)\
+            .filter(Wishlist.user_id == user_id)\
+            .filter(Wishlist.item_id == game_id).first()
+        
+        if not wishlist_game:
+            return {"success": False, "message": "Game not found in wishlist!"}
+        
+        game_name = database.query(Items).filter(Items.item_id == game_id)\
+            .first().item_name #type: ignore
+        
+        database.delete(wishlist_game)
+        database.commit()
+        
+        return f"Success, {game_name} deleted from the wishlist!"
+    finally:
+        database.close()
