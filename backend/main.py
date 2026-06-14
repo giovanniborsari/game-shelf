@@ -115,7 +115,7 @@ def user_login (request : FormattedPWDRequest):
     finally:
         database.close()
 
-@app.get("/items/")
+@app.get("/items")
 def get_items(page:int = 1, limit: int = 36):
     skip = (page - 1) * limit
     database = SessionLocal()
@@ -370,6 +370,41 @@ def user_me (token: str = Depends(GameShelfBearer())):
         )
 
         return user_info
+    
+    finally:
+        database.close()
+
+@app.post("/user/me/delete" , dependencies= [Depends(GameShelfBearer())])
+def user_delete (token:str = Depends(GameShelfBearer())):
+
+    user_id = get_user_id_from_token(token)
+
+    database = SessionLocal()
+
+    try:
+        user = database.query(User).filter(User.user_id == user_id).first()
+
+        if not user:
+            return {"success": False, "message": "User not found!"}
+        
+        collection = database.query(CollectionList).filter\
+            (CollectionList.user_id == user_id).all()
+        if collection:
+            for game in collection:
+                database.delete(game)
+                database.commit()
+
+        wishlist = database.query(Wishlist).filter\
+            (Wishlist.user_id == user_id).all()
+        if wishlist:
+            for game in wishlist:
+                database.delete(game)
+                database.commit()
+         
+        database.delete(user)
+        database.commit()
+
+        return f"User {user.username} deleted!"
     
     finally:
         database.close()
