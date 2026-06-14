@@ -456,3 +456,50 @@ def delete_wishlist_id(game_id: int, token: str = Depends(GameShelfBearer())):
         return f"Success, {game_name} deleted from the wishlist!"
     finally:
         database.close()
+
+@app.post("/collection/me/delete-all", dependencies= [Depends(GameShelfBearer())])
+def delete_collection(token: str = Depends(GameShelfBearer())):
+
+    user_id = get_user_id_from_token(token)
+
+    database = SessionLocal()
+
+    try:
+        collection = database.query(CollectionList)\
+            .filter(CollectionList.user_id == user_id).all()
+        
+        if not collection:
+            return {"success": False, "message": "Collection is empty!"}
+        
+        for game in collection:
+            database.delete(game)
+            database.commit()
+
+        return "Success, collection deleted!"
+    finally:
+        database.close()
+    
+@app.post("/collection/me/delete/{game_id}", dependencies= [Depends(GameShelfBearer())])
+def collection_delete_id(game_id: int, token: str = Depends(GameShelfBearer())):
+
+    user_id = get_user_id_from_token(token)
+
+    database = SessionLocal()
+
+    try:
+        collection_game = database.query(CollectionList)\
+            .filter(CollectionList.user_id == user_id)\
+            .filter(CollectionList.item_id == game_id).first()
+        
+        if not collection_game:
+            return {"success": False, "message": "Game not found in wishlist!"}
+        
+        game_name = database.query(Items).filter(Items.item_id == game_id)\
+            .first().item_name #type: ignore
+        
+        database.delete(collection_game)
+        database.commit()
+        
+        return f"Success, {game_name} deleted from the collection!"
+    finally:
+        database.close()
