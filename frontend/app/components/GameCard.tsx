@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-interface GameCardProps {
+export interface GameCardProps {
   id:number 
   game_name:string
   game_rating:number|null
@@ -19,8 +19,6 @@ export default function GameCard
     : game_rating && game_rating >= 60 
     ? "bg-yellow-500" 
     : "bg-red-500";
-
-    console.log(typeof game_rating, game_rating);
     
   return (
     <Link href={`/games/${id}`} >
