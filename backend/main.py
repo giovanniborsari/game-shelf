@@ -124,14 +124,36 @@ def user_login (request : FormattedPWDRequest):
     finally:
         database.close()
 
-@app.get("/items")
-def get_items(page:int = 1, limit: int = 36):
+@app.get("/items/")
+def get_items(page:int = 1, 
+              limit: int = 36,
+              search: str|None = None,
+              platform: str|None = None,
+              genre: str|None = None,
+              min_rating: float|None = None,
+              max_rating: float|None = None):
+    
     skip = (page - 1) * limit
     database = SessionLocal()
-    items = database.query(Items).offset(skip).limit(limit).all()
     formatted_items = []
 
-    try:
+    try:        
+        query = database.query(Items)
+
+        #Filtering options
+        if search:
+            query = query.filter(Items.item_name.ilike(f"%{search}%"))
+        if platform:
+            query = query.filter(Items.platform.ilike(f"%{platform}%"))
+        if genre:
+            query = query.filter(Items.genre.ilike(f"%{genre}%"))
+        if min_rating is not None:
+            query = query.filter(Items.rating >= min_rating)
+        if max_rating is not None:
+            query = query.filter(Items.rating <= max_rating)
+
+        items = query.offset(skip).limit(limit).all()
+        
         for item in items:
             new_item = FormattedItem(
                 game_id = item.item_id, #type:ignore
