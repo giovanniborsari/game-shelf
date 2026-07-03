@@ -8,7 +8,7 @@ from password import _check_pwd
 from auth_handler import encode_jwt, get_user_id_from_token
 from jwt_bearer import GameShelfBearer
 from lists_methods import *
-
+from fastapi.middleware.cors import CORSMiddleware
 
 class FormattedItem(BaseModel):
     game_id: int
@@ -69,6 +69,15 @@ class FormattedUser(BaseModel):
     created: datetime
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 def root():

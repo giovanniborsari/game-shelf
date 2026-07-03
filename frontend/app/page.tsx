@@ -1,5 +1,8 @@
-import GameCard from "./components/GameCard";
+"use client";
+import { useState, useEffect } from "react";
+import GameCard, {GameCardProps} from "./components/GameCard";
 import GameGrid from "./components/GameGrid";
+
 
 export default function Home() {
 
@@ -24,12 +27,22 @@ export default function Home() {
     game_platform:"Google Stadia, PlayStation 4, PC (Microsoft Windows), Xbox One"}
   ]; 
 
+const [games, setGames] = useState<GameCardProps[]>([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/items/?page=1")
+      .then((response) => response.json())
+      .then((data) => {
+        setGames(data.items);
+      });
+  }, []);
+
 return (
     <div className="min-h-screen bg-gray-900">
       <h1 className="text-3xl font-bold text-emerald-400 p-6">GameShelf</h1>
       <hr className="text-gray-500"></hr>
       <br></br>
-      <GameGrid gamesArray={fakeList} />
+      <GameGrid gamesArray={games} />
     </div>
   );
 }
