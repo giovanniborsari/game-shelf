@@ -28,7 +28,7 @@ const [filters, setFilters] = useState<FilterState>({
     if (filters.platform) params.append('platform', filters.platform);
     if (filters.genre) params.append('genre', filters.genre);
     if (filters.min_rating) params.append('min_rating', filters.min_rating)
-    if (filters.min_rating) params.append('max_rating', filters.max_rating)
+    if (filters.max_rating) params.append('max_rating', filters.max_rating)
 
     fetch(`http://localhost:8000/items/?${params.toString()}`)
       .then((response) => response.json())

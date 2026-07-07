@@ -95,6 +95,7 @@ def _population_pre ():
                     #Rename PlayStation for filtering 
                     PLATFORM_MAP = {
                         "PlayStation": "PlayStation 1",
+                        "Xbox": "Xbox Classic"
                     }
 
                     #Gets the list in 'platforms'
@@ -219,4 +220,27 @@ def _population_pre ():
                 #Always close the database
                 database.close() 
                
+def get_categories_genres():
+    database = SessionLocal()
+
+    try:
+        items = database.query(Items).all()
+
+        genre_set = set()
+        platform_set = set()
+
+        for item in items:
+            if item.genre:
+                genre_set.update(g.strip() for g in item.genre.split(","))
+            if item.platform:
+                platform_set.update(p.strip() for p in item.platform.split(","))
+
+        return sorted(genre_set), sorted(platform_set)
+    finally:
+        database.close()
+
+genre, platform = get_categories_genres()
+
+#print(genre)
+print(platform)
 _population_pre()
