@@ -243,13 +243,17 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
 
     //State for selected platforms and for is expanded 
     const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpandedPlatforms, setIsExpandedPlatforms] = useState(false);
+
+    //State for selected genre and for is expanded 
+    const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+    const [isExpandedGenre, setIsExpandedGenre] = useState(false);
 
     const handleApply = (e: React.SubmitEvent) => {
         onFilterChange({
             search,
             platform: selectedPlatforms,
-            genre: [],
+            genre: selectedGenres,
             min_rating,
             max_rating
         })
@@ -259,10 +263,10 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
 
     const handleClear = (e: React.SubmitEvent) => {
         setSearch('');
-        setPlatform('');
-        setGenre('');
         setMinRating('');
         setMaxRating('');
+        setSelectedPlatforms([]);
+        setSelectedGenres([]);
 
         onFilterChange({
             search: "",
@@ -275,23 +279,56 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
         e.preventDefault();
     };
 
-    //const handleCheckBox = (e; React.)
-        
+    const handleCheckbox = (platformName: string) => {
+        setSelectedPlatforms((prevSelected) => {
+            if (prevSelected.includes(platformName)){
+                return prevSelected.filter(p => p !== platformName)
+            }else{
+                return [...prevSelected, platformName];
+            }
+        });
+    }  
+    
+    const visiblePlatforms = 
+        isExpandedPlatforms ? PLATFORMS : PLATFORMS.slice(0, 10);
 
     return(
 
         <form onSubmit={handleApply} className=" flex flex-col w-72
          border-emerald-300 border-2 rounded ml-10 items-center"> 
             <h2 className='text-2xl font-bold mt-0.5 '>Filters</h2>
-            <label className="text-sm text-gray-200 text-right"> Search Game 
+            <label className="text-sm text-gray-200"> Search Game 
             </label>
             <input type="text" 
             value={search}
             onChange={(e) => setSearch(e.target.value)} 
             className='rounded text-black bg-gray-100 m-0.5 ' 
             placeholder="Game"></input>
-            <label className="text-sm text-gray-200 text-right"> Platforms 
-            </label>
+            <div className="flex flex-col gap-2">
+                <label className="text-sm text-gray-200 text-center">Platforms</label>
+                <div className="flex flex-col gap-2 pl-1">
+                    {visiblePlatforms.map((plat) => (
+                        <label key={plat} className="flex items-center gap-2 text-sm text-gray-200 cursor-pointer hover:text-emerald-400 transition-colors">
+                            <input 
+                                type="checkbox" 
+                                checked={selectedPlatforms.includes(plat)}
+                                onChange={() => handleCheckbox(plat)}
+                                className="w-4 h-4 rounded border-gray-700 accent-red-400 cursor-pointer"
+                            />
+                            {plat}
+                        </label>
+                    ))}
+                </div>
+                {PLATFORMS.length > 5 && (
+                    <button
+                        type="button"
+                        onClick={() => setIsExpandedPlatforms(!isExpandedPlatforms)}
+                        className="text-xs text-emerald-400 hover:text-emerald-300 font-bold text-left pl-1 mt-1 transition-colors"
+                    >
+                        {isExpandedPlatforms ? "▲ Show Less" : "▼ Show More"}
+                    </button>
+                )}
+            </div>
             <div className="flex gap-2 mt-2">
             <button type="submit" className="flex-1 bg-emerald-400 hover:bg-emerald-500 text-gray-900 font-bold py-2 px-4 rounded transition-colors">
                 Apply
