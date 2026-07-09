@@ -301,9 +301,10 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
             className='rounded text-black bg-gray-100 m-0.5 ' 
             placeholder="Game"></input>
             <div className="flex flex-col gap-2">
-                <label className="text-sm text-gray-200 text-center">Platforms</label>
-                <div className="flex flex-col gap-2 p-2 h-40 overflow-y-scroll 
-                scrollbar scrollbar-thumb-emerald-400">
+                <label className="text-sm text-gray-200 text-center mt-1">Platforms</label>
+                <div className="flex flex-col h-40 overflow-y-scroll 
+                scrollbar scrollbar-thumb-emerald-400 text-sm" dir="rtl">
+                    <div className='p-4' dir="ltr">
                     {PLATFORMS.map((plat) => (  
                     <label key ={plat} className="flex items-center gap-2 
                     test-sm text-white cursor-pointer hover:text-emerald-400
@@ -317,7 +318,8 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
                         </input>
                         {plat}
                     </label>
-                    ))}    
+                    ))}
+                    </div>    
             </div>
             </div>
             <div className="flex gap-2 mt-2">
