@@ -245,9 +245,8 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
     const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
     const [isExpandedPlatforms, setIsExpandedPlatforms] = useState(false);
 
-    //State for selected genre and for is expanded 
+    //State for selected genres
     const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-    const [isExpandedGenre, setIsExpandedGenre] = useState(false);
 
     const handleApply = (e: React.SubmitEvent) => {
         onFilterChange({
@@ -288,9 +287,6 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
             }
         });
     }  
-    
-    const visiblePlatforms = 
-        isExpandedPlatforms ? PLATFORMS : PLATFORMS.slice(0, 10);
 
     return(
 
@@ -306,28 +302,23 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
             placeholder="Game"></input>
             <div className="flex flex-col gap-2">
                 <label className="text-sm text-gray-200 text-center">Platforms</label>
-                <div className="flex flex-col gap-2 pl-1">
-                    {visiblePlatforms.map((plat) => (
-                        <label key={plat} className="flex items-center gap-2 text-sm text-gray-200 cursor-pointer hover:text-emerald-400 transition-colors">
-                            <input 
-                                type="checkbox" 
-                                checked={selectedPlatforms.includes(plat)}
-                                onChange={() => handleCheckbox(plat)}
-                                className="w-4 h-4 rounded border-gray-700 accent-red-400 cursor-pointer"
-                            />
-                            {plat}
-                        </label>
-                    ))}
-                </div>
-                {PLATFORMS.length > 5 && (
-                    <button
-                        type="button"
-                        onClick={() => setIsExpandedPlatforms(!isExpandedPlatforms)}
-                        className="text-xs text-emerald-400 hover:text-emerald-300 font-bold text-left pl-1 mt-1 transition-colors"
-                    >
-                        {isExpandedPlatforms ? "▲ Show Less" : "▼ Show More"}
-                    </button>
-                )}
+                <div className="flex flex-col gap-2 p-2 h-40 overflow-y-scroll 
+                scrollbar scrollbar-thumb-emerald-400">
+                    {PLATFORMS.map((plat) => (  
+                    <label key ={plat} className="flex items-center gap-2 
+                    test-sm text-white cursor-pointer hover:text-emerald-400
+                    transition-colors">
+                        <input
+                            type = "checkbox"
+                            checked = {selectedPlatforms.includes(plat)}
+                            onChange= {()=> handleCheckbox(plat)}
+                            className="text-sm text-white rounded border-gray-700 
+                            bg-transparent accent-emerald-400 cursor-pointer">
+                        </input>
+                        {plat}
+                    </label>
+                    ))}    
+            </div>
             </div>
             <div className="flex gap-2 mt-2">
             <button type="submit" className="flex-1 bg-emerald-400 hover:bg-emerald-500 text-gray-900 font-bold py-2 px-4 rounded transition-colors">
