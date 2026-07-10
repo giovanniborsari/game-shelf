@@ -233,17 +233,41 @@ const PLATFORMS = [
     'visionOS'
 ];
 
+const GENRES = [
+    'Adventure',
+    'Arcade', 
+    'Card & Board Game', 
+    'Fighting', 
+    "Hack and slash/Beat 'em up", 
+    'Indie', 
+    'MOBA', 
+    'Music', 
+    'Pinball', 
+    'Platform', 
+    'Point-and-click', 
+    'Puzzle', 
+    'Quiz/Trivia', 
+    'Racing',
+    'Real Time Strategy (RTS)', 
+    'Role-playing (RPG)', 
+    'Shooter', 
+    'Simulator', 
+    'Sport', 
+    'Strategy', 
+    'Tactical', 
+    'Turn-based strategy (TBS)', 
+    'Unknown', 
+    'Visual Novel'
+];
+
 export default function FilteringCol({ onFilterChange }: FilteringColProps){
 
     const[search, setSearch] = useState("");
-    const[platform, setPlatform] = useState("");
-    const[genre, setGenre] = useState("");
     const[min_rating, setMinRating] = useState("");
     const[max_rating, setMaxRating] = useState("");
 
     //State for selected platforms and for is expanded 
     const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
-    const [isExpandedPlatforms, setIsExpandedPlatforms] = useState(false);
 
     //State for selected genres
     const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
@@ -278,12 +302,22 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
         e.preventDefault();
     };
 
-    const handleCheckbox = (platformName: string) => {
+    const handleCheckboxPlat = (platformName: string) => {
         setSelectedPlatforms((prevSelected) => {
             if (prevSelected.includes(platformName)){
                 return prevSelected.filter(p => p !== platformName)
             }else{
                 return [...prevSelected, platformName];
+            }
+        });
+    }  
+
+    const handleCheckboxGen = (genreName: string) => {
+        setSelectedGenres((prevSelected) => {
+            if (prevSelected.includes(genreName)){
+                return prevSelected.filter(p => p !== genreName)
+            }else{
+                return [...prevSelected, genreName];
             }
         });
     }  
@@ -312,7 +346,7 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
                         <input
                             type = "checkbox"
                             checked = {selectedPlatforms.includes(plat)}
-                            onChange= {()=> handleCheckbox(plat)}
+                            onChange= {()=> handleCheckboxPlat(plat)}
                             className="text-sm text-white rounded border-gray-700 
                             bg-transparent accent-emerald-400 cursor-pointer">
                         </input>
@@ -320,8 +354,28 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
                     </label>
                     ))}
                     </div>    
-            </div>
-            </div>
+                </div>
+                <label className="text-sm text-gray-200 text-center mt-1">Genres</label>
+                <div className="flex flex-col h-40 overflow-y-scroll 
+                scrollbar scrollbar-thumb-emerald-400 text-sm" dir="rtl">
+                    <div className='p-4' dir="ltr">
+                    {GENRES.map((genre) => (  
+                    <label key ={genre} className="flex items-center gap-2 
+                    test-sm text-white cursor-pointer hover:text-emerald-400
+                    transition-colors">
+                        <input
+                            type = "checkbox"
+                            checked = {selectedGenres.includes(genre)}
+                            onChange= {()=> handleCheckboxGen(genre)}
+                            className="text-sm text-white rounded border-gray-700 
+                            bg-transparent accent-emerald-400 cursor-pointer">
+                        </input>
+                        {genre}
+                    </label>
+                    ))}
+                    </div>    
+                </div>
+            </div> 
             <div className="flex gap-2 mt-2">
             <button type="submit" className="flex-1 bg-emerald-400 hover:bg-emerald-500 text-gray-900 font-bold py-2 px-4 rounded transition-colors">
                 Apply
