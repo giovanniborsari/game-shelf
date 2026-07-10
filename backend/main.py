@@ -9,6 +9,7 @@ from auth_handler import encode_jwt, get_user_id_from_token
 from jwt_bearer import GameShelfBearer
 from lists_methods import *
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import or_
 
 class FormattedItem(BaseModel):
     game_id: int
@@ -142,11 +143,17 @@ def get_items(page:int = 1,
 
         #Filtering options
         if search:
-            query = query.filter(Items.item_name.ilike(f"%{search}%"))
+            query = query.filter(Items.item_name.ilike(f"%{search}%"))       
         if platform:
-            query = query.filter(Items.platform.ilike(f"%{platform}%"))
+            platform_list = platform.split(',')
+            query = query.filter(
+                or_(*[Items.platform.ilike(f"%{p}%") for p in platform_list])
+        )
         if genre:
-            query = query.filter(Items.genre.ilike(f"%{genre}%"))
+            genre_list = genre.split(',')
+            query = query.filter(
+                or_(*[Items.genre.ilike(f"%{g}%") for g in genre_list])
+        )
         if min_rating is not None:
             query = query.filter(Items.rating >= min_rating)
         if max_rating is not None:
@@ -169,7 +176,7 @@ def get_items(page:int = 1,
             
             formatted_items.append(new_item) #type: ignore
 
-        total = database.query(Items).count()
+        total = query.count()
 
         return {
         "items": formatted_items,

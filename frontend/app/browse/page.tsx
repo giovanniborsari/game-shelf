@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import GameCard, {GameCardProps} from "../components/GameCard";
 import GameGrid from "../components/GameGrid";
 import FilteringCol, {FilterState} from "../components/FilteringCol";
+import { platform } from "os";
 
 
 export default function Home() {
@@ -12,8 +13,8 @@ const [currentPage, setCurrentPage] = useState(1);
 const [totalPages, setTotalPages] = useState(1);
 const [filters, setFilters] = useState<FilterState>({
     search: '',
-    platform: '',
-    genre: '',
+    platform: [],
+    genre: [],
     min_rating: '', 
     max_rating: '',
 })
@@ -25,8 +26,8 @@ const [filters, setFilters] = useState<FilterState>({
     })
 
     if (filters.search) params.append('search', filters.search);
-    if (filters.platform) params.append('platform', filters.platform);
-    if (filters.genre) params.append('genre', filters.genre);
+    if (filters.platform.length > 0) params.append('platform', filters.platform.join(','));
+    if (filters.genre.length > 0) params.append('genre', filters.genre.join(','));
     if (filters.min_rating) params.append('min_rating', filters.min_rating)
     if (filters.max_rating) params.append('max_rating', filters.max_rating)
 
