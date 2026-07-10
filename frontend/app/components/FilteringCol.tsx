@@ -375,6 +375,23 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
                     ))}
                     </div>    
                 </div>
+                <label className="text-sm text-gray-200 text-center mt-1">Rating Range</label>
+                <div className= "flex flex-row h-10 items-center justify-center">
+                    <input 
+                        type = "number"
+                        onChange={(e) => setMinRating(e.target.value)} 
+                        className='border border-rounded border-emerald-400 
+                        ml-2 w-25'
+                        placeholder='Min Rating'
+                    /> 
+                    <input 
+                        type = "number"
+                        onChange={(e) => setMaxRating(e.target.value)} 
+                        className='border border-rounded border-emerald-400 
+                        ml-2 w-25'
+                        placeholder='Max Rating'
+                    /> 
+                </div>
             </div> 
             <div className="flex gap-2 mt-2">
             <button type="submit" className="flex-1 bg-emerald-400 hover:bg-emerald-500 text-gray-900 font-bold py-2 px-4 rounded transition-colors">
