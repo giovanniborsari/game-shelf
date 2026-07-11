@@ -1,10 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import GameCard, {GameCardProps} from "../components/GameCard";
+import {GameCardProps} from "../components/GameCard";
 import GameGrid from "../components/GameGrid";
 import FilteringCol, {FilterState} from "../components/FilteringCol";
-import { platform } from "os";
-
 
 export default function Home() {
 

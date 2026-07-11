@@ -69,13 +69,13 @@ def _population_pre ():
 
         #Define what the method is going to get from IGDB database
         query_body = f"""
-        fields name, platforms.name, genres.name, total_rating, cover.url, 
-                summary, first_release_date;
+        fields name, platforms.name, genres.name, total_rating, cover.image_id, 
+                first_release_date, artworks.image_id, summary;
         offset {offset};
         limit {limit};
         """
         response = requests.post(url, headers = header, data = query_body)
-
+        print(response.status_code)
         #Response status equals 200 == success
         if response.status_code == 200:
             games= response.json()
@@ -86,9 +86,6 @@ def _population_pre ():
                     #Get game name 
                     name = game.get('name')
                     print(f"Processing: {name}")
-                    
-                    #Category equals game, IGDB just have games
-                    category = "Game"
 
                     #Getting game platforms
 
@@ -112,7 +109,7 @@ def _population_pre ():
                                 (original_name, original_name)
                             
                             #Force it to be a string and append the platform name to it 
-                            platform_names.append(str(p.get("name")))
+                            platform_names.append(renamed_name)
                     #Join then together if there is a platform, unknown if not
                     if platform_names:
                         all_platforms = ", ".join(platform_names) 
@@ -134,17 +131,38 @@ def _population_pre ():
                     else:
                         all_genres= "Unknown"    
 
-                    #Cover
+                    #Cover Big
                     game_cover = game.get('cover') or None
-                    url_cover = None
-                    if game_cover is not None:
-                        url_cover = game_cover.get('url')
+                    url_bcover = None
+                    if game_cover:
+                        image_id = game_cover.get('image_id')
+                        if image_id:
+                            url_bcover = (f"https://images.igdb.com/igdb/image"
+                            f"/upload/t_cover_big/{image_id}.jpg")
+
+                    #Cover Small
+                    game_cover = game.get('cover') or None
+                    url_scover = None
+                    if game_cover:
+                        image_id = game_cover.get('image_id')
+                        if image_id:
+                            url_scover = (f"https://images.igdb.com/igdb/image"
+                            f"/upload/t_thumb/{image_id}.jpg")
+
+                    #Art
+                    game_art = game.get('artworks') or None
+                    url_art = None
+                    if game_art and len(game_art) > 0:
+                        image_id = game_art[0].get('image_id')
+                        if image_id:
+                            url_art = (f"https://images.igdb.com/igdb/image"
+                            f"/upload/t_1080p/{image_id}.jpg")
                     
                     #Rating
                     game_rating = game.get('total_rating')
                     
                     if game_rating is not None:
-                        game_rating = round(game_rating,1)
+                        game_rating = round(game_rating,0)
                     else:
                         game_rating = None
 
@@ -172,8 +190,7 @@ def _population_pre ():
                         cur_platforms = existing_game.platform.split(", ")
                         new_platforms = all_platforms.split(", ")
                         final_platforms = set(cur_platforms) | set(new_platforms)
-                        final_platforms = ", ".join(final_platforms)
-                        existing_game.platform = final_platforms #type: ignore
+                        existing_game.platform = ", ".join(final_platforms) #type: ignore
 
                         #Append new genres if any
                         cur_genres = existing_game.genre.split(", ")
@@ -187,14 +204,14 @@ def _population_pre ():
                         #creates a new item if it is not present in the database
                         new_game= Items(
                             item_name = name,
-                            categories = category,
                             platform = all_platforms,
                             genre = all_genres,
-                            cover = url_cover,
+                            small_cover = url_scover,
+                            big_cover = url_bcover,
                             rating = game_rating,
                             release_date = date,
-                            description = desc
-                        
+                            description = desc,
+                            art = url_art,
                         )
 
                         #Add and commit new game
@@ -217,30 +234,7 @@ def _population_pre ():
             finally:
                 time.sleep(0.25) #Pauses for 0.25 seconds due to IGDB restrictions
                 print("Round of games added")
-                #Always close the database
-                database.close() 
-               
-def get_categories_genres():
-    database = SessionLocal()
+    #Always close the database
+    database.close() 
 
-    try:
-        items = database.query(Items).all()
-
-        genre_set = set()
-        platform_set = set()
-
-        for item in items:
-            if item.genre:
-                genre_set.update(g.strip() for g in item.genre.split(","))
-            if item.platform:
-                platform_set.update(p.strip() for p in item.platform.split(","))
-
-        return sorted(genre_set), sorted(platform_set)
-    finally:
-        database.close()
-
-genre, platform = get_categories_genres()
-
-#print(genre)
-print(platform)
 _population_pre()

@@ -17,7 +17,6 @@ class FormattedItem(BaseModel):
     game_platforms: str | None
     game_genre: str | None
     game_rating: float | None
-    game_category: str | None
     game_release_date: datetime | None
     game_description: str | None
     game_cover: str | None
@@ -147,7 +146,7 @@ def get_items(page:int = 1,
         if platform:
             platform_list = platform.split(',')
             query = query.filter(
-                or_(*[Items.platform.ilike(f"%{p}%") for p in platform_list])
+                or_(*[Items.platform.ilike(f"{p}") for p in platform_list])
         )
         if genre:
             genre_list = genre.split(',')
@@ -168,10 +167,9 @@ def get_items(page:int = 1,
                 game_platforms = item.platform, #type: ignore
                 game_genre = item.genre, #type: ignore
                 game_rating = item.rating, #type: ignore
-                game_category = item.categories, #type: ignore
                 game_release_date = item.release_date, #type: ignore
                 game_description = item.description, #type: ignore
-                game_cover = item.cover #type: ignore
+                game_cover = item.small_cover #type: ignore
                 )
             
             formatted_items.append(new_item) #type: ignore
@@ -200,10 +198,9 @@ def get_item_id(id: int):
                 game_platforms = item.platform, #type: ignore
                 game_genre = item.genre, #type: ignore
                 game_rating = item.rating, #type: ignore
-                game_category = item.categories, #type: ignore
                 game_release_date = item.release_date, #type: ignore
                 game_description = item.description, #type: ignore
-                game_cover = item.cover #type: ignore
+                game_cover = item.big_cover #type: ignore
             )
             return desired_game
         else:
@@ -228,10 +225,9 @@ def get_item_search(search: str, page:int = 1, limit: int = 36):
                 game_platforms = item.platform, #type: ignore
                 game_genre = item.genre, #type: ignore
                 game_rating = item.rating, #type: ignore
-                game_category = item.categories, #type: ignore
                 game_release_date = item.release_date, #type: ignore
                 game_description = item.description, #type: ignore
-                game_cover = item.cover #type: ignore
+                game_cover = item.small_cover #type: ignore
                 )
             
                 formatted_items.append(new_item) #type: ignore
@@ -267,10 +263,9 @@ def get_item_platform(platform: str, page:int = 1, limit:int = 36):
                     game_platforms = item.platform, #type: ignore
                     game_genre = item.genre, #type: ignore
                     game_rating = item.rating, #type: ignore
-                    game_category = item.categories, #type: ignore
                     game_release_date = item.release_date, #type: ignore
                     game_description = item.description, #type: ignore
-                    game_cover = item.cover #type: ignore
+                    game_cover = item.small_cover #type: ignore
                 )
                 formatted_items.append(new_item) #type: ignore
 
@@ -325,7 +320,7 @@ def show_collection_me(token: str = Depends(GameShelfBearer())):
                 collection_game = FormattedCollectionItem(
                     collection_user = user.username, #type:ignore
                     item_name = item.item_name, #type:ignore
-                    item_cover = item.cover, #type:ignore
+                    item_cover = item.big_cover, #type:ignore
                     item_rating = item.rating, #type:ignore
                     release = item.release_date, #type:ignore
                     played = game.played, #type:ignore
@@ -375,7 +370,7 @@ def show_whishlist_me(token: str = Depends(GameShelfBearer())):
                 wishlist_game = FormattedWishlistItem(
                     wishlist_user = user.username, #type:ignore
                     item_name = item.item_name, #type:ignore
-                    item_cover = item.cover, #type:ignore
+                    item_cover = item.big_cover, #type:ignore
                     item_rating = item.rating, #type:ignore
                     release = item.release_date, #type:ignore
                     bought = game.bought, #type:ignore
