@@ -20,6 +20,7 @@ class FormattedItem(BaseModel):
     game_release_date: datetime | None
     game_description: str | None
     game_cover: str | None
+    game_art:str | None
 
 class FormattedUserRegister(BaseModel):
     username: str
@@ -169,7 +170,8 @@ def get_items(page:int = 1,
                 game_rating = item.rating, #type: ignore
                 game_release_date = item.release_date, #type: ignore
                 game_description = item.description, #type: ignore
-                game_cover = item.small_cover #type: ignore
+                game_cover = item.small_cover, #type: ignore
+                game_art= item.art #type: ignore
                 )
             
             formatted_items.append(new_item) #type: ignore
@@ -200,7 +202,8 @@ def get_item_id(id: int):
                 game_rating = item.rating, #type: ignore
                 game_release_date = item.release_date, #type: ignore
                 game_description = item.description, #type: ignore
-                game_cover = item.big_cover #type: ignore
+                game_cover = item.big_cover, #type: ignore
+                game_art = item.art #type: ignore
             )
             return desired_game
         else:
@@ -227,7 +230,9 @@ def get_item_search(search: str, page:int = 1, limit: int = 36):
                 game_rating = item.rating, #type: ignore
                 game_release_date = item.release_date, #type: ignore
                 game_description = item.description, #type: ignore
-                game_cover = item.small_cover #type: ignore
+                game_cover = item.small_cover, #type: ignore
+                game_art= item.art #type: ignore
+
                 )
             
                 formatted_items.append(new_item) #type: ignore
@@ -265,7 +270,8 @@ def get_item_platform(platform: str, page:int = 1, limit:int = 36):
                     game_rating = item.rating, #type: ignore
                     game_release_date = item.release_date, #type: ignore
                     game_description = item.description, #type: ignore
-                    game_cover = item.small_cover #type: ignore
+                    game_cover = item.small_cover, #type: ignore
+                    game_art= item.art #type: ignore
                 )
                 formatted_items.append(new_item) #type: ignore
 

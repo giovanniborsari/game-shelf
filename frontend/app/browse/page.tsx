@@ -40,7 +40,7 @@ const [filters, setFilters] = useState<FilterState>({
 
   const handleFilterChange = (newFilters: FilterState) => {
     setFilters(newFilters); // Set the permanent filters state to the new configuration
-    setCurrentPage(1);      // CRITICAL: Always jump back to page 1 for fresh searches!
+    setCurrentPage(1);      // Always jump back to page 1 for fresh searches!
   };
 
 
