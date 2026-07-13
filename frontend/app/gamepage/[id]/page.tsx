@@ -40,7 +40,7 @@ return (
         <img 
             src={game.game_art || "placeholder_art.jpg"} 
             alt={game.game_art}
-            className="w-full h-96 object-cover"/>
+            className="w-full h-96 object-cover object-center"/>
         <img 
             src={game.game_cover || "placeholder_art.jpg"} 
             alt={game.game_cover}
@@ -50,8 +50,19 @@ return (
         <h1 className="font-bold text-white text-[32px] ml-110 mt-3 ">
             {game.game_title}</h1>
         <br></br>
-        <div className="border rounded-xl border-emerald-400 ml-10 mr-10">
+        <div className="flex flex-col p-5 ml-auto border rounded-xl border-emerald-400 
+        w-250 mr-100 ">
+        <h2 className="font-bold text-xl mb-2"> Platforms:</h2>
+        <h3 className="ml-2 font-medium text-xl mb-2 text-gray-400"> 
+            {game.game_platforms}</h3>
 
+        <h2 className="font-bold text-xl mb-2"> Genres:</h2>
+        <h3 className="ml-2 font-medium text-xl mb-2 text-gray-400"> 
+            {game.game_genre}</h3>
+
+        <h2 className="font-bold text-xl mb-2"> Description:</h2>
+        <h3 className="ml-2 font-medium text-xl mb-2 text-gray-400"> 
+            {game.game_description}</h3>
         </div>
     </div>     
 </div>
