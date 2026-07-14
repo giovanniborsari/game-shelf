@@ -151,3 +151,8 @@ class Platform_Id(Base):
     __tablename__= "platform_id"
     id = Column(Integer, primary_key= True)
     name= Column(String, nullable=False)
+
+class Genre_Id(Base):
+    __tablename__= "genre_id"
+    id = Column(Integer, primary_key= True)
+    name= Column(String, nullable=False)

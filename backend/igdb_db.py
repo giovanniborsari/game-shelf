@@ -1,5 +1,5 @@
 import requests
-from models import Items, Platform_Id
+from models import Genre_Id, Items, Platform_Id
 from dotenv import load_dotenv
 from typing import List, Dict
 import os
@@ -473,5 +473,46 @@ def _platform_id_pop ():
     finally:
         database.close()
 
-_platform_id_pop()
+def _genre_id_pop ():
+
+    GENRES = [
+    'Adventure',
+    'Arcade', 
+    'Card & Board Game', 
+    'Fighting', 
+    "Hack and slash/Beat 'em up", 
+    'Indie', 
+    'MOBA', 
+    'Music', 
+    'Pinball', 
+    'Platform', 
+    'Point-and-click', 
+    'Puzzle', 
+    'Quiz/Trivia', 
+    'Racing',
+    'Real Time Strategy (RTS)', 
+    'Role-playing (RPG)', 
+    'Shooter', 
+    'Simulator', 
+    'Sport', 
+    'Strategy', 
+    'Tactical', 
+    'Turn-based strategy (TBS)', 
+    'Unknown', 
+    'Visual Novel'
+    ]
+
+    database = SessionLocal()
+    
+    try:
+        for g in GENRES:
+            print(g)
+            new_genre = Genre_Id(
+                name= g
+            )
+            database.add(new_genre)
+            database.commit()
+    finally:
+        database.close()
+_genre_id_pop()
 #_population_pre()
