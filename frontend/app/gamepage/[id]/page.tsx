@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import React from "react";
+import Link from 'next/link'
 
 type GameDetails = {
     game_id : number;
@@ -61,7 +62,7 @@ return (
             {game.game_title}</h1>
         <br></br>
         <div className="flex flex-row">
-            <div className="border border-emerald-400 rounded w-65 mr-auto
+            <div className="border border-emerald-400 rounded-xl w-65 mr-auto
             ml-32 p-5 flex flex-col items-center ">
             <h1 className="font-bold text-xl mb-2">
                 Release Date:</h1>
@@ -71,7 +72,7 @@ return (
             <h1 className="font-bold text-xl mb-2 mt-2 "> 
             Game Rating:</h1>
             <p className=
-            {`font-extrabold ml-auto ${ratingColor} rounded-md text-black
+            {`font-extrabold ${ratingColor} rounded-md text-black
             text-2xl flex justify-center items-center w-15 h-15 
             ml-auto mr-auto`}>
             {game.game_rating ?? "X"}
@@ -80,17 +81,32 @@ return (
             <h1 className="font-bold text-xl mb-2 mt-2 "> 
             User Rating:</h1>
             <p className=
-            {`font-extrabold ml-auto ${ratingColor} rounded-md text-black
+            {`font-extrabold ${ratingColor} rounded-md text-black
             text-2xl flex justify-center items-center w-15 h-15 
             ml-auto mr-auto`}>
             {game.game_rating ?? "X"}
             </p>
 
-            
+            <h1 className="font-bold text-xl mb-2 mt-2 "> 
+            Add to List:</h1>
+            <button onClick={() => {}}
+            className=
+            {`font-mono ml-auto bg-emerald-400 rounded-md text-black
+            text-xl flex justify-center items-center w-35 h-5 p-3
+            mr-auto`}>
+            Wishlist
+            </button>
+            <button onClick={() => {}}
+            className=
+            {`font-mono ml-auto bg-emerald-400 rounded-md text-black
+            text-xl flex justify-center items-center w-35 h-5 p-3
+            mr-auto`}>
+            Collection
+            </button>
 
         </div>
-        <div className="flex flex-col p-5 ml-auto border rounded-xl border-emerald-400 
-        w-250 mr-100 ">
+        <div className="flex flex-col p-5 ml-5 border rounded-xl border-emerald-400 
+        w-250 mr-auto  ">
             <h2 className="font-bold text-xl mb-2"> Platforms:</h2>
             <h3 className="ml-2 font-medium text-xl mb-2 text-gray-400"> 
             {game.game_platforms}</h3>
