@@ -92,15 +92,15 @@ return (
             <button onClick={() => {}}
             className=
             {`font-mono ml-auto bg-emerald-400 rounded-md text-black
-            text-xl flex justify-center items-center w-35 h-5 p-3
-            mr-auto`}>
+            text-xl flex justify-center items-center w-35 h-5 p-3 mr-auto
+            border-green-800 border-2`}>
             Wishlist
             </button>
             <button onClick={() => {}}
             className=
             {`font-mono ml-auto bg-emerald-400 rounded-md text-black
-            text-xl flex justify-center items-center w-35 h-5 p-3
-            mr-auto`}>
+            text-xl flex justify-center items-center w-35 h-5 p-3 mt-2 mr-auto
+            border-green-800 border-2`}>
             Collection
             </button>
 
