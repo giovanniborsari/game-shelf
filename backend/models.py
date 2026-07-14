@@ -39,9 +39,10 @@ class Items(Base):
     Attributes:
         item_id: Unique numeric identifier for each item, auto generated
         item_name: Item's unique name
-        platform: Item's platform (Example: PC)
+        platform: Item's platform (Example: PC) 
         genre: Item's genres (Example: Puzzle)
-        cover = URLs pointing to item's cover
+        small_cover = URLs pointing to item's cover (low quality)
+        big_cover = URLs pointing to item's cover (low quality)
         rating = Users' average rating
         release_date = date item was released
         art_url = higher quality image
@@ -145,5 +146,8 @@ class Showcase(Base):
     user_id= Column(Integer, ForeignKey("users.user_id"))
     item_id= Column(Integer, ForeignKey("items.item_id"))
     position= Column(Integer, nullable=True, default = None)
-    
 
+class Platform_Id(Base):
+    __tablename__= "platform_id"
+    id = Column(Integer, primary_key= True)
+    name= Column(String, nullable=False)

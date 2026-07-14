@@ -141,9 +141,9 @@ def get_items(page:int = 1,
     try:        
         query = database.query(Items)
 
-        #Filtering options
+        #Filtering options  
         if search:
-            query = query.filter(Items.item_name.ilike(f"%{search}%"))       
+            query = query.filter(Items.item_name.ilike(f"%{search}%"))     
         if platform:
             platform_list = platform.split(',')
             query = query.filter(
