@@ -18,13 +18,13 @@ export default function TopBar() {
         hover:text-emerald-400">
           Lists
         </a>
-        <a href="#profile" className="text-xl font-bold text-gray-300 p-4 
-        hover:text-emerald-400">
-          Profile
-        </a>
         <a href="#about" className="text-xl font-bold text-gray-300 p-4 
         hover:text-emerald-400">
           About
+        </a>
+        <a href="#profile" className="text-xl font-bold text-gray-300 p-4 
+        hover:text-emerald-400">
+          MyProfile
         </a>
       </nav>
     </header>
