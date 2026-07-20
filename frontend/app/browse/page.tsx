@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import {GameCardProps} from "../components/GameCard";
 import GameGrid from "../components/GameGrid";
 import FilteringCol, {FilterState} from "../components/FilteringCol";
+import TopBar from "../components/TopBar";
 
 export default function Home() {
 
@@ -46,9 +47,7 @@ const [filters, setFilters] = useState<FilterState>({
 
 return (
     <div className="min-h-screen bg-gray-900">
-      <h1 className="text-3xl font-bold text-emerald-400 p-6">GameShelf</h1>
-      <hr className="text-gray-500"></hr>
-      <br></br>
+      <TopBar/>
       <div className="flex flex-row w-full px-6">
         <div className="w-90 flex-shrink-0">
             <FilteringCol onFilterChange={handleFilterChange} />
