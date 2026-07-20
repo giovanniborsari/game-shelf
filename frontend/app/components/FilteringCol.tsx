@@ -12,252 +12,252 @@ type FilteringColProps = {
     onFilterChange: (filters: FilterState) => void;
 };
 
-const PLATFORMS = [
-    '1292 Advanced Programmable Video System',
-    '3DO Interactive Multiplayer',
-    '64DD', 
-    'AY-3-8500', 
-    'AY-3-8603', 
-    'AY-3-8605', 
-    'AY-3-8606', 
-    'AY-3-8607', 
-    'AY-3-8610', 
-    'AY-3-8760', 
-    'Acorn Archimedes', 
-    'Acorn Electron', 
-    'Advanced Pico Beena', 
-    'AirConsole', 
-    'Amazon Fire TV', 
-    'Amiga', 
-    'Amiga CD32', 
-    'Amstrad CPC', 
-    'Amstrad GX4000', 
-    'Amstrad PCW', 
-    'Analogue electronics', 
-    'Android', 
-    'Apple II', 
-    'Apple IIGS', 
-    'Apple Pippin', 
-    'Arcade', 
-    'Arcadia 2001', 
-    'Arduboy', 
-    'Atari 2600', 
-    'Atari 5200', 
-    'Atari 7800', 
-    'Atari 8-bit', 
-    'Atari Jaguar', 
-    'Atari Jaguar CD', 
-    'Atari Lynx', 
-    'Atari ST/STE', 
-    'BBC Microcomputer System', 
-    'Bally Astrocade', 
-    'BlackBerry OS', 
-    'Blu-ray Player', 
-    'CDC Cyber 70', 
-    'Call-A-Computer time-shared mainframe computer system', 
-    'Casio Loopy', 
-    'ColecoVision', 
-    'Commodore 16', 
-    'Commodore C64/128/MAX', 
-    'Commodore CDTV', 
-    'Commodore PET', 
-    'Commodore Plus/4', 
-    'Commodore VIC-20', 
-    'DEC GT40', 
-    'DOS', 
-    'DUPLICATE Stadia', 
-    'DVD Player', 
-    'Daydream', 
-    'Digiblast', 
-    'Donner Model 30', 
-    'Dragon 32/64', 
-    'Dreamcast', 
-    'EDSAC', 
-    'Elektor TV Games Computer', 
-    'Epoch Cassette Vision', 
-    'Epoch Super Cassette Vision', 
-    'Evercade', 
-    'Exidy Sorcerer', 
-    'FM Towns', 
-    'FM-7', 
-    'Fairchild Channel F', 
-    'Family Computer', 
-    'Family Computer Disk System', 
-    'Gamate', 
-    'Game & Watch', 
-    'Game Boy', 
-    'Game Boy Advance', 
-    'Game Boy Color', 
-    'Game.com', 
-    'Gear VR', 
-    'Gizmondo', 
-    'Google Stadia', 
-    'HP 2100', 
-    'HP 3000', 
-    'Handheld Electronic LCD', 
-    'Hyper Neo Geo 64', 
-    'HyperScan', 
-    'Imlac PDS-1', 
-    'Intellivision', 
-    'Intellivision Amico', 
-    'LaserActive', 
-    'LeapTV', 
-    'Leapster', 
-    'Leapster Explorer/LeadPad Explorer', 
-    'Legacy Computer', 
-    'Legacy Mobile Device', 
-    'Linux', 
-    'MSX', 
-    'MSX2', 
-    'Mac', 
-    'Mega Duck/Cougar Boy', 
-    'Meta Quest 2', 
-    'Meta Quest 3', 
-    'Microcomputer', 
-    'Microvision', 
-    'N-Gage', 
-    'NEC PC-6000 Series', 
-    'Neo Geo AES', 
-    'Neo Geo CD', 
-    'Neo Geo MVS', 
-    'Neo Geo Pocket', 
-    'Neo Geo Pocket Color', 
-    'New Nintendo 3DS', 
-    'Nintendo 3DS', 
-    'Nintendo 64', 
-    'Nintendo DS', 
-    'Nintendo DSi', 
-    'Nintendo Entertainment System', 
-    'Nintendo GameCube', 
-    'Nintendo Switch', 
-    'Nintendo Switch 2', 
-    'Nuon', 
-    'OOParts', 
-    'Oculus Go', 
-    'Oculus Quest', 
-    'Oculus Rift', 
-    'Oculus VR', 
-    'Odyssey', 
-    'Odyssey 2 / Videopac G7000', 
-    'OnLive Game System', 
-    'Ouya', 
-    'PC (Microsoft Windows)', 
-    'PC Engine SuperGrafx', 
-    'PC-50X Family', 
-    'PC-8800 Series', 
-    'PC-9800 Series', 
-    'PC-FX', 
-    'PDP-1', 
-    'PDP-10', 
-    'PDP-11', 
-    'PDP-7', 
-    'PDP-8', 
-    'PLATO', 
-    'Palm OS', 
-    'Panasonic Jungle', 
-    'Panasonic M2', 
-    'Philips CD-i', 
-    'PlayStation 1', 
-    'PlayStation 2', 
-    'PlayStation 3', 
-    'PlayStation 4', 
-    'PlayStation 5', 
-    'PlayStation Portable', 
-    'PlayStation VR', 
-    'PlayStation VR2', 
-    'PlayStation Vita', 
-    'Playdate', 
-    'Playdia', 
-    'Plug & Play', 
-    'PocketStation', 
-    'Pokémon mini', 
-    'Polymega', 
-    'R-Zone', 
-    'SDS Sigma 7', 
-    'SG-1000', 
-    'Satellaview', 
-    'Sega 32X', 
-    'Sega CD', 
-    'Sega CD 32X', 
-    'Sega Game Gear', 
-    'Sega Master System/Mark III', 
-    'Sega Mega Drive/Genesis', 
-    'Sega Pico', 
-    'Sega Saturn', 
-    'Sharp MZ-2200', 
-    'Sharp X1', 
-    'Sharp X68000', 
-    'Sinclair QL', 
-    'Sinclair ZX81', 
-    'Sol-20', 
-    'SteamVR', 
-    "Super A'Can", 
-    'Super Famicom', 
-    'Super NES CD-ROM System', 
-    'Super Nintendo Entertainment System', 
-    'TRS-80', 
-    'TRS-80 Color Computer', 
-    'Tapwave Zodiac', 
-    'Tatung Einstein', 
-    "Terebikko / See 'n Say Video Phone", 
-    'Texas Instruments TI-99', 
-    'Thomson MO5', 
-    'Tomy Tutor / Pyuta / Grandstand Tutor', 
-    'TurboGrafx-16/PC Engine', 
-    'Turbografx-16/PC Engine CD', 
-    'Unknown', 
-    'Uzebox', 
-    'V.Smile', 
-    'VC 4000', 
-    'Vectrex', 
-    'Virtual Boy', 
-    'Virtual Console', 
-    'Visual Memory Unit / Visual Memory System', 
-    'Watara/QuickShot Supervision', 
-    'Web browser', 
-    'Wii', 
-    'Wii U', 
-    'Windows Mixed Reality', 
-    'Windows Mobile', 
-    'Windows Phone', 
-    'WonderSwan', 
-    'WonderSwan Color', 
-    'Xbox Classic', 
-    'Xbox 360', 
-    'Xbox One', 
-    'Xbox Series X|S', 
-    'ZX Spectrum', 
-    'Zeebo', 
-    'e-Reader / Card-e Reader', 
-    'iOS', 
-    'visionOS'
+const PLATFORMS: Array<[string, number]> = [
+  ["1292 Advanced Programmable Video System", 2],
+  ["3DO Interactive Multiplayer", 3],
+  ["64DD", 4],
+  ["AY-3-8500", 5],
+  ["AY-3-8603", 6],
+  ["AY-3-8605", 7],
+  ["AY-3-8606", 8],
+  ["AY-3-8607", 9],
+  ["AY-3-8610", 10],
+  ["AY-3-8760", 11],
+  ["Acorn Archimedes", 12],
+  ["Acorn Electron", 13],
+  ["Advanced Pico Beena", 14],
+  ["AirConsole", 15],
+  ["Amazon Fire TV", 16],
+  ["Amiga", 17],
+  ["Amiga CD32", 18],
+  ["Amstrad CPC", 19],
+  ["Amstrad GX4000", 20],
+  ["Amstrad PCW", 21],
+  ["Analogue electronics", 22],
+  ["Android", 23],
+  ["Apple II", 24],
+  ["Apple IIGS", 25],
+  ["Apple Pippin", 26],
+  ["Arcade", 27],
+  ["Arcadia 2001", 28],
+  ["Arduboy", 29],
+  ["Atari 2600", 30],
+  ["Atari 5200", 31],
+  ["Atari 7800", 32],
+  ["Atari 8-bit", 33],
+  ["Atari Jaguar", 34],
+  ["Atari Jaguar CD", 35],
+  ["Atari Lynx", 36],
+  ["Atari ST/STE", 37],
+  ["BBC Microcomputer System", 38],
+  ["Bally Astrocade", 39],
+  ["BlackBerry OS", 40],
+  ["Blu-ray Player", 41],
+  ["CDC Cyber 70", 42],
+  ["Call-A-Computer time-shared mainframe computer system", 43],
+  ["Casio Loopy", 44],
+  ["ColecoVision", 45],
+  ["Commodore 16", 46],
+  ["Commodore C64/128/MAX", 47],
+  ["Commodore CDTV", 48],
+  ["Commodore PET", 49],
+  ["Commodore Plus/4", 50],
+  ["Commodore VIC-20", 51],
+  ["DEC GT40", 52],
+  ["DOS", 53],
+  ["DUPLICATE Stadia", 54],
+  ["DVD Player", 55],
+  ["Daydream", 56],
+  ["Digiblast", 57],
+  ["Donner Model 30", 58],
+  ["Dragon 32/64", 59],
+  ["Dreamcast", 60],
+  ["EDSAC", 61],
+  ["Elektor TV Games Computer", 62],
+  ["Epoch Cassette Vision", 63],
+  ["Epoch Super Cassette Vision", 64],
+  ["Evercade", 65],
+  ["Exidy Sorcerer", 66],
+  ["FM Towns", 67],
+  ["FM-7", 68],
+  ["Fairchild Channel F", 69],
+  ["Family Computer", 70],
+  ["Family Computer Disk System", 71],
+  ["Gamate", 72],
+  ["Game & Watch", 73],
+  ["Game Boy", 74],
+  ["Game Boy Advance", 75],
+  ["Game Boy Color", 76],
+  ["Game.com", 77],
+  ["Gear VR", 78],
+  ["Gizmondo", 79],
+  ["Google Stadia", 80],
+  ["HP 2100", 81],
+  ["HP 3000", 82],
+  ["Handheld Electronic LCD", 83],
+  ["Hyper Neo Geo 64", 84],
+  ["HyperScan", 85],
+  ["Imlac PDS-1", 86],
+  ["Intellivision", 87],
+  ["Intellivision Amico", 88],
+  ["LaserActive", 89],
+  ["LeapTV", 90],
+  ["Leapster", 91],
+  ["Leapster Explorer/LeadPad Explorer", 92],
+  ["Legacy Computer", 93],
+  ["Legacy Mobile Device", 94],
+  ["Linux", 95],
+  ["MSX", 96],
+  ["MSX2", 97],
+  ["Mac", 98],
+  ["Mega Duck/Cougar Boy", 99],
+  ["Meta Quest 2", 100],
+  ["Meta Quest 3", 101],
+  ["Microcomputer", 102],
+  ["Microvision", 103],
+  ["N-Gage", 104],
+  ["NEC PC-6000 Series", 105],
+  ["Neo Geo AES", 106],
+  ["Neo Geo CD", 107],
+  ["Neo Geo MVS", 108],
+  ["Neo Geo Pocket", 109],
+  ["Neo Geo Pocket Color", 110],
+  ["New Nintendo 3DS", 111],
+  ["Nintendo 3DS", 112],
+  ["Nintendo 64", 113],
+  ["Nintendo DS", 114],
+  ["Nintendo DSi", 115],
+  ["Nintendo Entertainment System", 116],
+  ["Nintendo GameCube", 117],
+  ["Nintendo Switch", 118],
+  ["Nintendo Switch 2", 119],
+  ["Nuon", 120],
+  ["OOParts", 121],
+  ["Oculus Go", 122],
+  ["Oculus Quest", 123],
+  ["Oculus Rift", 124],
+  ["Oculus VR", 125],
+  ["Odyssey", 126],
+  ["Odyssey 2 / Videopac G7000", 127],
+  ["OnLive Game System", 128],
+  ["Ouya", 129],
+  ["PC (Microsoft Windows)", 130],
+  ["PC Engine SuperGrafx", 131],
+  ["PC-50X Family", 132],
+  ["PC-8800 Series", 133],
+  ["PC-9800 Series", 134],
+  ["PC-FX", 135],
+  ["PDP-1", 136],
+  ["PDP-10", 137],
+  ["PDP-11", 138],
+  ["PDP-7", 139],
+  ["PDP-8", 140],
+  ["PLATO", 141],
+  ["Palm OS", 142],
+  ["Panasonic Jungle", 143],
+  ["Panasonic M2", 144],
+  ["Philips CD-i", 145],
+  ["PlayStation 1", 146],
+  ["PlayStation 2", 147],
+  ["PlayStation 3", 148],
+  ["PlayStation 4", 149],
+  ["PlayStation 5", 150],
+  ["PlayStation Portable", 151],
+  ["PlayStation VR", 152],
+  ["PlayStation VR2", 153],
+  ["PlayStation Vita", 154],
+  ["Playdate", 155],
+  ["Playdia", 156],
+  ["Plug & Play", 157],
+  ["PocketStation", 158],
+  ["Pokémon mini", 159],
+  ["Polymega", 160],
+  ["R-Zone", 161],
+  ["SDS Sigma 7", 162],
+  ["SG-1000", 163],
+  ["Satellaview", 164],
+  ["Sega 32X", 165],
+  ["Sega CD", 166],
+  ["Sega CD 32X", 167],
+  ["Sega Game Gear", 168],
+  ["Sega Master System/Mark III", 169],
+  ["Sega Mega Drive/Genesis", 170],
+  ["Sega Pico", 171],
+  ["Sega Saturn", 172],
+  ["Sharp MZ-2200", 173],
+  ["Sharp X1", 174],
+  ["Sharp X68000", 175],
+  ["Sinclair QL", 176],
+  ["Sinclair ZX81", 177],
+  ["Sol-20", 178],
+  ["SteamVR", 179],
+  ["Super A'Can", 180],
+  ["Super Famicom", 181],
+  ["Super NES CD-ROM System", 182],
+  ["Super Nintendo Entertainment System", 183],
+  ["TRS-80", 184],
+  ["TRS-80 Color Computer", 185],
+  ["Tapwave Zodiac", 186],
+  ["Tatung Einstein", 187],
+  ["Terebikko / See 'n Say Video Phone", 188],
+  ["Texas Instruments TI-99", 189],
+  ["Thomson MO5", 190],
+  ["Tomy Tutor / Pyuta / Grandstand Tutor", 191],
+  ["TurboGrafx-16/PC Engine", 192],
+  ["Turbografx-16/PC Engine CD", 193],
+  ["Unknown", 194],
+  ["Uzebox", 195],
+  ["V.Smile", 196],
+  ["VC 4000", 197],
+  ["Vectrex", 198],
+  ["Virtual Boy", 199],
+  ["Virtual Console", 200],
+  ["Visual Memory Unit / Visual Memory System", 201],
+  ["Watara/QuickShot Supervision", 202],
+  ["Web browser", 203],
+  ["Wii", 204],
+  ["Wii U", 205],
+  ["Windows Mixed Reality", 206],
+  ["Windows Mobile", 207],
+  ["Windows Phone", 208],
+  ["WonderSwan", 209],
+  ["WonderSwan Color", 210],
+  ["Xbox Classic", 211],
+  ["Xbox 360", 212],
+  ["Xbox One", 213],
+  ["Xbox Series X|S", 214],
+  ["ZX Spectrum", 215],
+  ["Zeebo", 216],
+  ["e-Reader / Card-e Reader", 217],
+  ["iOS", 218],
+  ["visionOS", 219]
 ];
 
-const GENRES = [
-    'Adventure',
-    'Arcade', 
-    'Card & Board Game', 
-    'Fighting', 
-    "Hack and slash/Beat 'em up", 
-    'Indie', 
-    'MOBA', 
-    'Music', 
-    'Pinball', 
-    'Platform', 
-    'Point-and-click', 
-    'Puzzle', 
-    'Quiz/Trivia', 
-    'Racing',
-    'Real Time Strategy (RTS)', 
-    'Role-playing (RPG)', 
-    'Shooter', 
-    'Simulator', 
-    'Sport', 
-    'Strategy', 
-    'Tactical', 
-    'Turn-based strategy (TBS)', 
-    'Unknown', 
-    'Visual Novel'
+const GENRES: Array<[string, number]> = [
+    ["Adventure", 1],
+    ["Arcade", 2],
+    ["Card & Board Game", 3],
+    ["Fighting", 4],
+    ["Hack and slash/Beat 'em up", 5],
+    ["Indie", 6],
+    ["MOBA", 7],
+    ["Music", 8],
+    ["Pinball", 9],
+    ["Platform", 10],
+    ["Point-and-click", 11],
+    ["Puzzle", 12],
+    ["Quiz/Trivia", 13],
+    ["Racing", 14],
+    ["Real Time Strategy (RTS)", 15],
+    ["Role-playing (RPG)", 16],
+    ["Shooter", 17],
+    ["Simulator", 18],
+    ["Sport", 19],
+    ["Strategy", 20],
+    ["Tactical", 21],
+    ["Turn-based strategy (TBS)", 22],
+    ["Unknown", 23],
+    ["Visual Novel", 24]
 ];
 
 export default function FilteringCol({ onFilterChange }: FilteringColProps){
@@ -267,24 +267,27 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
     const[max_rating, setMaxRating] = useState("");
 
     //State for selected platforms and for is expanded 
-    const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
+    const [selectedPlatforms, setSelectedPlatforms] = useState<number[]>([]);
 
     //State for selected genres
-    const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+    const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
 
     const handleApply = (e: React.SubmitEvent) => {
+
+        e.preventDefault();
+
         onFilterChange({
             search,
-            platform: selectedPlatforms,
-            genre: selectedGenres,
+            platform: selectedPlatforms.map(id => String(id)),
+            genre: selectedGenres.map(id => String(id)),
             min_rating,
             max_rating
         })
 
-        e.preventDefault();
     };
 
     const handleClear = (e: React.SubmitEvent) => {
+        e.preventDefault();
         setSearch('');
         setMinRating('');
         setMaxRating('');
@@ -299,25 +302,24 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
             max_rating: ""
         })
         
-        e.preventDefault();
     };
 
-    const handleCheckboxPlat = (platformName: string) => {
+    const handleCheckboxPlat = (id: number) => {
         setSelectedPlatforms((prevSelected) => {
-            if (prevSelected.includes(platformName)){
-                return prevSelected.filter(p => p !== platformName)
+            if (prevSelected.includes(id)){
+                return prevSelected.filter(p => p !== id)
             }else{
-                return [...prevSelected, platformName];
+                return [...prevSelected, id];
             }
         });
     }  
 
-    const handleCheckboxGen = (genreName: string) => {
+    const handleCheckboxGen = (id: number) => {
         setSelectedGenres((prevSelected) => {
-            if (prevSelected.includes(genreName)){
-                return prevSelected.filter(p => p !== genreName)
+            if (prevSelected.includes(id)){
+                return prevSelected.filter(p => p !== id)
             }else{
-                return [...prevSelected, genreName];
+                return [...prevSelected, id];
             }
         });
     }  
@@ -339,18 +341,18 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
                 <div className="flex flex-col h-40 overflow-y-scroll 
                 scrollbar scrollbar-thumb-emerald-400 text-sm" dir="rtl">
                     <div className='p-4' dir="ltr">
-                    {PLATFORMS.map((plat) => (  
-                    <label key ={plat} className="flex items-center gap-2 
+                    {PLATFORMS.map(([name, id]) => (  
+                    <label key ={id} className="flex items-center gap-2 
                     test-sm text-white cursor-pointer hover:text-emerald-400
                     transition-colors">
                         <input
                             type = "checkbox"
-                            checked = {selectedPlatforms.includes(plat)}
-                            onChange= {()=> handleCheckboxPlat(plat)}
+                            checked = {selectedPlatforms.includes(id)}
+                            onChange= {()=> handleCheckboxPlat(id)}
                             className="text-sm text-white rounded border-gray-700 
                             bg-transparent accent-emerald-400 cursor-pointer">
                         </input>
-                        {plat}
+                        {name}
                     </label>
                     ))}
                     </div>    
@@ -359,18 +361,18 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
                 <div className="flex flex-col h-40 overflow-y-scroll 
                 scrollbar scrollbar-thumb-emerald-400 text-sm" dir="rtl">
                     <div className='p-4' dir="ltr">
-                    {GENRES.map((genre) => (  
-                    <label key ={genre} className="flex items-center gap-2 
+                    {GENRES.map(([name, id]) => (  
+                    <label key ={id} className="flex items-center gap-2 
                     test-sm text-white cursor-pointer hover:text-emerald-400
                     transition-colors">
                         <input
                             type = "checkbox"
-                            checked = {selectedGenres.includes(genre)}
-                            onChange= {()=> handleCheckboxGen(genre)}
+                            checked = {selectedGenres.includes(id)}
+                            onChange= {()=> handleCheckboxGen(id)}
                             className="text-sm text-white rounded border-gray-700 
                             bg-transparent accent-emerald-400 cursor-pointer">
                         </input>
-                        {genre}
+                        {name}
                     </label>
                     ))}
                     </div>    

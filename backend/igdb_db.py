@@ -1,5 +1,5 @@
 import requests
-from models import Genre_Id, Items, Platform_Id
+from models import Genre_Games, Genre_Id, Items, Platform_Games, Platform_Id
 from dotenv import load_dotenv
 from typing import List, Dict
 import os
@@ -108,6 +108,10 @@ def _population_pre ():
                             renamed_name = PLATFORM_MAP.get\
                                 (original_name, original_name)
                             
+                            #Add to platform table
+                            query_plat = database.query(Platform_Id).\
+                            filter(Platform_Id.name == renamed_name).first()
+                            
                             #Force it to be a string and append the platform name to it 
                             platform_names.append(renamed_name)
                     #Join then together if there is a platform, unknown if not
@@ -199,6 +203,46 @@ def _population_pre ():
                         existing_game.genre = ", ".join(final_genres)  # type: ignore
 
                         database.commit()
+
+                        #Link with platform_items table
+                        for plat_name in platform_names:
+                            query_plat = database.query(Platform_Id)\
+                                .filter(Platform_Id.name == plat_name).first()
+                            if query_plat:
+                                # Check if link already exists
+                                existing_link = database.query(Platform_Games)\
+                                    .filter(Platform_Games.platform_id \
+                                            == query_plat.id)\
+                                    .filter(Platform_Games.game_id \
+                                            == existing_game.item_id).first()
+                                
+                                if not existing_link:
+                                    new_link = Platform_Games(
+                                        platform_id = query_plat.id,
+                                        game_id = existing_game.item_id
+                                    )
+                                    database.add(new_link)
+                        database.commit()
+
+                        #Link with genres_items table
+                        for gen_name in genre_names:
+                            query_gen = database.query(Genre_Id)\
+                                .filter(Genre_Id.name == gen_name).first()
+                            if query_gen:
+                                # Check if link already exists
+                                existing_link = database.query(Genre_Games)\
+                                    .filter(Genre_Games.genre_id \
+                                            == query_gen.id)\
+                                    .filter(Genre_Games.game_id \
+                                            == existing_game.item_id).first()
+                                
+                                if not existing_link:
+                                    new_link = Genre_Games(
+                                        genre_id = query_gen.id,
+                                        game_id = existing_game.item_id
+                                    )
+                                    database.add(new_link)
+                        database.commit()
         
                     else:
                         #creates a new item if it is not present in the database
@@ -217,6 +261,32 @@ def _population_pre ():
                         #Add and commit new game
                         database.add(new_game)
                         database.commit()
+                        database.refresh(new_game)  
+                        
+                        #Link with platform_items table
+                        for plat_name in platform_names:
+                            query_plat = database.query(Platform_Id)\
+                                .filter(Platform_Id.name == plat_name).first()
+                            if query_plat:
+                                new_link = Platform_Games(
+                                    platform_id = query_plat.id,
+                                    game_id = new_game.item_id
+                                )
+                                database.add(new_link)
+                        database.commit()
+
+                        #Link with genre_items table
+                        for gen_name in genre_names:
+                            query_gen = database.query(Genre_Id)\
+                                .filter(Genre_Id.name == gen_name).first()
+                            if query_gen:
+                                new_link = Genre_Games(
+                                    genre_id = query_gen.id,
+                                    game_id = new_game.item_id
+                                )
+                                database.add(new_link)
+                        database.commit()
+                        
                 #Break while if len games is smaller limit
                 if len(games) < limit:
                     break
@@ -514,5 +584,5 @@ def _genre_id_pop ():
             database.commit()
     finally:
         database.close()
-_genre_id_pop()
-#_population_pre()
+#_genre_id_pop()
+_population_pre()

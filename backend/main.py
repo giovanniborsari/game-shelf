@@ -140,20 +140,23 @@ def get_items(page:int = 1,
 
     try:        
         query = database.query(Items)
-
+        
         #Filtering options  
+        if platform:
+            platform_ids = [int(p) for p in platform.split(",") if p.strip().isdigit()]
+            if platform_ids:
+                query = query.join(Platform_Games, Platform_Games.game_id 
+                    == Items.item_id).\
+                        where(Platform_Games.platform_id.in_(platform_ids))
+
+        if genre:
+            genre_ids = [int(g) for g in genre.split(",") if g.strip().isdigit()]
+            if genre_ids:
+                query = query.join(Genre_Games, Genre_Games.game_id 
+                    == Items.item_id).where(Genre_Games.genre_id.in_(genre_ids))
+            
         if search:
             query = query.filter(Items.item_name.ilike(f"%{search}%"))     
-        if platform:
-            platform_list = platform.split(',')
-            query = query.filter(
-                or_(*[Items.platform.ilike(f"{p}") for p in platform_list])
-        )
-        if genre:
-            genre_list = genre.split(',')
-            query = query.filter(
-                or_(*[Items.genre.ilike(f"%{g}%") for g in genre_list])
-        )
         if min_rating is not None:
             query = query.filter(Items.rating >= min_rating)
         if max_rating is not None:

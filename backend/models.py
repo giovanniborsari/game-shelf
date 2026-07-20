@@ -149,10 +149,22 @@ class Showcase(Base):
 
 class Platform_Id(Base):
     __tablename__= "platform_id"
-    id = Column(Integer, primary_key= True)
+    id = Column(Integer, primary_key= True, unique=True)
     name= Column(String, nullable=False)
 
 class Genre_Id(Base):
     __tablename__= "genre_id"
-    id = Column(Integer, primary_key= True)
+    id = Column(Integer, primary_key= True, unique=True)
     name= Column(String, nullable=False)
+
+class Platform_Games(Base):
+    __tablename__ = "platform_games"
+    id = Column(Integer, primary_key=True)
+    platform_id = Column(Integer, ForeignKey("platform_id.id"), nullable=False)
+    game_id = Column(Integer, ForeignKey("items.item_id"), nullable=False)
+
+class Genre_Games(Base):
+    __tablename__ = "genre_games"
+    id = Column(Integer, primary_key=True)
+    genre_id = Column(Integer, ForeignKey("genre_id.id"), nullable=False)
+    game_id = Column(Integer, ForeignKey("items.item_id"), nullable=False)
