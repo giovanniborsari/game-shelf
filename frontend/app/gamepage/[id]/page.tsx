@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import React from "react";
-import Link from 'next/link'
+import TopBar from "@/app/components/TopBar";
+
 
 type GameDetails = {
     game_id : number;
@@ -43,9 +44,7 @@ const ratingColor = !game.game_rating
 return (
 <>
 <div className="min-h-screen bg-gray-900">
-    <h1 className="text-3xl font-bold text-emerald-400 p-6">GameShelf</h1>
-    <hr className="text-gray-500"></hr>
-    <br></br>
+    <TopBar/>
     <div className = " relative mx-6 mt-4 rounded-lg ">
         <img 
             src={game.game_art || "placeholder_art.jpg"} 
