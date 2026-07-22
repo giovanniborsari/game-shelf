@@ -40,7 +40,7 @@ export default function ConsoleRow() {
                 {FEATURED_CONSOLES.map((console) => (
                 <Link
                 key = {console.id}
-                href={`/browse?platform=${encodeURIComponent(console.name)}`}
+                href={`/browse?platform=${encodeURIComponent(console.id)}`}
                 className="shrink-0 flex flex-col items-center gap-2 border-3 
               border-gray-600 rounded-b hover:border-emerald-400 
                 transition-colors bg-white"

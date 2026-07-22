@@ -4,18 +4,25 @@ import {GameCardProps} from "../components/GameCard";
 import GameGrid from "../components/GameGrid";
 import FilteringCol, {FilterState} from "../components/FilteringCol";
 import TopBar from "../components/TopBar";
+import { useSearchParams } from "next/navigation";
 
-export default function Home() {
+export default function Browse() {
+
+const searchParams = useSearchParams()
+const platformFromURL = searchParams.get("platform");
+const genreFromURL = searchParams.get("genre");
+const minFromURL = searchParams.get("min");
+const maxFromURL = searchParams.get("max");
 
 const [games, setGames] = useState<GameCardProps[]>([]);
 const [currentPage, setCurrentPage] = useState(1);
 const [totalPages, setTotalPages] = useState(1);
 const [filters, setFilters] = useState<FilterState>({
     search: '',
-    platform: [],
-    genre: [],
-    min_rating: '', 
-    max_rating: '',
+    platform: platformFromURL ? [platformFromURL] : [],
+    genre:  genreFromURL ? [genreFromURL] : [],
+    min_rating: minFromURL || '', 
+    max_rating: maxFromURL || '',
 })
 
   useEffect(() => {
