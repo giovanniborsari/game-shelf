@@ -66,7 +66,8 @@ return (
             <h1 className="font-bold text-xl mb-2">
                 Release Date:</h1>
             <h3 className="ml-2 font-medium text-xl mb-2 text-gray-400"> 
-            {game.game_release_date.slice(0,10)}</h3>
+            {game.game_release_date ? game.game_release_date.slice(0,10): 
+            "XX/XX/XXXX"}</h3>
             
             <h1 className="font-bold text-xl mb-2 mt-2 "> 
             Game Rating:</h1>
