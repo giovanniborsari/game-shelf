@@ -51,7 +51,7 @@ return(
             alt={console.name} 
             width={360} 
             height={240}
-            className=" w-58 l-70 mt-auto mb-auto object-contain " />
+            className=" w-58 h-80 mt-auto mb-auto object-contain " />
 
             <p className="text-gray-300 text-xl mt-auto text-center 
             font-bold w-full border-emerald-400 bg-gray-900 

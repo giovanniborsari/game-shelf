@@ -20,12 +20,12 @@ useEffect(() => {
 const params = new URLSearchParams({})
 
 params.append('genre', id.toString());
-params.append('min_rating', '85')
+params.append('min_rating', '80')
 
 fetch(`http://localhost:8000/items/bigcover/?${params.toString()}`)
     .then((response) => response.json())
     .then((data) => {
-    setGames(((data.items).sort(()=> Math.random()-0.5)).slice(0,15));
+    setGames(((data.items).sort(()=> Math.random()-0.5)).slice(0,30));
     setIsLoading(false);
     })
     .catch((err) => console.error("Error fetching featured games:", err));
