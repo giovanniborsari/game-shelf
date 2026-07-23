@@ -6,6 +6,7 @@ import TopBar from "../components/TopBar";
 import { GameCardHomeProps } from "../components/GameCardHome";
 import { useSearchParams } from "next/navigation";
 import { FilterState } from "../components/FilteringCol";
+import PlatformRow from "../components/PlatformRow";
 
 export default function Home() {
 
@@ -45,6 +46,41 @@ export default function Home() {
   const picked = shuffledGenres.slice(0,4);
   setFeaturedGenres(picked)
   }, [])
+
+  const [featuredPlatforms, setFeaturedPlatforms] = 
+        useState<{id: number, name: string}[]>([])
+
+  useEffect(() =>{
+    const PLATFORMS =[
+    {name: "Game Boy", id: 74},
+    {name: "Game Boy Advance", id: 75},
+    {name: "Nintendo 3DS", id: 112},
+    {name: "Nintendo 64", id: 113},
+    {name: "Nintendo DS", id: 114},
+    {name: "Nintendo Switch", id: 118},
+    {name: "Nintendo Switch", id: 119},
+    {name: "PlayStation 1", id: 146},
+    {name: "PlayStation 2", id: 147},
+    {name: "PlayStation 3", id: 148},
+    {name: "PlayStation 4", id: 149},
+    {name: "PlayStation 5", id: 150},
+    {name: "PlayStation Portable", id: 151},
+    {name: "Sega Mega Drive/Genesis", id: 170},
+    {name: "Super Famicom", id: 181},
+    {name: "Super Nintendo Entertainment System", id: 183},
+    {name: "Wii", id: 204},
+    {name: "Xbox Classic", id: 211},
+    {name: "Xbox 360", id: 212},
+    {name: "Xbox One", id: 213},
+    {name: "Xbox Series X|S", id: 214},
+    {name: "Dreamcast", id: 60},
+    {name: "Neo Geo AES", id: 106}
+]
+
+  const shuffledPlatforms = [...PLATFORMS].sort(()=> Math.random() - 0.5);
+  const picked = shuffledPlatforms.slice(0,4);
+  setFeaturedPlatforms(picked)
+  }, [])
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">
         <TopBar/>
@@ -54,6 +90,13 @@ export default function Home() {
         key={genre.id} 
         id={genre.id} 
         name={genre.name}
+        /> 
+        ))}
+        {featuredPlatforms.map((platform) => (
+        <PlatformRow
+        key={platform.id} 
+        id={platform.id} 
+        name={platform.name}
         /> 
         ))}
     </div>
