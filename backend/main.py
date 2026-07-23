@@ -189,7 +189,72 @@ def get_items(page:int = 1,
         }
     finally:
         database.close()
+
+@app.get("/items/bigcover/")
+def get_items_big_cover(page:int = 1, 
+              limit: int = 36,
+              search: str|None = None,
+              platform: str|None = None,
+              genre: str|None = None,
+              min_rating: float|None = None,
+              max_rating: float|None = None):
+    
+    skip = (page - 1) * limit
+    database = SessionLocal()
+    formatted_items = []
+
+    try:        
+        query = database.query(Items)
         
+        #Filtering options  
+        if platform:
+            platform_ids = [int(p) for p in platform.split(",") if p.strip().isdigit()]
+            if platform_ids:
+                query = query.join(Platform_Games, Platform_Games.game_id 
+                    == Items.item_id).\
+                        where(Platform_Games.platform_id.in_(platform_ids))
+
+        if genre:
+            genre_ids = [int(g) for g in genre.split(",") if g.strip().isdigit()]
+            if genre_ids:
+                query = query.join(Genre_Games, Genre_Games.game_id 
+                    == Items.item_id).where(Genre_Games.genre_id.in_(genre_ids))
+            
+        if search:
+            query = query.filter(Items.item_name.ilike(f"%{search}%"))     
+        if min_rating is not None:
+            query = query.filter(Items.rating >= min_rating)
+        if max_rating is not None:
+            query = query.filter(Items.rating <= max_rating)
+
+        items = query.offset(skip).limit(limit).all()
+        
+        for item in items:
+            new_item = FormattedItem(
+                game_id = item.item_id, #type:ignore
+                game_title = item.item_name, #type: ignore
+                game_platforms = item.platform, #type: ignore
+                game_genre = item.genre, #type: ignore
+                game_rating = item.rating, #type: ignore
+                game_release_date = item.release_date, #type: ignore
+                game_description = item.description, #type: ignore
+                game_cover = item.big_cover, #type: ignore
+                game_art= item.art #type: ignore
+                )
+            
+            formatted_items.append(new_item) #type: ignore
+
+        total = query.count()
+
+        return {
+        "items": formatted_items,
+        "total": total,
+        "page": page,
+        "pages": (total + limit - 1) // limit
+        }
+    finally:
+        database.close()
+
 @app.get("/items/get_id/{id}")
 def get_item_id(id: int):
     database = SessionLocal()

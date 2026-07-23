@@ -9,39 +9,7 @@ import { FilterState } from "../components/FilteringCol";
 
 export default function Home() {
 
-  const searchParams = useSearchParams()
-  const platformFromURL = searchParams.get("platform");
-
-  const [games, setGames] = useState<GameCardHomeProps[]>([]);
-  const [filtersGenre, setFiltersGenre] = useState<FilterState>({
-      search: '',
-      platform: platformFromURL ? [platformFromURL] : [],
-      genre: [],
-      min_rating: '85', 
-      max_rating: '', 
-  })
-
-  useEffect(() => {
-    const params = new URLSearchParams({})
-
-    if (filtersGenre.search) params.append
-                    ('search', filtersGenre.search);
-    if (filtersGenre.platform.length > 0) params.append
-                    ('platform', filtersGenre.platform.join(','));
-    if (filtersGenre.genre.length > 0) params.append
-                    ('genre', filtersGenre.genre.join(','));
-    if (filtersGenre.min_rating) params.append
-                    ('min_rating', filtersGenre.min_rating)
-    if (filtersGenre.max_rating) params.append
-                    ('max_rating', filtersGenre.max_rating)
-
-    fetch(`http://localhost:8000/items/?${params.toString()}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setGames(data.items);
-      })
-      .catch((err) => console.error("Error fetching featured games:", err));
-  }, [filtersGenre]);
+  const searchParams = useSearchParams();
 
   const [featuredGenres, setFeaturedGenres] = 
         useState<{id: number, name: string}[]>([])
@@ -82,7 +50,11 @@ export default function Home() {
         <TopBar/>
         <ConsoleRow/>
         {featuredGenres.map((genre) => (
-        <GenreRow id={genre.id} name={genre.name} />
+        <GenreRow
+        key={genre.id} 
+        id={genre.id} 
+        name={genre.name}
+        /> 
         ))}
     </div>
 

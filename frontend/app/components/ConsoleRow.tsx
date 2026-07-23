@@ -28,38 +28,39 @@ type Console = {
 };
 
 export default function ConsoleRow() {
-    return(
-        <div className="w-full px-4 py-6">
-            <h2 className="text-2xl text-gray-300 font-bold md-2">
-                Featured Platforms
-            </h2>
-            <hr></hr>
-            <br></br>
-            <div className="flex flex-row overflow-x-auto gap-4 pb-2 scrollbar 
-            scrollbar-thumb-emerald-400">
-                {FEATURED_CONSOLES.map((console) => (
-                <Link
-                key = {console.id}
-                href={`/browse?platform=${encodeURIComponent(console.id)}`}
-                className="shrink-0 flex flex-col items-center gap-2 border-3 
-              border-gray-600 rounded-b hover:border-emerald-400 
-                transition-colors bg-white"
-                >
-                 <Image 
-                 src={console.source} 
-                 alt={console.name} 
-                 width={360} 
-                 height={240}
-                 className=" w-58 l-70 mt-auto mb-auto object-contain " />
+  
+return(
+    <div className="w-full px-4 py-6">
+        <h2 className="text-2xl text-gray-300 font-bold md-2">
+            Featured Platforms
+        </h2>
+        <hr></hr>
+        <br></br>
+        <div className="flex flex-row overflow-x-auto gap-4 pb-2 scrollbar 
+        scrollbar-thumb-emerald-400">
+            {FEATURED_CONSOLES.map((console) => (
+            <Link
+            key = {console.id}
+            href={`/browse?platform=${encodeURIComponent(console.id)}`}
+            className="shrink-0 flex flex-col items-center gap-2 border-3 
+            border-gray-600 rounded-b hover:border-emerald-400 
+            transition-colors bg-white"
+            >
+            <Image 
+            src={console.source} 
+            alt={console.name} 
+            width={360} 
+            height={240}
+            className=" w-58 l-70 mt-auto mb-auto object-contain " />
 
-                <p className="text-gray-300 text-xl mt-auto text-center 
-                font-bold w-full border-emerald-400 bg-gray-900 
-                hover:text-emerald-400">
-                    {console.name}</p>
-                </Link>
-                ))}
+            <p className="text-gray-300 text-xl mt-auto text-center 
+            font-bold w-full border-emerald-400 bg-gray-900 
+            hover:text-emerald-400">
+                {console.name}</p>
+            </Link>
+            ))}
 
-            </div>
         </div>
-    );
+    </div>
+);
 }

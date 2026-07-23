@@ -15,6 +15,6 @@ return(
   border-gray-600 rounded-b hover:border-emerald-400 transition-colors'>
         <img src={game_cover || "/placeholder.jpg"} alt={game_title} 
         className="rounded-md border-black border-2 text-sm truncate 
-        max-w-58 max-h-70"/>
+        max-w-58 max-h-70 bg-black mt-auto mb-auto"/>
   </div>
 )}
