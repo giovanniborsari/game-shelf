@@ -56,13 +56,13 @@ return (
     <div className="min-h-screen bg-gray-900">
       <TopBar/>
       <div className="flex flex-row w-full px-6">
-        <div className="w-90 flex-shrink-0">
+        <div className="w-90 shrink-0">
             <FilteringCol onFilterChange={handleFilterChange} />
         </div>
         <div className="flex-1 flex flex-col justify-center items-center">
             <GameGrid gamesArray={games}/>
         </div>
-        <div className="w-90 flex-shrink-0 pointer-events-none opacity-0 
+        <div className="w-90 shrink-0 pointer-events-none opacity-0 
         hidden xl:block" aria-hidden="true"></div>
         </div>
 
