@@ -396,10 +396,14 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
                 </div>
             </div> 
             <div className="flex gap-2 mt-2">
-            <button type="submit" className="flex-1 bg-emerald-400 hover:bg-emerald-500 text-gray-900 font-bold py-2 px-4 rounded transition-colors">
+            <button type="submit" className="flex-1 bg-emerald-400 
+            hover:bg-emerald-500 text-gray-900 font-bold py-2 px-4 rounded 
+            transition-colors">
                 Apply
             </button>
-            <button type="button" onClick={handleClear} className="bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded transition-colors">
+            <button type="button" onClick={handleClear} className="bg-gray-700
+            hover:bg-gray-600 text-white py-2 px-4 rounded 
+            transition-colors">
                 Clear
             </button>
             </div>

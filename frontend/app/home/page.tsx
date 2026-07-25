@@ -89,6 +89,10 @@ export default function Home() {
         key={featuredGenres[0].id}
         id={featuredGenres[0].id}
         name={featuredGenres[0].name} />
+        <GenreRow
+        key={featuredGenres[1].id}
+        id={featuredGenres[1].id}
+        name={featuredGenres[1].name} />
         <PlatformRow
         key={featuredPlatforms[0].id}
         id={featuredPlatforms[0].id}

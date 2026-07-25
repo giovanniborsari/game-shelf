@@ -23,7 +23,6 @@ export default function Login(){
     p-2"
     placeholder="Username"
     ></input>
-    <br></br>
     <h1 className="text-white text-2xl font-bold mr-auto p-2">Password</h1>
     <input 
     type="password"
@@ -50,7 +49,7 @@ export default function Login(){
     .then(data => {
       if (data.access_token) {
         localStorage.setItem("token", data.access_token);
-        router.push("/");
+        router.push("user/me");
       } else {
         setError(data.Error);
       }
@@ -63,11 +62,12 @@ export default function Login(){
     </button>
     {error && <p className="text-red-500 mt-2">{error}</p>}
     <br></br>
-    <button type="submit" className="flex-1 bg-emerald-400 
+    <a href="/register" 
+    className="flex items-center justify-center bg-emerald-400
     hover:bg-emerald-500 text-gray-900 font-bold py-2 px-4 rounded 
     transition-colors min-w-xl min-h-10">
     Register
-    </button>
+    </a>
     </div>
     </div>
 
