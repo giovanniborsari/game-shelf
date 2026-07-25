@@ -43,8 +43,7 @@ export default function Home() {
 ]
 
   const shuffledGenres = [...GENRES].sort(()=> Math.random() - 0.5);
-  const picked = shuffledGenres.slice(0,4);
-  setFeaturedGenres(picked)
+  setFeaturedGenres(shuffledGenres)
   }, [])
 
   const [featuredPlatforms, setFeaturedPlatforms] = 
@@ -78,27 +77,24 @@ export default function Home() {
 ]
 
   const shuffledPlatforms = [...PLATFORMS].sort(()=> Math.random() - 0.5);
-  const picked = shuffledPlatforms.slice(0,4);
-  setFeaturedPlatforms(picked)
+  setFeaturedPlatforms(shuffledPlatforms)
   }, [])
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">
         <TopBar/>
         <ConsoleRow/>
-        {featuredGenres.map((genre) => (
+        {featuredGenres.length > 0 && featuredPlatforms.length > 0 && (
+        <>
         <GenreRow
-        key={genre.id} 
-        id={genre.id} 
-        name={genre.name}
-        /> 
-        ))}
-        {featuredPlatforms.map((platform) => (
+        key={featuredGenres[0].id}
+        id={featuredGenres[0].id}
+        name={featuredGenres[0].name} />
         <PlatformRow
-        key={platform.id} 
-        id={platform.id} 
-        name={platform.name}
-        /> 
-        ))}
+        key={featuredPlatforms[0].id}
+        id={featuredPlatforms[0].id}
+        name={featuredPlatforms[0].name} />
+        </> 
+        )};
     </div>
 
   );
