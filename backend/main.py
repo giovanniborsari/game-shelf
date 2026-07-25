@@ -64,6 +64,7 @@ class FormattedCollectionItem(BaseModel):
     played: bool | None = False
 
 class FormattedUser(BaseModel):
+    user_id: int
     username: str
     bio: str|None = None
     profile_pic: str
@@ -470,6 +471,7 @@ def user_me (token: str = Depends(GameShelfBearer())):
             return {"success": False, "message": "User not found!"}
         
         user_info = FormattedUser(
+            user_id = user.user_id, # type: ignore
             username = user.username, #type: ignore
             bio= user.user_bio, #type: ignore
             profile_pic= user.profile_picture, #type: ignore

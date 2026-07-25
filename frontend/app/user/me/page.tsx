@@ -1,7 +1,36 @@
 "use client";
 import TopBar from "@/app/components/TopBar";
+import { useEffect, useState } from "react";
+
+type meDetails = {
+user_id: number;
+username: string;
+bio: string;
+created: string;
+profile_pic: string;
+}
 
 export default function Me(){
+
+const [me, setMe] = useState<meDetails | null>(null);
+
+useEffect(() => {
+    const token = localStorage.getItem("token") ?? "";
+    fetch(`http://localhost:8000/user/me`,{
+    headers: {
+      "Authorization": `Bearer ${token }`
+    }
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+        setMe(data);
+    })
+    .catch((err) => console.error("Error:", err));
+    }, []);
+
+if (!me) return <p className="text-white">Loading...</p>;
+
 return(
     <div className="min-h-screen bg-gray-900 flex flex-col items-center">
         <TopBar />
@@ -17,24 +46,22 @@ return(
         <h6 className="text-gray-500 text-sm font-semibold">
             Username:</h6>
         <h1 className="text-white text-2xl font-semibold">
-            Giovanni</h1>
+            {me.username}</h1>
         <br></br>
         <h6 className="text-gray-500 text-sm font-semibold">
             Bio:</h6>
         <p className="text-white text-2xl font-semibold max-h-35">
-            Just here for the good vibes, cool loot, and side quests. 
-            I spend more time customizing my character and organizing my 
-            inventory than actually doing the main objective.</p>
+            {me.bio}</p>
         <br></br>
         <h6 className="text-gray-500 text-sm font-semibold">
             Created at:</h6>
         <h1 className="text-white text-2xl font-semibold">
-            07/25/2026</h1>
-        </div>
+            {(me.created).slice(0,10)}</h1>
         </div>
 
         </div>
-    </div>
-    
+
+        </div>
+    </div>   
 )
 }
