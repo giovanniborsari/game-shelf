@@ -81,6 +81,10 @@ return(
     <br></br>
     <button 
     onClick={() => {
+    if (password !== confirmPassword) {
+    setError("Passwords do not match!");
+    return;
+    }
     fetch("http://localhost:8000/auth/register", {
       method: "POST",
       headers: {
@@ -95,7 +99,6 @@ return(
         //Implement picture when adding aws
         })
     })
-    
     .then(res => res.json())
     .then(data => {
       if (data.access_token) {
@@ -113,6 +116,5 @@ return(
     </button>
     </div>
     </div>
-    
 )
 }
