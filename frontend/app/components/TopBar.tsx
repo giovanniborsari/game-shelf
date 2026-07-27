@@ -22,7 +22,9 @@ export default function TopBar() {
         hover:text-emerald-400">
           About
         </a>
-        <a href="#profile" className="text-xl font-bold text-gray-300 p-4 
+        <a href={typeof window !== "undefined" && localStorage.getItem
+        ("token") ? "/user/me" : "/login" } 
+        className="text-xl font-bold text-gray-300 p-4 
         hover:text-emerald-400">
           MyProfile
         </a>

@@ -85,6 +85,7 @@ return(
     setError("Passwords do not match!");
     return;
     }
+    {error && <p className="text-red-500 mt-2">{error}</p>}
     fetch("http://localhost:8000/auth/register", {
       method: "POST",
       headers: {
