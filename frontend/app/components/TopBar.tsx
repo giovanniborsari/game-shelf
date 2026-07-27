@@ -1,4 +1,14 @@
+"use client";
+import { useEffect, useState } from "react";
+
 export default function TopBar() {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem("token"));
+  }, []);
+
   return (
     <header className="flex flex-row h-24 items-center w-full bg-gray-900">
       <a href="/home" className="text-3xl font-bold text-gray-300 p-6 
@@ -22,8 +32,7 @@ export default function TopBar() {
         hover:text-emerald-400">
           About
         </a>
-        <a href={typeof window !== "undefined" && localStorage.getItem
-        ("token") ? "/user/me" : "/login" } 
+        <a href={isLoggedIn ? "/user/me" : "/login" } 
         className="text-xl font-bold text-gray-300 p-4 
         hover:text-emerald-400">
           MyProfile
