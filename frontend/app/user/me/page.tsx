@@ -1,5 +1,6 @@
 "use client";
 import TopBar from "@/app/components/TopBar";
+import WishlistRow from "@/app/components/wishlistRow";
 import { useEffect, useState } from "react";
 
 type meDetails = {
@@ -50,7 +51,7 @@ return(
         <br></br>
         <h6 className="text-gray-500 text-sm font-semibold">
             Bio:</h6>
-        <p className="text-white text-2xl font-semibold max-h-35">
+        <p className="text-white text-2xl font-semibold h-35 ">
             {me.bio}</p>
         <br></br>
         <h6 className="text-gray-500 text-sm font-semibold">
@@ -58,9 +59,8 @@ return(
         <h1 className="text-white text-2xl font-semibold">
             {(me.created).slice(0,10)}</h1>
         </div>
-
         </div>
-
+        <WishlistRow/>
         </div>
     </div>   
 )
