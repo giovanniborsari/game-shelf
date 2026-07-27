@@ -57,7 +57,7 @@ class FormattedWishlistItem(BaseModel):
 class FormattedCollectionItem(BaseModel):
     collection_user: str
     game_id: int
-    game_name: str
+    game_title: str
     game_cover: str | None
     release: datetime | None = None
     date: datetime | None = None
@@ -407,7 +407,7 @@ def show_collection_me(token: str = Depends(GameShelfBearer())):
                 )
                 formatted_collection.append(collection_game)
 
-        return {"wishlist": formatted_collection, "total": len(formatted_collection)}
+        return {"collection": formatted_collection, "total": len(formatted_collection)}
     finally:
         database.close()
 

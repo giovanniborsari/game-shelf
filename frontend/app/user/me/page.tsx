@@ -1,4 +1,5 @@
 "use client";
+import CollectionRow from "@/app/components/CollectionRow";
 import TopBar from "@/app/components/TopBar";
 import WishlistRow from "@/app/components/wishlistRow";
 import { useEffect, useState } from "react";
@@ -61,6 +62,7 @@ return(
         </div>
         </div>
         <WishlistRow/>
+        <CollectionRow/>
         </div>
     </div>   
 )
