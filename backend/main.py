@@ -46,20 +46,22 @@ class FormattedAddItemWishlist(BaseModel):
 
 class FormattedWishlistItem(BaseModel):
     wishlist_user: str
-    item_name: str
-    item_cover: str | None
+    game_id: int
+    game_title: str
+    game_cover: str | None
     release: datetime | None = None
     date: datetime | None = None
-    item_rating: float | None
+    game_rating: float | None
     bought: bool | None = False
 
 class FormattedCollectionItem(BaseModel):
     collection_user: str
-    item_name: str
-    item_cover: str | None
+    game_id: int
+    game_name: str
+    game_cover: str | None
     release: datetime | None = None
     date: datetime | None = None
-    item_rating: float | None
+    game_rating: float | None
     user_rating: float | None
     played: bool | None = False
 
@@ -394,9 +396,10 @@ def show_collection_me(token: str = Depends(GameShelfBearer())):
             if item:
                 collection_game = FormattedCollectionItem(
                     collection_user = user.username, #type:ignore
-                    item_name = item.item_name, #type:ignore
-                    item_cover = item.big_cover, #type:ignore
-                    item_rating = item.rating, #type:ignore
+                    game_id = item.item_id, #type:ignore
+                    game_title = item.item_name, #type:ignore
+                    game_cover = item.big_cover, #type:ignore
+                    game_rating = item.rating, #type:ignore
                     release = item.release_date, #type:ignore
                     played = game.played, #type:ignore
                     date = game.date, #type:ignore
@@ -444,9 +447,10 @@ def show_whishlist_me(token: str = Depends(GameShelfBearer())):
             if item:
                 wishlist_game = FormattedWishlistItem(
                     wishlist_user = user.username, #type:ignore
-                    item_name = item.item_name, #type:ignore
-                    item_cover = item.big_cover, #type:ignore
-                    item_rating = item.rating, #type:ignore
+                    game_id = item.item_id, #type:ignore
+                    game_title = item.item_name, #type:ignore
+                    game_cover = item.big_cover, #type:ignore
+                    game_rating = item.rating, #type:ignore
                     release = item.release_date, #type:ignore
                     bought = game.bought, #type:ignore
                     date = game.date #type:ignore
