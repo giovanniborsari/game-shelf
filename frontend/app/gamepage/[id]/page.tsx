@@ -22,7 +22,7 @@ export default function GameDetailPage({ params }: { params: { id: string } }) {
 const id = params.id;
 const [game, setGame] = useState<GameDetails | null>(null);
 const [showWishlistAdd, setShowWishlistAdd] = useState(false);
-const wishlistPlatform = "";
+const [wishlistPlatform, setWishlistPlatform] = useState("");
 
 useEffect(() => {
     fetch(`http://localhost:8000/items/get_id/${id}`)
@@ -34,6 +34,8 @@ useEffect(() => {
 }, [id])
 
 if (!game) return <p>Game not found!</p>;
+
+const platforms = game?.game_platforms.split(",");
 
 const ratingColor = !game.game_rating 
     ? "bg-white" 
@@ -102,7 +104,7 @@ return (
             <div className="fixed inset-0 flex items-center justify-center 
             bg-black/50 z-50">
                 <div className="bg-gray-900 border-2 border-emerald-400
-                rounded-lg w-full max-w-xl p-6 flex flex-col">
+                rounded-lg w-full max-w-md p-6 flex flex-col">
                     <h1 
                     className="text-white font-bold text-2xl ml-auto mr-auto
                     mb-2">
@@ -117,6 +119,24 @@ return (
                     <h2 className='text-white font-bold text-[18px]'>
                         Set Platform
                     </h2>
+                    <div className="h-20 overflow-y-scroll scrollbar 
+                    scrollbar-thumb-emerald-400 text-sm" dir="rtl">
+                    <div dir="ltr">
+                    {platforms && platforms.map((name) => (  
+                    <label key ={name} className="flex items-center
+                    test-sm text-white cursor-pointer hover:text-emerald-400
+                    transition-colors">
+                        <input
+                            type="radio"
+                            checked={wishlistPlatform === name}
+                            onChange={() => setWishlistPlatform(name)}
+                            className="accent-emerald-400 cursor-pointer"
+                        />
+                        {name}
+                    </label>
+                    ))}
+                    </div>
+                    </div>
                     </div>
                     </div>
                 </div>
