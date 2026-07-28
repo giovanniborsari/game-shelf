@@ -21,6 +21,8 @@ export default function GameDetailPage({ params }: { params: { id: string } }) {
 
 const id = params.id;
 const [game, setGame] = useState<GameDetails | null>(null);
+const [showWishlistAdd, setShowWishlistAdd] = useState(false);
+const wishlistPlatform = "";
 
 useEffect(() => {
     fetch(`http://localhost:8000/items/get_id/${id}`)
@@ -89,14 +91,38 @@ return (
 
             <h1 className="font-bold text-xl mb-2 mt-2 "> 
             Add to List:</h1>
-            <button onClick={() => {}}
+            <button onClick={() => setShowWishlistAdd(true)}
             className=
             {`font-mono ml-auto bg-emerald-400 rounded-md text-black
             text-xl flex justify-center items-center w-35 h-5 p-3 mr-auto
             border-green-800 border-2`}>
             Wishlist
             </button>
-            <button onClick={() => {}}
+            {showWishlistAdd &&(
+            <div className="fixed inset-0 flex items-center justify-center 
+            bg-black/50 z-50">
+                <div className="bg-gray-900 border-2 border-emerald-400
+                rounded-lg w-full max-w-xl p-6 flex flex-col">
+                    <h1 
+                    className="text-white font-bold text-2xl ml-auto mr-auto
+                    mb-2">
+                        Add to Wishlist
+                    </h1>
+                    <div className="flex flex-row gap-4">
+                    <img src={game.game_cover || "placeholder_art.jpg"} 
+                    alt ={game.game_cover}
+                    className="w-36 border-2 border-black shrink-0 "/> 
+                    <div className="flex flex-col items-center">
+                    
+                    <h2 className='text-white font-bold text-[18px]'>
+                        Set Platform
+                    </h2>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            )}
+            <button 
             className=
             {`font-mono ml-auto bg-emerald-400 rounded-md text-black
             text-xl flex justify-center items-center w-35 h-5 p-3 mt-2 mr-auto
