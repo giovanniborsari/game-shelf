@@ -2,6 +2,7 @@
 import CollectionRow from "@/app/components/CollectionRow";
 import TopBar from "@/app/components/TopBar";
 import WishlistRow from "@/app/components/wishlistRow";
+import router from "next/router";
 import { useEffect, useState } from "react";
 
 type meDetails = {
@@ -23,10 +24,16 @@ useEffect(() => {
       "Authorization": `Bearer ${token }`
     }
     })
-    .then(res => res.json())
+    .then(res => {
+    if (res.status === 403) {
+      localStorage.removeItem("token");
+      router.push("/login");
+      return;
+    }
+    return res.json();
+    })
     .then(data => {
-        console.log(data);
-        setMe(data);
+        if (data) setMe(data);
     })
     .catch((err) => console.error("Error:", err));
     }, []);
@@ -58,7 +65,7 @@ return(
         <h6 className="text-gray-500 text-sm font-semibold">
             Created at:</h6>
         <h1 className="text-white text-2xl font-semibold">
-            {(me.created).slice(0,10)}</h1>
+            {me.created ? me.created.slice(0,10) : "Unknown"}</h1>
         </div>
         </div>
         <WishlistRow/>
