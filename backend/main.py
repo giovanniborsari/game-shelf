@@ -72,6 +72,16 @@ class FormattedUser(BaseModel):
     profile_pic: str
     created: datetime
 
+class FormattedGameReviews (BaseModel):
+    game_id: int
+    user_id:int
+    user: str
+    user_rating: int
+    platform: str
+    date: datetime
+    played: bool
+
+
 app = FastAPI()
 
 app.add_middleware(
@@ -487,6 +497,38 @@ def user_me (token: str = Depends(GameShelfBearer())):
     
     finally:
         database.close()
+
+@app.get("/game/reviews")
+def game_reviews (game_id: int):
+
+    database = SessionLocal()
+
+    try:
+        query = database.query(CollectionList).filter\
+                (CollectionList.item_id == game_id).all()
+
+        reviews = []
+
+        if query:
+            for review in query:
+                user = database.query(User).filter\
+                (User.user_id == review.user_id).first()
+                username = user.username #type: ignore
+
+                game_review = FormattedGameReviews(
+                    game_id= game_id,
+                    user_id = review.user_id, #type: ignore
+                    user= username, #type: ignore
+                    user_rating=review.user_rating, #type: ignore
+                    platform=review.platform, #type: ignore
+                    date = review.date, #type: ignore
+                    played= review.played #type: ignore
+                )
+                reviews.append(game_review)
+        return {"reviews": reviews, "total": len(reviews)}
+    finally:
+        database.close()
+        
 
 #--------------------------------Delete Methods---------------------------------
 @app.delete("/user/me/delete" , dependencies= [Depends(GameShelfBearer())])
