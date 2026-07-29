@@ -59,7 +59,7 @@ return (
         <div className="w-90 shrink-0">
             <FilteringCol onFilterChange={handleFilterChange} />
         </div>
-        <div className="flex-1 flex flex-col justify-center items-center">
+        <div className="flex-1 flex flex-col justify-center items-center w-2xl">
             <GameGrid gamesArray={games}/>
         </div>
         <div className="w-90 shrink-0 pointer-events-none opacity-0 
