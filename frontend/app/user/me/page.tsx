@@ -47,7 +47,7 @@ return(
         max-w-full">
         <div className="flex flex-row">
         <div className="w-66 m-3 border-2 border-black">
-        <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/coasay.jpg"
+        <img src={me.profile_pic}
          className="w-full h-full object-cover" 
         ></img>
         </div>

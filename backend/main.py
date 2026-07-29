@@ -293,84 +293,6 @@ def get_item_id(id: int):
     finally:
         database.close()
 
-@app.get("/items/search/{search}")
-def get_item_search(search: str, page:int = 1, limit: int = 36):
-    skip = (page - 1) * limit
-    database = SessionLocal()
-    items = database.query(Items).filter(Items.item_name.ilike(f"%{search}%"))\
-        .offset(skip).limit(limit).all()
-    formatted_items = []  
-
-    try:
-        if items: 
-            for item in items:
-                new_item = FormattedItem(
-                game_id = item.item_id, #type:ignore
-                game_title = item.item_name, #type: ignore
-                game_platforms = item.platform, #type: ignore
-                game_genre = item.genre, #type: ignore
-                game_rating = item.rating, #type: ignore
-                game_release_date = item.release_date, #type: ignore
-                game_description = item.description, #type: ignore
-                game_cover = item.small_cover, #type: ignore
-                game_art= item.art #type: ignore
-
-                )
-            
-                formatted_items.append(new_item) #type: ignore
-
-            total = database.query(Items)\
-                .filter(Items.item_name.ilike(f"%{search}%")).count()
-
-            return {
-            "items": formatted_items,
-            "total": total,
-            "page": page,
-            "pages": (total + limit - 1) // limit
-            }   
-        else:
-            return "Item not found, do you want to add a new game to our database?"
-    finally:
-        database.close()                                                                             
-
-@app.get("/items/platform/{platform}")
-def get_item_platform(platform: str, page:int = 1, limit:int = 36):
-    database = SessionLocal()
-    skip = (page - 1) * limit
-    items = database.query(Items).filter(Items.platform.ilike(f"%{platform}%"))\
-        .offset(skip).limit(limit).all()
-    formatted_items = []
-
-    try:
-        if items:
-            for item in items:
-                new_item = FormattedItem(
-                    game_id = item.item_id, #type:ignore
-                    game_title = item.item_name, #type: ignore
-                    game_platforms = item.platform, #type: ignore
-                    game_genre = item.genre, #type: ignore
-                    game_rating = item.rating, #type: ignore
-                    game_release_date = item.release_date, #type: ignore
-                    game_description = item.description, #type: ignore
-                    game_cover = item.small_cover, #type: ignore
-                    game_art= item.art #type: ignore
-                )
-                formatted_items.append(new_item) #type: ignore
-
-            total = database.query(Items)\
-                .filter(Items.platform == platform).count()
-
-            return {
-            "items": formatted_items,
-            "total": total,
-            "page": page,
-            "pages": (total + limit - 1) // limit
-            }
-        else:
-            return "Item not found, do you want to add a new game to our database?"
-    finally:
-        database.close()    
-
 @app.post("/collection/add", dependencies=[Depends(GameShelfBearer())])
 def add_to_collection(item: FormattedAddItemCollection, 
                       token: str = Depends(GameShelfBearer())):
@@ -398,6 +320,44 @@ def show_collection_me(token: str = Depends(GameShelfBearer())):
         
         collection = database.query(CollectionList).\
             filter(CollectionList.user_id == user_id).all()
+        if not collection:
+            return {"success": False, "message": "Wishlist is empty"}
+        
+        formatted_collection = []
+        for game in collection:
+            item = database.query(Items).filter(Items.item_id == game.item_id).first()
+            
+            if item:
+                collection_game = FormattedCollectionItem(
+                    collection_user = user.username, #type:ignore
+                    game_id = item.item_id, #type:ignore
+                    game_title = item.item_name, #type:ignore
+                    game_cover = item.big_cover, #type:ignore
+                    game_rating = item.rating, #type:ignore
+                    release = item.release_date, #type:ignore
+                    played = game.played, #type:ignore
+                    date = game.date, #type:ignore
+                    user_rating = game.user_rating, #type:ignore
+                )
+                formatted_collection.append(collection_game)
+
+        return {"collection": formatted_collection, "total": len(formatted_collection)}
+    finally:
+        database.close()
+
+@app.get("/collection/{id}", dependencies=[Depends(GameShelfBearer())])
+def show_collection_id():
+
+    database = SessionLocal()
+
+    try:
+        user = database.query(User).\
+            filter(User.user_id == id).first() 
+        if not user:
+            return {"success": False, "message": "User not found"}
+        
+        collection = database.query(CollectionList).\
+            filter(CollectionList.user_id == id).all()
         if not collection:
             return {"success": False, "message": "Wishlist is empty"}
         
@@ -473,6 +433,43 @@ def show_whishlist_me(token: str = Depends(GameShelfBearer())):
     finally:
         database.close()
 
+@app.get("/wishlist/{id}", dependencies=[Depends(GameShelfBearer())])
+def show_whishlist_id():
+
+    database = SessionLocal()    
+    
+    try:
+        user = database.query(User).\
+            filter(User.user_id == id).first() 
+        if not user:
+            return {"success": False, "message": "User not found"}
+        
+        wishlist = database.query(Wishlist).\
+            filter(Wishlist.user_id == id).all()
+        if not wishlist:
+            return {"success": False, "message": "Wishlist is empty"}
+        
+        formatted_wishlist = []
+        for game in wishlist:
+            item = database.query(Items).filter(Items.item_id == game.item_id).first()
+            
+            if item:
+                wishlist_game = FormattedWishlistItem(
+                    wishlist_user = user.username, #type:ignore
+                    game_id = item.item_id, #type:ignore
+                    game_title = item.item_name, #type:ignore
+                    game_cover = item.big_cover, #type:ignore
+                    game_rating = item.rating, #type:ignore
+                    release = item.release_date, #type:ignore
+                    bought = game.bought, #type:ignore
+                    date = game.date #type:ignore
+                )
+                formatted_wishlist.append(wishlist_game)
+
+        return {"wishlist": formatted_wishlist, "total": len(formatted_wishlist)}
+    finally:
+        database.close()
+
 @app.get("/user/me", dependencies=[Depends(GameShelfBearer())])
 def user_me (token: str = Depends(GameShelfBearer())):
 
@@ -482,6 +479,30 @@ def user_me (token: str = Depends(GameShelfBearer())):
 
     try:
         user = database.query(User).filter(User.user_id == user_id).first()
+
+        if not user:
+            return {"success": False, "message": "User not found!"}
+        
+        user_info = FormattedUser(
+            user_id = user.user_id, # type: ignore
+            username = user.username, #type: ignore
+            bio= user.user_bio, #type: ignore
+            profile_pic= user.profile_picture, #type: ignore
+            created= user.created_at_utc #type: ignore
+        )
+
+        return user_info
+    
+    finally:
+        database.close()
+
+@app.get("/user/{id}", dependencies=[Depends(GameShelfBearer())])
+def user_id ():
+
+    database = SessionLocal()
+
+    try:
+        user = database.query(User).filter(User.user_id == id).first()
 
         if not user:
             return {"success": False, "message": "User not found!"}

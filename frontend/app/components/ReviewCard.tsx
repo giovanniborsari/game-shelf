@@ -27,7 +27,7 @@ return (
         <div className='flex flex-col bg-gray-500 border-2 border-gray-300 
         p-2 mb-2 rounded-xl max-h-55'>
             <div className='flex flex-row'>
-            <Link href="">
+            <Link href={`/user/${user_id}`} >
             <h2 className='text-white text-md font-bold ml-2 
             hover:text-emerald-400 transition-colors'>
                 {user}
