@@ -159,7 +159,7 @@ def get_items(page:int = 1,
                     == Items.item_id).where(Genre_Games.genre_id.in_(genre_ids))
             
         if search:
-            query = query.filter(Items.item_name.ilike(f"%{search}%"))     
+            query = query.filter(Items.item_name.match(search))     
         if min_rating is not None:
             query = query.filter(Items.rating >= min_rating)
         if max_rating is not None:
