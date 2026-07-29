@@ -35,6 +35,7 @@ class FormattedPWDRequest(BaseModel):
 
 class FormattedAddItemCollection(BaseModel):
     item_id: int
+    platform:str | None = None
     item_rating: int | None = None
     notes: str | None = None
     played: bool |None = False
@@ -365,8 +366,9 @@ def add_to_collection(item: FormattedAddItemCollection,
     
     user_id = get_user_id_from_token(token)
    
-    success, message = add_item_collection(user_id, item.item_id,  #type: ignore
-                       item.item_rating, item.notes, item.played) #type: ignore
+    success, message = add_item_collection(user_id,item.platform, #type: ignore
+                       item.item_id, item.item_rating, item.notes, #type: ignore 
+                       item.played) #type: ignore
     
     return {"success": success, "message": message}
 

@@ -2,7 +2,7 @@ from models import *
 from database import SessionLocal
 from datetime import datetime, timezone
 
-def add_item_collection(user_id:int, game_id:int, 
+def add_item_collection(user_id:int,platform:str|None, game_id:int, 
                         user_rating:int|None,user_notes:str|None, played:bool):
 
     database = SessionLocal()
@@ -38,7 +38,8 @@ def add_item_collection(user_id:int, game_id:int,
             user_rating = user_rating,
             notes = user_notes,
             played = played, 
-            date = date
+            date = date,
+            platform= platform
         )
 
         database.add(collection_item)

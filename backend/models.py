@@ -94,6 +94,8 @@ class CollectionList(Base):
         collection_id: Collection's unique id
         user_id: User's unique id linked to users table
         item_id: Items's unique id linked to items table
+        platform: Platform that the player want to play.
+        platform_id: Platform id for filtering.
         rating: Media rating to the game (0 to 100)
         user_rating: Users rating to the game (0 to 100)
         user_media: URL to uploaded media from the user to the item database
@@ -105,6 +107,8 @@ class CollectionList(Base):
     collection_id= Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.user_id"))
     item_id = Column(Integer, nullable= False)
+    platform = Column(String, nullable=True, default=None)
+    platform_id = Column(Integer, ForeignKey("platform_id.id"), nullable=True)
     rating = Column(Float, nullable= True, default= None)
     user_rating = Column(Float, nullable= True, default= None)
     notes = Column(String(300), nullable= True, default= None)
