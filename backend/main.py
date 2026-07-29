@@ -345,8 +345,8 @@ def show_collection_me(token: str = Depends(GameShelfBearer())):
     finally:
         database.close()
 
-@app.get("/collection/{id}", dependencies=[Depends(GameShelfBearer())])
-def show_collection_id():
+@app.get("/collection/{id}")
+def show_collection_id(id:int):
 
     database = SessionLocal()
 
@@ -433,8 +433,8 @@ def show_whishlist_me(token: str = Depends(GameShelfBearer())):
     finally:
         database.close()
 
-@app.get("/wishlist/{id}", dependencies=[Depends(GameShelfBearer())])
-def show_whishlist_id():
+@app.get("/wishlist/{id}")
+def show_whishlist_id(id:int):
 
     database = SessionLocal()    
     
@@ -496,8 +496,8 @@ def user_me (token: str = Depends(GameShelfBearer())):
     finally:
         database.close()
 
-@app.get("/user/{id}", dependencies=[Depends(GameShelfBearer())])
-def user_id ():
+@app.get("/user/{id}")
+def user_id (id:int):
 
     database = SessionLocal()
 

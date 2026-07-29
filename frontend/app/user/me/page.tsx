@@ -1,7 +1,6 @@
 "use client";
-import CollectionRow from "@/app/components/CollectionRow";
+import ProfileRow from "@/app/components/ProfileRow";
 import TopBar from "@/app/components/TopBar";
-import WishlistRow from "@/app/components/wishlistRow";
 import router from "next/router";
 import { useEffect, useState } from "react";
 
@@ -68,8 +67,8 @@ return(
             {me.created ? me.created.slice(0,10) : "Unknown"}</h1>
         </div>
         </div>
-        <WishlistRow/>
-        <CollectionRow/>
+        <ProfileRow user_id={null} row_type={"wishlist"}/>
+        <ProfileRow user_id={null} row_type={"collection"}/>
         </div>
     </div>   
 )

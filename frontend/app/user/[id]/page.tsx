@@ -1,7 +1,6 @@
 "use client";
-import CollectionRow from "@/app/components/CollectionRow";
+import ProfileRow from "@/app/components/ProfileRow";
 import TopBar from "@/app/components/TopBar";
-import WishlistRow from "@/app/components/wishlistRow";
 import router from "next/router";
 import { useEffect, useState } from "react";
 
@@ -13,7 +12,7 @@ created: string;
 profile_pic: string;
 }
 
-export default function UserDetailPage({ params }: { params: { id: string } }){
+export default function UserDetailPage({ params }: { params: { id: number } }){
     const id = params.id;
     const [user, setUser] = useState<userDetails | null>(null);
 
@@ -56,8 +55,8 @@ export default function UserDetailPage({ params }: { params: { id: string } }){
                 {user.created ? user.created.slice(0,10) : "Unknown"}</h1>
             </div>
             </div>
-            <WishlistRow/>
-            <CollectionRow/>
+            <ProfileRow user_id={id} row_type={"wishlist"}/>
+            <ProfileRow user_id={id} row_type={"collection"}/>
             </div>
         </div>   
     )
