@@ -41,7 +41,6 @@ class FormattedAddItemCollection(BaseModel):
 
 class FormattedAddItemWishlist(BaseModel):
     item_id: int
-    user_id: int
     platform: str | None = None
 
 class FormattedWishlistItem(BaseModel):
