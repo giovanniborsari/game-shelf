@@ -77,9 +77,10 @@ class FormattedGameReviews (BaseModel):
     user_id:int
     user: str
     user_rating: int
-    platform: str
+    platform: str|None = None
     date: datetime
-    played: bool
+    played: bool|None = False
+    notes: str|None = None
 
 
 app = FastAPI()
@@ -522,7 +523,8 @@ def game_reviews (game_id: int):
                     user_rating=review.user_rating, #type: ignore
                     platform=review.platform, #type: ignore
                     date = review.date, #type: ignore
-                    played= review.played #type: ignore
+                    played= review.played, #type: ignore
+                    notes= review.notes #type: ignore
                 )
                 reviews.append(game_review)
         return {"reviews": reviews, "total": len(reviews)}
