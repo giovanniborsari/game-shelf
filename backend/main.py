@@ -520,6 +520,42 @@ def user_id (id:int):
     finally:
         database.close()
 
+@app.get("/users/")
+def get_users(page:int = 1, limit: int = 36,search: str|None = None):
+    
+    skip = (page - 1) * limit
+    database = SessionLocal()
+    formatted_users = []
+
+    try:        
+        query = database.query(User)
+            
+        if search:
+            query = query.filter(User.username.ilike(f"%{search}%"))     
+        users = query.offset(skip).limit(limit).all()
+        
+        for user in users:
+            new_user = FormattedUser(
+                user_id = user.user_id, #type: ignore
+                username = user.username, #type: ignore
+                profile_pic= user.profile_picture, #type: ignore
+                bio = user.user_bio, #type: ignore
+                created= user.created_at_utc #type: ignore
+                )
+            
+            formatted_users.append(new_user) #type: ignore
+
+        total = query.count()
+
+        return {
+        "users": formatted_users,
+        "total": total,
+        "page": page,
+        "pages": (total + limit - 1) // limit
+        }
+    finally:
+        database.close()
+
 @app.get("/game/reviews")
 def game_reviews (game_id: int):
 

@@ -20,7 +20,7 @@ export default function TopBar() {
       hover:text-emerald-400">
           Games
         </a>
-        <a href="#users" className="text-xl font-bold text-gray-300 p-4 
+        <a href="\user_search" className="text-xl font-bold text-gray-300 p-4 
         hover:text-emerald-400">
           Users
         </a>
@@ -32,7 +32,7 @@ export default function TopBar() {
         hover:text-emerald-400">
           About
         </a>
-        <a href={isLoggedIn ? "/user/me" : "/login" } 
+        <a href={!isLoggedIn ? "/login" : "/user/me" } 
         className="text-xl font-bold text-gray-300 p-4 
         hover:text-emerald-400">
           MyProfile

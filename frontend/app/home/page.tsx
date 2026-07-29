@@ -39,7 +39,6 @@ export default function Home() {
     {name: "Strategy", id: 20},
     {name: "Tactical", id: 21},
     {name: "Turn-based strategy (TBS)", id: 22},
-    {name: "Visual Novel", id: 24}
 ]
 
   const shuffledGenres = [...GENRES].sort(()=> Math.random() - 0.5);
