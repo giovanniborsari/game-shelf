@@ -38,16 +38,26 @@ if (filters.search) params.append('search', filters.search);
     });
 }, [currentPage, filters]);
 
-if (!loaded) return <p className="text-white">Loading users...</p>;
-if (users && users.length == 0) 
-    return <p className="text-white">No users found.</p>;
-
 let profiles = users.map((user) => <ProfileCard key={user.user_id} {...user} />);
 
 const handleFilterChange = (newFilters: FilterState) => {
     setFilters(newFilters); 
     setCurrentPage(1);      
   };
+
+if (!loaded) return <p className="text-white">Loading users...</p>;
+if (users && users.length == 0) 
+    return(
+    <div className="min-h-screen bg-gray-900">
+    <TopBar/>
+    <div className="flex flex-row w-full px-6">
+      <div className="w-90 shrink-0">
+        <UserSearchCol onFilterChange={handleFilterChange} />
+      </div>
+    <p className="text-white">No users found.</p>
+    </div>
+    </div>
+    )
 
 return(
   <div className="min-h-screen bg-gray-900">
