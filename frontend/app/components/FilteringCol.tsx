@@ -286,7 +286,7 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
 
     };
 
-    const handleClear = (e: React.SubmitEvent) => {
+    const handleClear = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         setSearch('');
         setMinRating('');
@@ -401,9 +401,9 @@ export default function FilteringCol({ onFilterChange }: FilteringColProps){
             transition-colors">
                 Apply
             </button>
-            <button type="button" onClick={handleClear} className="bg-gray-700
-            hover:bg-gray-600 text-white py-2 px-4 rounded 
-            transition-colors">
+            <button type="button" onClick={handleClear} 
+            className="bg-gray-700 hover:bg-gray-600 text-white py-2 
+            px-4 rounded transition-colors">
                 Clear
             </button>
             </div>
