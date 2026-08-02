@@ -44,6 +44,11 @@ class FormattedAddItemWishlist(BaseModel):
     item_id: int
     platform: str | None = None
 
+class FormattedEditItemWishlist(BaseModel):
+    item_id: int
+    platform: str | None = None
+    bought: bool | None = False
+
 class FormattedWishlistItem(BaseModel):
     wishlist_user: str
     game_id: int
@@ -308,6 +313,19 @@ def add_to_collection(item: FormattedAddItemCollection,
     
     return {"success": success, "message": message}
 
+@app.post("/collection/edit", dependencies=[Depends(GameShelfBearer())])
+def edit_to_collection(item: FormattedAddItemCollection, 
+                      token: str = Depends(GameShelfBearer())):
+    
+    user_id = get_user_id_from_token(token)
+   
+    success, message = edit_item_collection(user_id, item.platform, #type: ignore
+                       item.item_id, item.user_rating, item.notes, #type: ignore 
+                       item.played) #type: ignore
+    
+    return {"success": success, "message": message}
+
+
 @app.get("/collection/me", dependencies=[Depends(GameShelfBearer())])
 def show_collection_me(token: str = Depends(GameShelfBearer())):
 
@@ -398,6 +416,17 @@ def add_to_wishlist(item: FormattedAddItemWishlist,
    
     success, message = add_item_wishlist(user_id, item.item_id,  #type: ignore
                        item.platform) #type: ignore
+    
+    return {"success": success, "message": message}
+
+@app.post("/wishlist/edit", dependencies=[Depends(GameShelfBearer())])
+def edit_to_wishlist(item: FormattedEditItemWishlist, 
+                      token: str = Depends(GameShelfBearer())):
+    
+    user_id = get_user_id_from_token(token)
+   
+    success, message = edit_item_wishlist(user_id, item.item_id,  #type: ignore
+                       item.platform, item.bought) #type: ignore
     
     return {"success": success, "message": message}
 

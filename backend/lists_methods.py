@@ -49,6 +49,43 @@ def add_item_collection(user_id:int,platform:str|None, game_id:int,
     finally:
         database.close()
 
+def edit_item_collection(user_id:int,platform:str|None, game_id:int, 
+                        user_rating:int|None,user_notes:str|None, played:bool):
+
+    database = SessionLocal()
+
+    game = database.query(CollectionList).filter\
+    (CollectionList.item_id == game_id,  
+    CollectionList.user_id == user_id ).first()
+    user = database.query(User).filter(User.user_id == user_id ).first()
+
+    try:
+        if not game:
+            return False, f"Game id: {game_id} not found, impossible to edit"
+        
+        if not user:
+            return False, f"User: {user_id} not found, impossible to edit!"
+
+        game_title = (database.query(Items).filter
+            (Items.item_id == game_id).first()).item_name # type: ignore
+
+        game.platform = platform # type: ignore
+        game.user_rating = user_rating # type: ignore
+        game.notes = user_notes # type: ignore
+        game.played = played # type: ignore
+        game.date = datetime.now(timezone.utc) # type: ignore
+
+        database.commit()
+
+        return True, f"Game: {game_title} edited!"
+    
+    except Exception as e:
+        database.rollback()
+        return False, f"Error editing game: {e}"
+    
+    finally:
+        database.close()
+
 def add_item_wishlist(user_id:int, game_id:int, platform:str|None):
 
     database = SessionLocal()
@@ -90,6 +127,40 @@ def add_item_wishlist(user_id:int, game_id:int, platform:str|None):
         database.commit()
 
         return True, f"Game: {game.item_name} added!"
+    
+    finally:
+        database.close()
+
+def edit_item_wishlist(user_id:int, game_id:int, platform:str|None, 
+                       bought:bool|None):
+
+    database = SessionLocal()
+
+    game = database.query(Wishlist).filter\
+        (Wishlist.item_id == game_id,  
+        Wishlist.user_id == user_id ).first()
+    user = database.query(User).filter(User.user_id == user_id ).first()
+    
+    try:
+        if not game:
+            return False, f"Game id: {game_id} not found, impossible to edit!"
+        
+        if not user:
+            return False, f"User: {user_id} not found, impossible to edit!"
+
+        game_title = (database.query(Items).filter
+                    (Items.item_id == game_id).first()).item_name # type: ignore
+        
+        if bought is None:
+            bought = False
+        
+        game.platform = platform #type: ignore
+        game.date = datetime.now(timezone.utc) #type: ignore
+        game.bought = bought #type: ignore
+        
+        database.commit()
+
+        return True, f"Game: {game_title} edited!"
     
     finally:
         database.close()

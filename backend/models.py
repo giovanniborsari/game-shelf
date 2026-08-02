@@ -53,12 +53,12 @@ class Items(Base):
     item_name = Column(String(255), unique= True, nullable= False)
     platform = Column(Text, nullable= False)
     genre = Column(Text, nullable = True)    #Sports, Fighting, RPG, etc.
-    small_cover = Column(String, nullable= True, default= "default_smallcover.jpg")
-    big_cover = Column(String, nullable= True, default= "default_bigcover.jpg")
+    small_cover = Column(String, nullable= True, default= "/default_smallcover.jpg")
+    big_cover = Column(String, nullable= True, default= "/default_bigcover.jpg")
     rating = Column(Float, nullable= True, default= None)
     release_date = Column(DateTime, nullable= True, default = None)
     description = Column(String, nullable= True)
-    art = Column(String, nullable= True, default= "default_item_art.jpg")
+    art = Column(String, nullable= True, default= "/default_item_art.jpg")
 
 
 class Wishlist(Base):

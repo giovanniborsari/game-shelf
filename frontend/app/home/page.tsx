@@ -18,12 +18,10 @@ export default function Home() {
   useEffect(() =>{
     const GENRES =[
     {name: "Adventure", id: 1},
-    {name: "Arcade", id: 2},
     {name: "Card & Board Game", id: 3},
     {name: "Fighting", id: 4},
     {name: "Hack and slash/Beat 'em up", id: 5},
     {name: "Indie", id: 6},
-    {name: "MOBA", id: 7},
     {name: "Music", id: 8},
     {name: "Pinball", id: 9},
     {name: "Platform", id: 10},
@@ -96,6 +94,22 @@ export default function Home() {
         key={featuredPlatforms[0].id}
         id={featuredPlatforms[0].id}
         name={featuredPlatforms[0].name} />
+        <PlatformRow
+        key={featuredPlatforms[1].id}
+        id={featuredPlatforms[1].id}
+        name={featuredPlatforms[1].name} />
+        <PlatformRow
+        key={featuredPlatforms[2].id}
+        id={featuredPlatforms[2].id}
+        name={featuredPlatforms[2].name} />
+        <GenreRow
+        key={featuredGenres[2].id}
+        id={featuredGenres[2].id}
+        name={featuredGenres[2].name} />
+        <GenreRow
+        key={featuredGenres[3].id}
+        id={featuredGenres[3].id}
+        name={featuredGenres[3].name} />
         </> 
         )};
     </div>
