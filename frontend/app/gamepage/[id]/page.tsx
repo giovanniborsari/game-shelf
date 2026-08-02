@@ -152,7 +152,7 @@ return (
                     test-sm text-white cursor-pointer hover:text-emerald-400
                     transition-colors">
                         <input
-                            type="radio"
+                            type="checkbox"
                             checked={wishlistPlatform === name}
                             onChange={() => setWishlistPlatform(name)}
                             className="accent-emerald-400 cursor-pointer"
@@ -239,10 +239,10 @@ return (
                     <div dir="ltr">
                     {platforms && platforms.map((name) => (  
                     <label key ={name} className="flex items-center
-                    test-sm text-white cursor-pointer hover:text-emerald-400
+                    text-sm text-white cursor-pointer hover:text-emerald-400
                     transition-colors">
                         <input
-                            type="radio"
+                            type="checkbox"
                             checked={collectionPlatform === name}
                             onChange={() => setCollectionPlatform(name)}
                             className="accent-emerald-400 cursor-pointer"
