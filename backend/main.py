@@ -36,7 +36,7 @@ class FormattedPWDRequest(BaseModel):
 class FormattedAddItemCollection(BaseModel):
     item_id: int
     platform:str | None = None
-    item_rating: int | None = None
+    user_rating: int | None = None
     notes: str | None = None
     played: bool |None = False
 
@@ -53,17 +53,20 @@ class FormattedWishlistItem(BaseModel):
     date: datetime | None = None
     game_rating: float | None
     bought: bool | None = False
+    notes: str| None = None
 
 class FormattedCollectionItem(BaseModel):
     collection_user: str
     game_id: int
     game_title: str
     game_cover: str | None
+    game_platform: str | None
     release: datetime | None = None
     date: datetime | None = None
     game_rating: float | None
     user_rating: float | None
     played: bool | None = False
+    notes: str| None = None
 
 class FormattedUser(BaseModel):
     user_id: int
@@ -300,7 +303,7 @@ def add_to_collection(item: FormattedAddItemCollection,
     user_id = get_user_id_from_token(token)
    
     success, message = add_item_collection(user_id,item.platform, #type: ignore
-                       item.item_id, item.item_rating, item.notes, #type: ignore 
+                       item.item_id, item.user_rating, item.notes, #type: ignore 
                        item.played) #type: ignore
     
     return {"success": success, "message": message}
@@ -334,10 +337,12 @@ def show_collection_me(token: str = Depends(GameShelfBearer())):
                     game_title = item.item_name, #type:ignore
                     game_cover = item.big_cover, #type:ignore
                     game_rating = item.rating, #type:ignore
+                    game_platform = item.platform, #type:ignore
                     release = item.release_date, #type:ignore
                     played = game.played, #type:ignore
                     date = game.date, #type:ignore
                     user_rating = game.user_rating, #type:ignore
+                    game_notes = game.notes #type:ignore
                 )
                 formatted_collection.append(collection_game)
 
@@ -372,10 +377,12 @@ def show_collection_id(id:int):
                     game_title = item.item_name, #type:ignore
                     game_cover = item.big_cover, #type:ignore
                     game_rating = item.rating, #type:ignore
+                    game_platform = item.platform, #type:ignore
                     release = item.release_date, #type:ignore
                     played = game.played, #type:ignore
                     date = game.date, #type:ignore
                     user_rating = game.user_rating, #type:ignore
+                    game_notes = game.notes #type:ignore
                 )
                 formatted_collection.append(collection_game)
 

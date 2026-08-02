@@ -111,9 +111,10 @@ class CollectionList(Base):
     platform_id = Column(Integer, ForeignKey("platform_id.id"), nullable=True)
     rating = Column(Float, nullable= True, default= None)
     user_rating = Column(Float, nullable= True, default= None)
-    notes = Column(String(300), nullable= True, default= None)
+    notes = Column(String(750), nullable= True, default= None)
     played = Column(Boolean, nullable= True, default= False)
-    date = Column(DateTime, nullable= True, default= None)
+    date = Column(DateTime, nullable= True, 
+            default= lambda: datetime.now(timezone.utc).replace(tzinfo=None))
 
 class PriceRecord(Base):
     """ 
