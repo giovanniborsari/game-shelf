@@ -41,7 +41,7 @@ def add_item_collection(user_id:int,platform:str|None, game_id:int,
             date = date,
             platform= platform
         )
-
+        
         database.add(collection_item)
         database.commit()
 

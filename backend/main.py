@@ -66,7 +66,7 @@ class FormattedCollectionItem(BaseModel):
     game_rating: float | None
     user_rating: float | None
     played: bool | None = False
-    notes: str| None = None
+    game_notes: str| None = None
 
 class FormattedUser(BaseModel):
     user_id: int
@@ -302,7 +302,7 @@ def add_to_collection(item: FormattedAddItemCollection,
     
     user_id = get_user_id_from_token(token)
    
-    success, message = add_item_collection(user_id,item.platform, #type: ignore
+    success, message = add_item_collection(user_id, item.platform, #type: ignore
                        item.item_id, item.user_rating, item.notes, #type: ignore 
                        item.played) #type: ignore
     
@@ -329,7 +329,7 @@ def show_collection_me(token: str = Depends(GameShelfBearer())):
         formatted_collection = []
         for game in collection:
             item = database.query(Items).filter(Items.item_id == game.item_id).first()
-            
+
             if item:
                 collection_game = FormattedCollectionItem(
                     collection_user = user.username, #type:ignore
@@ -337,7 +337,7 @@ def show_collection_me(token: str = Depends(GameShelfBearer())):
                     game_title = item.item_name, #type:ignore
                     game_cover = item.big_cover, #type:ignore
                     game_rating = item.rating, #type:ignore
-                    game_platform = item.platform, #type:ignore
+                    game_platform = game.platform, #type:ignore
                     release = item.release_date, #type:ignore
                     played = game.played, #type:ignore
                     date = game.date, #type:ignore
@@ -377,7 +377,7 @@ def show_collection_id(id:int):
                     game_title = item.item_name, #type:ignore
                     game_cover = item.big_cover, #type:ignore
                     game_rating = item.rating, #type:ignore
-                    game_platform = item.platform, #type:ignore
+                    game_platform = game.platform, #type:ignore
                     release = item.release_date, #type:ignore
                     played = game.played, #type:ignore
                     date = game.date, #type:ignore
