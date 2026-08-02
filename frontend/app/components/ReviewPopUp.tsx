@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 
 export interface ReviewProps {
@@ -19,6 +20,8 @@ export interface ReviewProps {
 export default function ReviewPopUp ( {game_id , game_title, username,
   game_rating, game_cover, release, played, user_rating, game_platform,
   game_notes, date, onClose} : ReviewProps){
+
+const [showDeleteConfirmCol, setShowDeleteConfirmCol] = useState(false);
 
 if (typeof document === "undefined") return null;
 
@@ -108,11 +111,63 @@ return createPortal(
     className='border-2 border-emerald-400 m-1 p-2 font-bold bg-mauve-700
     rounded-xl'>
         Edit</button>
-    <button onClick={(e)=>(console.log())}
+    <button onClick={(e)=>(setShowDeleteConfirmCol(true))}
     className='border-2 border-emerald-400 m-1 p-2 font-bold bg-red-600
     rounded-xl'>
         Delete</button>
     </div>
+    </div>
+    )}
+
+    {showDeleteConfirmCol &&(
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center 
+    z-60">
+    <div className='flex flex-col bg-gray-500 border-2 rounded-xl p-2 z-60
+    border-emerald-400 w-200 items-center '>
+    <p className='text-xl text-white font-bold ml-auto mr-auto'>
+        Do you want to remove "{game_title}" from the list ?</p>
+    <div className='flex flex-row gap-2'>
+    <button onClick={(e)=>{
+    const token = localStorage.getItem("token") ?? "";
+                        
+        fetch(`http://localhost:8000/collection/me/delete/${game_id}`,{
+            method: 'DELETE',
+            headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+    }})
+        .then(data =>{
+        console.log(data);
+        setShowDeleteConfirmCol(false);
+        onClose();
+        window.location.reload();
+        })
+        .catch(err => console.error("Error:", err));
+    }}
+    className='bg-red-700 text-white font-bold text-xl p-2 border-2 
+    border-white rounded-xl w-20'>YES</button>
+    <button onClick={(e)=>(setShowDeleteConfirmCol(false))}
+    className='bg-green-700 text-white font-bold text-xl p-2 border-2 
+    border-white rounded-xl w-20'>NO</button>
+    </div>
+    </div>
+    </div>
+    )}
+
+    {user_rating == null &&(
+    <div>
+     <button onClick={onClose}
+    className='border-2 border-emerald-400 m-1 p-2 font-bold bg-mauve-700
+    rounded-xl'>
+        Close</button>
+    <button onClick={(e)=>(console.log())}
+    className='border-2 border-emerald-400 m-1 p-2 font-bold bg-mauve-700
+    rounded-xl'>
+        Edit</button>
+    <button onClick={(e)=>(console.log())}
+    className='border-2 border-emerald-400 m-1 p-2 font-bold bg-red-600
+    rounded-xl'>
+        Delete</button>
     </div>
     )}
     </div>,
