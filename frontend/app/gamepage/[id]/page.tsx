@@ -52,7 +52,7 @@ useEffect(() => {
 
 if (!game) return <p>Game not found!</p>;
 
-const platforms = game?.game_platforms.split(",");
+const platforms = game?.game_platforms.split(",").map(p => p.trim());;
 
 const ratingColor = !game.game_rating 
     ? "bg-white" 
@@ -280,7 +280,7 @@ return (
                     </h2>
                     <textarea 
                         value={userNotes}
-                        maxLength={300}
+                        maxLength={750}
                         onChange={(e)=>setUserNotes(e.target.value)}
                         className="bg-gray-500 w-full h-45 text-md font-medium
                         p-1 resize-none scrollbar-thumb-emerald-400"
@@ -301,7 +301,7 @@ return (
                     <button onClick={()=>{
 
                         const token = localStorage.getItem("token") ?? "";
-
+                        
                         fetch("http://localhost:8000/collection/add",{
                         method: 'POST',
                         headers: {
@@ -311,9 +311,10 @@ return (
                             body: JSON.stringify({
                             item_id: game.game_id,
                             platform: collectionPlatform,
-                            item_rating: userRating,
+                            user_rating: userRating,
                             notes: userNotes,
-                            played: played
+                            played: played,
+                            rating: game.game_rating, 
                             })
                         })
                         .then(res=> res.json())

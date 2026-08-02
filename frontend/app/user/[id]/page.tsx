@@ -55,8 +55,10 @@ export default function UserDetailPage({ params }: { params: { id: number } }){
                 {user.created ? user.created.slice(0,10) : "Unknown"}</h1>
             </div>
             </div>
-            <ProfileRow user_id={id} row_type={"wishlist"}/>
-            <ProfileRow user_id={id} row_type={"collection"}/>
+            <ProfileRow user_id={id} row_type={"wishlist"} 
+            clickable username={user.username} />
+            <ProfileRow user_id={id} row_type={"collection"}
+            clickable username={user.username} />
             </div>
         </div>   
     )

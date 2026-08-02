@@ -6,9 +6,12 @@ import { useEffect, useState } from "react";
 export interface RowProps {
   user_id: number|null
   row_type: string
+  clickable?: boolean
+  username: string
 }
 
-export default function ProfileRow({user_id, row_type} : RowProps) {
+export default function ProfileRow(
+  {user_id, row_type, username, clickable= false} : RowProps) {
 
 const [games, setGames] = useState<GameCardHomeProps[]>([]);
 const [isLoading, setIsLoading] = useState(true)
@@ -79,7 +82,8 @@ useEffect(() => {
 
 if (games && games.length > 0) {
 let gameCardRow = games.map((game) => 
-                                <GameCardHome key={game.game_id} {...game} />);
+          <GameCardHome key={game.game_id} {...game} clickable={clickable} 
+          username={username}/>);
 
     return(
         <div className="w-full px-4 py-6">

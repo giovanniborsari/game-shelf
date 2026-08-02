@@ -67,8 +67,10 @@ return(
             {me.created ? me.created.slice(0,10) : "Unknown"}</h1>
         </div>
         </div>
-        <ProfileRow user_id={null} row_type={"wishlist"}/>
-        <ProfileRow user_id={null} row_type={"collection"}/>
+        <ProfileRow user_id={null} row_type={"wishlist"} 
+        clickable username={me.username}/>
+        <ProfileRow user_id={null} row_type={"collection"} 
+        clickable username={me.username}/>
         </div>
     </div>   
 )
