@@ -35,6 +35,8 @@ export default function ReviewPopUp ( {game_id , game_title, username,
 
 const [showDeleteConfirmCol, setShowDeleteConfirmCol] = useState(false);
 const [showEditCol, setShowEditCol] = useState(false);
+const [showDeleteConfirmWish, setShowDeleteConfirmWish] = useState(false);
+const [showEditWish, setShowEditWish] = useState(false);
 const [game, setGame] = useState<GameDetails | null>(null);
 const [editPlatform, setEditPlatform] = useState("");
 const [editPlayed, setEditPlayed] = useState(false)
@@ -177,7 +179,7 @@ return createPortal(
     <div className='flex flex-col bg-gray-500 border-2 rounded-xl p-2 z-60
     border-emerald-400 w-200 items-center '>
     <p className='text-xl text-white font-bold ml-auto mr-auto'>
-        Do you want to remove "{game_title}" from the list ?</p>
+        Do you want to remove "{game_title}" from the collection list ?</p>
     <div className='flex flex-row gap-2'>
     <button onClick={(e)=>{
     const token = localStorage.getItem("token") ?? "";
@@ -381,17 +383,53 @@ return createPortal(
     className='border-2 border-emerald-400 m-1 p-2 font-bold bg-mauve-700
     rounded-xl'>
         Close</button>
-    <button onClick={(e)=>(setShowEditCol(true))}
+    <button onClick={(e)=>(setShowEditWish(true))}
     className='border-2 border-emerald-400 m-1 p-2 font-bold bg-mauve-700
     rounded-xl'>
         Edit</button>
-    <button onClick={(e)=>(setShowDeleteConfirmCol(true))}
+    <button onClick={(e)=>(setShowDeleteConfirmWish(true))}
     className='border-2 border-emerald-400 m-1 p-2 font-bold bg-red-600
     rounded-xl'>
         Delete</button>
     </div>
     </div>
     )}
+
+    {showDeleteConfirmWish &&(
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center 
+    z-60">
+    <div className='flex flex-col bg-gray-500 border-2 rounded-xl p-2 z-60
+    border-emerald-400 w-200 items-center '>
+    <p className='text-xl text-white font-bold ml-auto mr-auto'>
+        Do you want to remove "{game_title}" from the wishlist ?</p>
+    <div className='flex flex-row gap-2'>
+    <button onClick={(e)=>{
+    const token = localStorage.getItem("token") ?? "";
+                        
+        fetch(`http://localhost:8000/wishlist/me/delete/${game_id}`,{
+            method: 'DELETE',
+            headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+    }})
+        .then(data =>{
+        console.log(data);
+        setShowDeleteConfirmWish(false);
+        onClose();
+        window.location.reload();
+        })
+        .catch(err => console.error("Error:", err));
+    }}
+    className='bg-red-700 text-white font-bold text-xl p-2 border-2 
+    border-white rounded-xl w-20 mt-2'>YES</button>
+    <button onClick={(e)=>(setShowDeleteConfirmWish(false))}
+    className='bg-green-700 text-white font-bold text-xl p-2 border-2 
+    border-white rounded-xl w-20 mt-2'>NO</button>
+    </div>
+    </div>
+    </div>
+    )}
+
     </div>,
     document.body
 );
