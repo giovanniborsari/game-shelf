@@ -53,7 +53,8 @@ class FormattedWishlistItem(BaseModel):
     wishlist_user: str
     game_id: int
     game_title: str
-    game_cover: str | None
+    game_cover: str | None 
+    game_platform: str | None = None
     release: datetime | None = None
     date: datetime | None = None
     game_rating: float | None
@@ -458,6 +459,7 @@ def show_whishlist_me(token: str = Depends(GameShelfBearer())):
                     game_id = item.item_id, #type:ignore
                     game_title = item.item_name, #type:ignore
                     game_cover = item.big_cover, #type:ignore
+                    game_platform = game.platform, #type:ignore
                     game_rating = item.rating, #type:ignore
                     release = item.release_date, #type:ignore
                     bought = game.bought, #type:ignore
@@ -495,6 +497,7 @@ def show_whishlist_id(id:int):
                     game_id = item.item_id, #type:ignore
                     game_title = item.item_name, #type:ignore
                     game_cover = item.big_cover, #type:ignore
+                    game_platform = game.platform, #type:ignore
                     game_rating = item.rating, #type:ignore
                     release = item.release_date, #type:ignore
                     bought = game.bought, #type:ignore

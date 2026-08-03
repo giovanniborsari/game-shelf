@@ -74,9 +74,18 @@ const ratingColor = !user_rating
     ? "bg-yellow-500" 
     : "bg-red-500";
 
+const ratingColorWishlist = !game_rating 
+    ? "bg-white" 
+    : game_rating  && game_rating >= 80 
+    ? "bg-green-500" 
+    : game_rating  && game_rating  >= 60 
+    ? "bg-yellow-500" 
+    : "bg-red-500";
+
 return createPortal(
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center 
     z-50">
+    
     {user_rating!= null &&(
     <div className='flex flex-col bg-gray-500 border-2 border-emerald-400
     w-250 max-w-250 rounded-xl'>
@@ -317,20 +326,70 @@ return createPortal(
     </div>
     )}
 
+    {/* Wishlist pop up */}
     {user_rating == null &&(
-    <div>
-     <button onClick={onClose}
+    <div className='flex flex-col bg-gray-500 border-2 border-emerald-400
+    w-250 max-w-250 rounded-xl'>
+    <Link href={`/gamepage/${game_id}`}> 
+    <h1 className='flex text-3xl text-white font-bold overflow-hidden ml-auto 
+    mr-auto mt-3 max-w-225 justify-center hover:text-emerald-400'> 
+        {game_title} </h1>
+    </Link>
+    <div className='flex flex-row items-start'> 
+    <img 
+    src={game_cover||"/default_img.jpg"}
+    className='m-5 w-50 border-2 border-black rounded-xl shrink-0'></img>
+    <div className='flex flex-col flex-1 min-w-0 mr-5'>
+    <div className=' flex flex-row'>
+    <div className=' flex flex-col'>
+    <div className=' flex flex-row'>
+    <p className='text-xl text-gray-700 font-bold mt-5'> User: </p>
+    <p className='text-xl text-white font-bold ml-2 max-w-100 mt-5
+    overflow-hidden'
+    > {username} </p>
+    </div>
+    <div className=' flex flex-row'>
+    <p className='text-xl text-gray-700 font-bold'> Platform: </p>
+    <p className='text-xl text-white font-bold ml-2 max-w-150 overflow-hidden'
+    > {game_platform ?? "Unknown"} </p>
+    </div>
+    <div className=' flex flex-row'>
+    <p className='text-xl text-gray-700 font-bold'> Release Date: </p>
+    <p className='text-xl text-white font-bold ml-2 max-w-100 overflow-hidden'
+    > {(release)?.slice(0,10) ?? "Unknown"} </p>
+    </div>
+    <div className=' flex flex-row'>
+    <p className='text-xl text-gray-700 font-bold'> Log Date: </p>
+    <p className='text-xl text-white font-bold ml-2 max-w-100 overflow-hidden'
+    > {(date)?.slice(0,10) ?? "Unknown"} </p>
+    </div>
+    </div>
+    <div className='ml-auto mt-5 mr-5 items-center flex flex-col'>
+    <p className='text-xl text-gray-700 font-bold '> Game Rating </p>
+    <p className=
+    {`font-extrabold ${ratingColorWishlist} w-30 h-30 rounded-md text-black
+    text-2xl flex items-center justify-center overflow-hidden border-2
+    border-black`}>
+    {game_rating ?? "X"}
+    </p>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div className='flex flex-row items-center justify-center'>
+    <button onClick={onClose}
     className='border-2 border-emerald-400 m-1 p-2 font-bold bg-mauve-700
     rounded-xl'>
         Close</button>
-    <button onClick={(e)=>(console.log())}
+    <button onClick={(e)=>(setShowEditCol(true))}
     className='border-2 border-emerald-400 m-1 p-2 font-bold bg-mauve-700
     rounded-xl'>
         Edit</button>
-    <button onClick={(e)=>(console.log())}
+    <button onClick={(e)=>(setShowDeleteConfirmCol(true))}
     className='border-2 border-emerald-400 m-1 p-2 font-bold bg-red-600
     rounded-xl'>
         Delete</button>
+    </div>
     </div>
     )}
     </div>,
