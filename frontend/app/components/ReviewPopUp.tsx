@@ -430,6 +430,82 @@ return createPortal(
     </div>
     )}
 
+    {showEditWish &&(
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center 
+    z-60 ">
+    <div className='flex flex-col bg-gray-500 border-2 rounded-xl p-2 z-60
+    border-emerald-400 w-250 max-w-250 h-100 max-h-100'>
+    <p className='text-xl text-white font-bold ml-auto mr-auto'>
+        Edit {game_title}</p>
+    <div className='flex flex-row flex-1'> 
+    <img 
+    src={game_cover||"/default_img.jpg"}
+    className='m-5 w-50 border-2 border-black rounded-xl shrink-0
+    self-start'></img>
+    <div className='flex flex-col flex-1 min-w-0 mr-5'>
+    <div className=' flex flex-col h-full'>
+    <div className=' flex flex-row '>
+    <p className='text-xl text-gray-700 font-bold mt-5'> User: </p>
+    <p className='text-xl text-white font-bold ml-2 max-w-100 mt-5
+    overflow-hidden'
+    > {username} </p>
+    </div>
+    <div className=' flex flex-col min-w-0 mr-5 '>
+    <p className='text-xl text-gray-700 font-bold'> Set Platform: </p>
+    <div className="h-20 overflow-y-scroll scrollbar 
+                    scrollbar-thumb-emerald-400 text-sm" dir="rtl">
+    <div dir="ltr">
+    {platforms && platforms.map((name) => (  
+        <label key ={name} className="flex items-center
+        text-sm text-white cursor-pointer hover:text-emerald-400
+        transition-colors">
+        <input
+        type="checkbox"
+        checked={editPlatform?.split(", ").includes(name) ?? false}
+        onChange={() => togglePlatform(name)}
+        className="accent-emerald-400 cursor-pointer"
+        />
+        {name}
+        </label>
+    ))}
+    </div>
+    </div>
+    </div>
+    <div className='flex flex-row gap-2 justify-center mt-auto '>
+    <button onClick={(e)=>{
+    const token = localStorage.getItem("token") ?? "";
+                        
+        fetch(`http://localhost:8000/wishlist/edit`,{
+            method: 'POST',
+            headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+            body: JSON.stringify({
+            item_id: game_id,
+            platform: editPlatform,
+            })
+        })
+        .then(data =>{
+        console.log(data);
+        setShowEditWish(false);
+        onClose();
+        window.location.reload();
+        })
+        .catch(err => console.error("Error:", err));
+    }}
+    className='bg-green-700 text-white font-bold text-md p-2 border-2 
+    border-white rounded-xl w-20 '>Update</button>
+    <button onClick={(e)=>(setShowEditWish(false))}
+    className='bg-red-700 text-white font-bold text-md p-2 border-2 
+    border-white rounded-xl w-20 '>Cancel</button>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    )}
     </div>,
     document.body
 );
