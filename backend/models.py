@@ -25,8 +25,7 @@ class User(Base):
     email = Column(String(100), unique = True, nullable = False)
     password_token = Column(String, nullable = False)
     user_bio = Column(String(300), nullable = True)
-    profile_picture = Column(String, nullable = True, 
-                             default = "unknown.jpg")
+    profile_picture = Column(String, nullable = True, )
     created_at_utc = Column(DateTime, nullable = False, 
                             default= lambda: datetime.now(timezone.utc).replace(tzinfo=None))
     password_attempts= Column(Integer, nullable=True, default=0)
@@ -38,6 +37,7 @@ class Items(Base):
 
     Attributes:
         item_id: Unique numeric identifier for each item, auto generated
+        igdb_id: Unique numeric identifier for each item, igdb database
         item_name: Item's unique name
         platform: Item's platform (Example: PC) 
         genre: Item's genres (Example: Puzzle)
@@ -50,15 +50,18 @@ class Items(Base):
 
     __tablename__ = "items"
     item_id = Column(Integer, primary_key= True)
+    igdb_id = Column(Integer, nullable=False)
     item_name = Column(String(255), unique= True, nullable= False)
     platform = Column(Text, nullable= False)
     genre = Column(Text, nullable = True)    #Sports, Fighting, RPG, etc.
-    small_cover = Column(String, nullable= True, default= "/default_smallcover.jpg")
-    big_cover = Column(String, nullable= True, default= "/default_bigcover.jpg")
+    small_cover = Column(String, nullable= True)
+    big_cover = Column(String, nullable= True)
     rating = Column(Float, nullable= True, default= None)
     release_date = Column(DateTime, nullable= True, default = None)
     description = Column(String, nullable= True)
-    art = Column(String, nullable= True, default= "/default_item_art.jpg")
+    art = Column(String, nullable= True)
+    age_rating = Column(Integer, nullable=True)
+    age_category = Column(Integer, nullable=True)
 
 
 class Wishlist(Base):

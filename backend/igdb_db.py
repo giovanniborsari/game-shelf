@@ -69,8 +69,9 @@ def _population_pre ():
 
         #Define what the method is going to get from IGDB database
         query_body = f"""
-        fields name, platforms.name, genres.name, total_rating, cover.image_id, 
-                first_release_date, artworks.image_id, summary;
+        fields id, name, platforms.name, genres.name, total_rating, 
+        cover.image_id, first_release_date, artworks.image_id, summary, 
+        age_ratings.rating, age_ratings.category;
         offset {offset};
         limit {limit};
         """
@@ -185,69 +186,38 @@ def _population_pre ():
                     #Description
                     desc = game.get('summary')
 
+                    #IGDB id
+                    igdb_id = game.get('id')
+
+                    #Age rating information
+                    age_ratings = game.get("age_ratings", [])
+                    age_rating = None
+                    age_category = None
+
+                    for rating in age_ratings:
+                        if rating.get("category") == 1:   # ESRB
+                            age_rating = rating.get("rating")
+                            age_category = rating.get("category")
+                            break
+
+                    if age_rating is None and age_ratings:
+                        age_rating = age_ratings[0].get("rating")
+                        age_category = age_ratings[0].get("category")
+
                     #Check if game already exists
-                    existing_game = database.query(Items).filter(Items.item_name
-                                                             == name).first()
+                    existing_game = database.query(Items).filter(Items.igdb_id
+                                                             == igdb_id).first()
                     #Update item if it already exists
-                    if existing_game:                   
-                        #Append new platforms if any
-                        cur_platforms = existing_game.platform.split(", ")
-                        new_platforms = all_platforms.split(", ")
-                        final_platforms = set(cur_platforms) | set(new_platforms)
-                        existing_game.platform = ", ".join(final_platforms) #type: ignore
-
-                        #Append new genres if any
-                        cur_genres = existing_game.genre.split(", ")
-                        new_genres = all_genres.split(", ")
-                        final_genres = set(cur_genres) | set(new_genres)
-                        existing_game.genre = ", ".join(final_genres)  # type: ignore
-
-                        database.commit()
-
-                        #Link with platform_items table
-                        for plat_name in platform_names:
-                            query_plat = database.query(Platform_Id)\
-                                .filter(Platform_Id.name == plat_name).first()
-                            if query_plat:
-                                # Check if link already exists
-                                existing_link = database.query(Platform_Games)\
-                                    .filter(Platform_Games.platform_id \
-                                            == query_plat.id)\
-                                    .filter(Platform_Games.game_id \
-                                            == existing_game.item_id).first()
-                                
-                                if not existing_link:
-                                    new_link = Platform_Games(
-                                        platform_id = query_plat.id,
-                                        game_id = existing_game.item_id
-                                    )
-                                    database.add(new_link)
-                        database.commit()
-
-                        #Link with genres_items table
-                        for gen_name in genre_names:
-                            query_gen = database.query(Genre_Id)\
-                                .filter(Genre_Id.name == gen_name).first()
-                            if query_gen:
-                                # Check if link already exists
-                                existing_link = database.query(Genre_Games)\
-                                    .filter(Genre_Games.genre_id \
-                                            == query_gen.id)\
-                                    .filter(Genre_Games.game_id \
-                                            == existing_game.item_id).first()
-                                
-                                if not existing_link:
-                                    new_link = Genre_Games(
-                                        genre_id = query_gen.id,
-                                        game_id = existing_game.item_id
-                                    )
-                                    database.add(new_link)
-                        database.commit()
+                    if existing_game:
+                        print(f'{name} is already in the database')                   
         
                     else:
                         #creates a new item if it is not present in the database
                         new_game= Items(
                             item_name = name,
+                            igdb_id = igdb_id,
+                            age_rating = age_rating,
+                            age_category = age_category,
                             platform = all_platforms,
                             genre = all_genres,
                             small_cover = url_scover,
