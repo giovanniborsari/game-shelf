@@ -2,6 +2,7 @@
 import Link from "next/link";
 import GameCardHome, { GameCardHomeProps } from "./GameCardHome";
 import { useEffect, useState } from "react";
+import { API_URL } from "../utils/api";
 
 export interface RowProps {
   user_id: number|null
@@ -20,7 +21,7 @@ useEffect(() => {
     const token = localStorage.getItem("token") ?? "";
 
     if (user_id == null && row_type === "collection") {
-      fetch(`http://localhost:8000/collection/me`, {
+      fetch(`${API_URL}/collection/me`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((response) => response.json())
@@ -33,7 +34,7 @@ useEffect(() => {
           setIsLoading(false);
         });
     } else if (user_id == null && row_type === "wishlist") {
-      fetch(`http://localhost:8000/wishlist/me`, {
+      fetch(`${API_URL}/wishlist/me`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((response) => response.json())
@@ -46,7 +47,7 @@ useEffect(() => {
           setIsLoading(false);
         });
     } else if (user_id != null && row_type === "wishlist") {
-      fetch(`http://localhost:8000/wishlist/${user_id}`, {
+      fetch(`${API_URL}/wishlist/${user_id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((response) => response.json())
@@ -59,7 +60,7 @@ useEffect(() => {
           setIsLoading(false);
         }); 
     } else if (user_id != null && row_type === "collection") {
-      fetch(`http://localhost:8000/collection/${user_id}`, {
+      fetch(`${API_URL}/collection/${user_id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((response) => response.json())

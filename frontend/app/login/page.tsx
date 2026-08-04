@@ -2,6 +2,7 @@
 import { useState } from "react";
 import TopBar from "../components/TopBar";
 import { useRouter } from "next/navigation";
+import { API_URL } from "../utils/api";
 
 export default function Login(){
     const router = useRouter();
@@ -35,7 +36,7 @@ export default function Login(){
     <br></br>
     <button 
     onClick={() => {
-    fetch("http://localhost:8000/auth/login", {
+    fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

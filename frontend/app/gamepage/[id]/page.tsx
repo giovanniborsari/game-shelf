@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import React from "react";
 import TopBar from "@/app/components/TopBar";
 import ReviewCard, { GameReviewsProps } from "@/app/components/ReviewCard";
+import { API_URL } from "@/app/utils/api";
 
 
 type GameDetails = {
@@ -32,7 +33,7 @@ const [played, setPlayed] = useState(false)
 const [gameReviews, setGameReviews] = useState<GameReviewsProps[]>([]);
 
 useEffect(() => {
-    fetch(`http://localhost:8000/items/get_id/${id}`)
+    fetch(`${API_URL}/items/get_id/${id}`)
     .then(res => res.json())
     .then(data => {
         console.log(data);
@@ -41,7 +42,7 @@ useEffect(() => {
 }, [id])
 
 useEffect(() => {
-    fetch(`http://localhost:8000/game/reviews?game_id=${id}`)
+    fetch(`${API_URL}/game/reviews?game_id=${id}`)
     .then(res => res.json())
     .then(data => {
         console.log("Reviews:", data.reviews); 
@@ -178,7 +179,7 @@ return (
 
                         const token = localStorage.getItem("token") ?? "";
 
-                        fetch("http://localhost:8000/wishlist/add",{
+                        fetch(`${API_URL}/wishlist/add`,{
                         method: 'POST',
                         headers: {
                         "Content-Type": "application/json",
@@ -318,7 +319,7 @@ return (
 
                         const token = localStorage.getItem("token") ?? "";
                         
-                        fetch("http://localhost:8000/collection/add",{
+                        fetch(`${API_URL}/collection/add`,{
                         method: 'POST',
                         headers: {
                         "Content-Type": "application/json",

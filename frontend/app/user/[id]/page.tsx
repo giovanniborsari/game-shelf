@@ -1,6 +1,7 @@
 "use client";
 import ProfileRow from "@/app/components/ProfileRow";
 import TopBar from "@/app/components/TopBar";
+import { API_URL } from "@/app/utils/api";
 import router from "next/router";
 import { useEffect, useState } from "react";
 
@@ -17,7 +18,7 @@ export default function UserDetailPage({ params }: { params: { id: number } }){
     const [user, setUser] = useState<userDetails | null>(null);
 
     useEffect(() => {
-        fetch(`http://localhost:8000/user/${id}`)
+        fetch(`${API_URL}/user/${id}`)
         .then(res => res.json())
         .then(data => {
             if (data) setUser(data);

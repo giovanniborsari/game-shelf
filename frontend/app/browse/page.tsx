@@ -1,11 +1,12 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import GameCard, {GameCardProps} from "../components/GameCard";
 import FilteringCol, {FilterState} from "../components/FilteringCol";
 import TopBar from "../components/TopBar";
 import { useSearchParams } from "next/navigation";
+import { API_URL } from "../utils/api";
 
-export default function Browse() {
+function BrowseContent() {
 
 const searchParams = useSearchParams()
 const platformFromURL = searchParams.get("platform");
@@ -37,7 +38,7 @@ const [filters, setFilters] = useState<FilterState>({
     if (filters.min_rating) params.append('min_rating', filters.min_rating)
     if (filters.max_rating) params.append('max_rating', filters.max_rating)
 
-    fetch(`http://localhost:8000/items/?${params.toString()}`)
+    fetch(`${API_URL}/items/?${params.toString()}`)
       .then((response) => response.json())
       .then((data) => {
         setGames(data.items);
@@ -104,5 +105,17 @@ return (
     </div>
 
     </div>
+  );
+}
+
+export default function Browse() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-900 text-white p-6">
+        Loading page...
+      </div>
+    }>
+      <BrowseContent />
+    </Suspense>
   );
 }

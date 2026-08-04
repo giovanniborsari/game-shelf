@@ -2,6 +2,7 @@
 import { useState } from "react";
 import TopBar from "../components/TopBar";
 import { useRouter } from "next/navigation";
+import { API_URL } from "../utils/api";
 
 export default function Register(){
 
@@ -86,7 +87,7 @@ return(
     return;
     }
     {error && <p className="text-red-500 mt-2">{error}</p>}
-    fetch("http://localhost:8000/auth/register", {
+    fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

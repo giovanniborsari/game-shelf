@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import ConsoleRow from "../components/ConsoleRow";
 import GenreRow from "../components/GenreRow";
 import TopBar from "../components/TopBar";
@@ -8,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { FilterState } from "../components/FilteringCol";
 import PlatformRow from "../components/PlatformRow";
 
-export default function Home() {
+function Home() {
 
   const searchParams = useSearchParams();
 
@@ -114,5 +114,17 @@ export default function Home() {
         )};
     </div>
 
+  );
+}
+
+export default function HomeLoading() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-900 text-white p-6">
+        Loading page...
+      </div>
+    }>
+      <Home />
+    </Suspense>
   );
 }

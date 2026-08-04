@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import TopBar from "../components/TopBar";
 import ProfileCard from "../components/ProfileCard";
 import UserSearchCol, { FilterState } from "../components/UserSearchCol";
+import { API_URL } from "../utils/api";
 
 export default function User_Search() {
 
@@ -24,7 +25,7 @@ useEffect(() => {
 
 if (filters.search) params.append('search', filters.search);
 
-  fetch(`http://localhost:8000/users/?${params.toString()}`)
+  fetch(`${API_URL}/users/?${params.toString()}`)
     .then((response) => response.json())
     .then((data) => {
       console.log(data);

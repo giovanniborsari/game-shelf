@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { API_URL } from '../utils/api'
 
 export interface ReviewProps {
     game_id : number
@@ -44,7 +45,7 @@ const [userNotes, setUserNotes] = useState(game_notes ?? "")
 const [userRating, setUserRating] = useState(user_rating ?? 50)
 
 useEffect(() => {
-    fetch(`http://localhost:8000/items/get_id/${game_id}`)
+    fetch(`${API_URL}/items/get_id/${game_id}`)
     .then(res => res.json())
     .then(data => {
         console.log(data);
@@ -184,7 +185,7 @@ return createPortal(
     <button onClick={(e)=>{
     const token = localStorage.getItem("token") ?? "";
                         
-        fetch(`http://localhost:8000/collection/me/delete/${game_id}`,{
+        fetch(`${API_URL}/collection/me/delete/${game_id}`,{
             method: 'DELETE',
             headers: {
             "Content-Type": "application/json",
@@ -296,7 +297,7 @@ return createPortal(
     <button onClick={(e)=>{
     const token = localStorage.getItem("token") ?? "";
                         
-        fetch(`http://localhost:8000/collection/edit`,{
+        fetch(`${API_URL}/collection/edit`,{
             method: 'POST',
             headers: {
             "Content-Type": "application/json",
@@ -406,7 +407,7 @@ return createPortal(
     <button onClick={(e)=>{
     const token = localStorage.getItem("token") ?? "";
                         
-        fetch(`http://localhost:8000/wishlist/me/delete/${game_id}`,{
+        fetch(`${API_URL}/wishlist/me/delete/${game_id}`,{
             method: 'DELETE',
             headers: {
             "Content-Type": "application/json",
@@ -475,7 +476,7 @@ return createPortal(
     <button onClick={(e)=>{
     const token = localStorage.getItem("token") ?? "";
                         
-        fetch(`http://localhost:8000/wishlist/edit`,{
+        fetch(`${API_URL}/wishlist/edit`,{
             method: 'POST',
             headers: {
             "Content-Type": "application/json",

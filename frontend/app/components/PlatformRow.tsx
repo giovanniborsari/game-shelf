@@ -2,6 +2,7 @@
 import Link from "next/link";
 import GameCardHome, { GameCardHomeProps } from "./GameCardHome";
 import { useEffect, useState } from "react";
+import { API_URL } from "../utils/api";
 
 export interface PlatformRowProps {
   id: number;
@@ -20,7 +21,7 @@ const params = new URLSearchParams({})
 params.append('platform', id.toString());
 params.append('min_rating', '80')
 
-fetch(`http://localhost:8000/items/bigcover/?${params.toString()}`)
+fetch(`${API_URL}/items/bigcover/?${params.toString()}`)
     .then((response) => response.json())
     .then((data) => {
     setGames(((data.items).sort(()=> Math.random()-0.5)).slice(0,30));

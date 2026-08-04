@@ -1,6 +1,7 @@
 "use client";
 import ProfileRow from "@/app/components/ProfileRow";
 import TopBar from "@/app/components/TopBar";
+import { API_URL } from "@/app/utils/api";
 import router from "next/router";
 import { useEffect, useState } from "react";
 
@@ -18,7 +19,7 @@ const [me, setMe] = useState<meDetails | null>(null);
 
 useEffect(() => {
     const token = localStorage.getItem("token") ?? "";
-    fetch(`http://localhost:8000/user/me`,{
+    fetch(`${API_URL}/user/me`,{
     headers: {
       "Authorization": `Bearer ${token }`
     }

@@ -4,6 +4,7 @@ import GameCardHome, { GameCardHomeProps } from "./GameCardHome";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FilterState } from "./FilteringCol";
+import { API_URL } from "../utils/api";
 
 export interface GenreRowProps {
   id: number;
@@ -22,7 +23,7 @@ const params = new URLSearchParams({})
 params.append('genre', id.toString());
 params.append('min_rating', '80')
 
-fetch(`http://localhost:8000/items/bigcover/?${params.toString()}`)
+fetch(`${API_URL}/items/bigcover/?${params.toString()}`)
     .then((response) => response.json())
     .then((data) => {
     setGames(((data.items).sort(()=> Math.random()-0.5)).slice(0,30));
