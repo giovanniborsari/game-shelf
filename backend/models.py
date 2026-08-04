@@ -51,7 +51,7 @@ class Items(Base):
     __tablename__ = "items"
     item_id = Column(Integer, primary_key= True)
     igdb_id = Column(Integer, nullable=False)
-    item_name = Column(String(255), unique= True, nullable= False)
+    item_name = Column(String(255), nullable= False)
     platform = Column(Text, nullable= False)
     genre = Column(Text, nullable = True)    #Sports, Fighting, RPG, etc.
     small_cover = Column(String, nullable= True)
