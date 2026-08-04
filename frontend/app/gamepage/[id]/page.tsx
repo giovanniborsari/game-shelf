@@ -23,9 +23,9 @@ export default function GameDetailPage({ params }: { params: { id: string } }) {
 const id = params.id;
 const [game, setGame] = useState<GameDetails | null>(null);
 const [showWishlistAdd, setShowWishlistAdd] = useState(false);
-const [wishlistPlatform, setWishlistPlatform] = useState("");
+const [wishlistPlatform, setWishlistPlatform] = useState<string[]>([]);
 const [showCollectionAdd, setShowCollectionAdd] = useState(false);
-const [collectionPlatform, setCollectionPlatform] = useState("");
+const [collectionPlatform, setCollectionPlatform] = useState<string[]>([]);
 const [userRating, setUserRating] = useState(50)
 const [userNotes, setUserNotes] = useState("")
 const [played, setPlayed] = useState(false)
@@ -153,8 +153,16 @@ return (
                     transition-colors">
                         <input
                             type="checkbox"
-                            checked={wishlistPlatform === name}
-                            onChange={() => setWishlistPlatform(name)}
+                            onChange={() => {
+                                setWishlistPlatform(prev => 
+                                    prev.includes(name) 
+                                    // remove if already selected
+                                    ? prev.filter(p => p !== name) 
+                                    // add if not selected 
+                                    : [...prev, name]               
+                                )
+                                }}
+                                checked={wishlistPlatform.includes(name)}
                             className="accent-emerald-400 cursor-pointer"
                         />
                         {name}
@@ -178,7 +186,7 @@ return (
                         },
                             body: JSON.stringify({
                             item_id: game.game_id,
-                            platform: wishlistPlatform
+                            platform: wishlistPlatform.join(", ")
                             })
                         })
                         .then(res=> res.json())
@@ -243,8 +251,16 @@ return (
                     transition-colors">
                         <input
                             type="checkbox"
-                            checked={collectionPlatform === name}
-                            onChange={() => setCollectionPlatform(name)}
+                            onChange={() => {
+                                setCollectionPlatform(prev => 
+                                    prev.includes(name) 
+                                    //Remove if already checked
+                                    ? prev.filter(p => p !== name)
+                                    //Add if not checked
+                                    : [...prev, name]
+                                )
+                                }}
+                                checked={collectionPlatform.includes(name)}
                             className="accent-emerald-400 cursor-pointer"
                         />
                         {name}
@@ -310,7 +326,7 @@ return (
                         },
                             body: JSON.stringify({
                             item_id: game.game_id,
-                            platform: collectionPlatform,
+                            platform: collectionPlatform.join(", "),
                             user_rating: userRating,
                             notes: userNotes,
                             played: played,

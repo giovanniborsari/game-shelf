@@ -72,6 +72,7 @@ def _population_pre ():
         fields id, name, platforms.name, genres.name, total_rating, 
         cover.image_id, first_release_date, artworks.image_id, summary, 
         age_ratings.rating, age_ratings.category;
+        sort id asc;
         offset {offset};
         limit {limit};
         """
@@ -82,8 +83,9 @@ def _population_pre ():
             games= response.json()
             #Print count of games received
             print(f"Games received: {len(games)}")
-            try:
-                for game in games:
+            
+            for game in games:
+                try:
                     #Get game name 
                     name = game.get('name')
                     print(f"Processing: {name}")
@@ -257,23 +259,21 @@ def _population_pre ():
                                 database.add(new_link)
                         database.commit()
                         
-                #Break while if len games is smaller limit
-                if len(games) < limit:
-                    break
-                #Updates offset
-                offset += limit        
-        
-            except Exception as e:
-                print(f"Error on game: {name}, skipping it!")
-                print(f"Error: {e}")
+                except Exception as e:
+                    print(f"Error on game: {name}, skipping it!")
+                    print(f"Error: {e}")
 
-                #Rollback database and coninue to the next item, so method can
-                #still looking for more items
-                database.rollback()
-                continue
-            finally:
-                time.sleep(0.25) #Pauses for 0.25 seconds due to IGDB restrictions
-                print("Round of games added")
+                    #Rollback database and coninue to the next item, so method can
+                    #still looking for more items
+                    database.rollback()
+                    continue
+
+            if len(games) < limit:
+                break
+
+            offset += limit
+            time.sleep(0.25)
+                
     #Always close the database
     database.close()
 
