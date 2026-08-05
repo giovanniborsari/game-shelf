@@ -1,6 +1,7 @@
 "use client"
 import { useState } from "react";
 import TopBar from "../components/TopBar";
+import BottomBar from "../components/BottomBar";
 
 export default function About() {
 const [showForm, setShowForm] = useState(false);
@@ -42,6 +43,7 @@ return(
     </a>
     </div>
     </div>
+    <BottomBar/>
     </div>        
 )
 }

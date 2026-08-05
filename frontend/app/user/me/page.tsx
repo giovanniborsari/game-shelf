@@ -1,4 +1,5 @@
 "use client";
+import BottomBar from "@/app/components/BottomBar";
 import ProfileRow from "@/app/components/ProfileRow";
 import TopBar from "@/app/components/TopBar";
 import { API_URL } from "@/app/utils/api";
@@ -73,6 +74,7 @@ return(
         <ProfileRow user_id={null} row_type={"collection"} 
         clickable username={me.username}/>
         </div>
+        <BottomBar/>
     </div>   
 )
 }

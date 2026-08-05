@@ -7,6 +7,7 @@ import { GameCardHomeProps } from "../components/GameCardHome";
 import { useSearchParams } from "next/navigation";
 import { FilterState } from "../components/FilteringCol";
 import PlatformRow from "../components/PlatformRow";
+import BottomBar from "../components/BottomBar";
 
 function Home() {
 
@@ -112,8 +113,8 @@ function Home() {
         name={featuredGenres[3].name} />
         </> 
         )}
+      <BottomBar/>
     </div>
-
   );
 }
 

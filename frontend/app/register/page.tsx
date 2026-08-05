@@ -3,6 +3,7 @@ import { useState } from "react";
 import TopBar from "../components/TopBar";
 import { useRouter } from "next/navigation";
 import { API_URL } from "../utils/api";
+import BottomBar from "../components/BottomBar";
 
 export default function Register(){
 
@@ -117,6 +118,7 @@ return(
     Register
     </button>
     </div>
+    <BottomBar/>
     </div>
 )
 }

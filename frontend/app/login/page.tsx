@@ -3,6 +3,7 @@ import { useState } from "react";
 import TopBar from "../components/TopBar";
 import { useRouter } from "next/navigation";
 import { API_URL } from "../utils/api";
+import BottomBar from "../components/BottomBar";
 
 export default function Login(){
     const router = useRouter();
@@ -70,6 +71,7 @@ export default function Login(){
     Register
     </a>
     </div>
+    <BottomBar/>
     </div>
 
     )

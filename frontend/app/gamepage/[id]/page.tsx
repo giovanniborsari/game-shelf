@@ -4,6 +4,7 @@ import React from "react";
 import TopBar from "@/app/components/TopBar";
 import ReviewCard, { GameReviewsProps } from "@/app/components/ReviewCard";
 import { API_URL } from "@/app/utils/api";
+import BottomBar from "@/app/components/BottomBar";
 
 
 type GameDetails = {
@@ -380,7 +381,8 @@ return (
             </div>
         
         </div>
-    </div>     
+    </div>   
+    <BottomBar/>  
 </div>
 </>
 )

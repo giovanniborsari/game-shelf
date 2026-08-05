@@ -1,4 +1,5 @@
 "use client";
+import BottomBar from "@/app/components/BottomBar";
 import ProfileRow from "@/app/components/ProfileRow";
 import TopBar from "@/app/components/TopBar";
 import { API_URL } from "@/app/utils/api";
@@ -61,6 +62,7 @@ export default function UserDetailPage({ params }: { params: { id: number } }){
             <ProfileRow user_id={id} row_type={"collection"}
             clickable username={user.username} />
             </div>
+            <BottomBar/>
         </div>   
     )
     }

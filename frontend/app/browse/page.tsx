@@ -5,6 +5,7 @@ import FilteringCol, {FilterState} from "../components/FilteringCol";
 import TopBar from "../components/TopBar";
 import { useSearchParams } from "next/navigation";
 import { API_URL } from "../utils/api";
+import BottomBar from "../components/BottomBar";
 
 function BrowseContent() {
 
@@ -103,7 +104,7 @@ return (
         Next
       </button>
     </div>
-
+    <BottomBar/>
     </div>
   );
 }

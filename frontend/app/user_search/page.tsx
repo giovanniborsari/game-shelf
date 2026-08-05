@@ -5,6 +5,7 @@ import TopBar from "../components/TopBar";
 import ProfileCard from "../components/ProfileCard";
 import UserSearchCol, { FilterState } from "../components/UserSearchCol";
 import { API_URL } from "../utils/api";
+import BottomBar from "../components/BottomBar";
 
 export default function User_Search() {
 
@@ -89,7 +90,7 @@ return(
         Next
       </button>
     </div>
-
+    <BottomBar/>
     </div>
   );
 }
