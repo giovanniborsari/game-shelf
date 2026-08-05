@@ -49,7 +49,7 @@ def _population_pre ():
 
     #Variable
     limit = 500
-    offset = 0
+    offset = 55400
 
     # Fetching the token
     access_token = _get_access_token(client_id, client_sec)
@@ -272,7 +272,7 @@ def _population_pre ():
                 break
 
             offset += limit
-            time.sleep(0.25)
+            #time.sleep(0.25)
                 
     #Always close the database
     database.close()
