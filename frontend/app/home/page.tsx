@@ -82,6 +82,7 @@ function Home() {
         <ConsoleRow/>
         {featuredGenres.length > 0 && featuredPlatforms.length > 0 && (
         <>
+        <GenreRow id={1} name="Adventure" />
         <GenreRow
         key={featuredGenres[0].id}
         id={featuredGenres[0].id}
@@ -124,7 +125,7 @@ export default function HomeLoading() {
         Loading page...
       </div>
     }>
-      <Home />
+      <Home/>
     </Suspense>
   );
 }
