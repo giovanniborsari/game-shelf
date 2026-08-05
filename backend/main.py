@@ -758,3 +758,14 @@ def collection_delete_id(game_id: int, token: str = Depends(GameShelfBearer())):
         return f"Success, {game_name} deleted from the collection!"
     finally:
         database.close()
+
+@app.get("/db-test")
+def db_test():
+    try:
+        db = SessionLocal()
+        # Try a simple query, e.g., count users
+        count = db.query(User).count()
+        db.close()
+        return {"status": "connected", "user_count": count}
+    except Exception as e:
+        return {"status": "error", "detail": str(e)}
