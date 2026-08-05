@@ -10,7 +10,7 @@ export interface PlatformRowProps {
 }
 
 
-export default function ConsoleRow({id ,name} : PlatformRowProps) {
+export default function PlatformRow({id ,name} : PlatformRowProps) {
 
 const [games, setGames] = useState<GameCardHomeProps[]>([]);
 const [isLoading, setIsLoading] = useState(true)

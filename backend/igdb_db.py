@@ -49,7 +49,7 @@ def _population_pre ():
 
     #Variable
     limit = 500
-    offset = 55400
+    offset = 0
 
     # Fetching the token
     access_token = _get_access_token(client_id, client_sec)
@@ -555,4 +555,5 @@ def _genre_id_pop ():
     finally:
         database.close()
 #_genre_id_pop()
+#_platform_id_pop()
 _population_pre()

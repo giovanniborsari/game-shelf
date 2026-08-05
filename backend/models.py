@@ -60,8 +60,6 @@ class Items(Base):
     release_date = Column(DateTime, nullable= True, default = None)
     description = Column(String, nullable= True)
     art = Column(String, nullable= True)
-    age_rating = Column(Integer, nullable=True)
-    age_category = Column(Integer, nullable=True)
 
 
 class Wishlist(Base):

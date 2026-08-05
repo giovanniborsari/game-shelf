@@ -10,7 +10,7 @@ export default function TopBar() {
   }, []);
 
   return (
-    <header className="flex flex-row h-24 items-center w-full bg-gray-900">
+    <header className="flex flex-row h-24 items-center w-full bg-gray-900 ">
       <a href="/home" className="text-3xl font-bold text-gray-300 p-6 
       hover:text-emerald-400">
         GameShelf</a>
@@ -20,15 +20,11 @@ export default function TopBar() {
       hover:text-emerald-400">
           Games
         </a>
-        <a href="\user_search" className="text-xl font-bold text-gray-300 p-4 
+        <a href="/user_search" className="text-xl font-bold text-gray-300 p-4 
         hover:text-emerald-400">
           Users
         </a>
-        <a href="#lists" className="text-xl font-bold text-gray-300 p-4 
-        hover:text-emerald-400">
-          Lists
-        </a>
-        <a href="#about" className="text-xl font-bold text-gray-300 p-4 
+        <a href="/about" className="text-xl font-bold text-gray-300 p-4 
         hover:text-emerald-400">
           About
         </a>

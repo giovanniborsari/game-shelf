@@ -12,7 +12,7 @@ export interface GenreRowProps {
 }
 
 
-export default function ConsoleRow({id ,name} : GenreRowProps) {
+export default function GenreRow({id ,name} : GenreRowProps) {
 
 const [games, setGames] = useState<GameCardHomeProps[]>([]);
 const [isLoading, setIsLoading] = useState(true)
