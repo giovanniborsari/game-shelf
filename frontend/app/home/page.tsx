@@ -112,7 +112,7 @@ function Home() {
         id={featuredGenres[3].id}
         name={featuredGenres[3].name} />
         </> 
-        )};
+        )}
     </div>
 
   );

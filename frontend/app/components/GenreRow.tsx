@@ -26,6 +26,7 @@ params.append('min_rating', '80')
 fetch(`${API_URL}/items/bigcover/?${params.toString()}`)
     .then((response) => response.json())
     .then((data) => {
+    console.log();
     setGames(((data.items).sort(()=> Math.random()-0.5)).slice(0,30));
     setIsLoading(false);
     })
