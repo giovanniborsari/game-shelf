@@ -82,6 +82,7 @@ function Home() {
         <ConsoleRow/>
         {featuredGenres.length > 0 && featuredPlatforms.length > 0 && (
         <>
+        <p>test</p>
         <GenreRow id={1} name="Adventure" />
         <GenreRow
         key={featuredGenres[0].id}
