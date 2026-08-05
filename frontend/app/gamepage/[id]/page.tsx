@@ -119,7 +119,7 @@ return (
             className=
             {`font-mono ml-auto bg-emerald-400 rounded-md text-black
             text-xl flex justify-center items-center w-35 h-5 p-3 mr-auto
-            border-green-800 border-2`}>
+            border-green-800 border-2 hover:bg-emerald-700`}>
             Wishlist
             </button>
             {showWishlistAdd &&(
@@ -216,7 +216,7 @@ return (
             className=
             {`font-mono ml-auto bg-emerald-400 rounded-md text-black
             text-xl flex justify-center items-center w-35 h-5 p-3 mt-2 mr-auto
-            border-green-800 border-2`}>
+            border-green-800 border-2 hover:bg-emerald-700`}>
             Collection
             </button>
             {showCollectionAdd &&(

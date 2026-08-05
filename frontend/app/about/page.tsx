@@ -1,14 +1,17 @@
+"use client"
+import { useState } from "react";
 import TopBar from "../components/TopBar";
 
 export default function About() {
+const [showForm, setShowForm] = useState(false);
 
 return(
     <div className="min-h-screen bg-gray-900 flex flex-col">
         <TopBar/>
-    <div className="flex flex-col items-center ">
+    <div className="flex flex-col items-center mt-10 mb-auto ">
     <h1 className="text-3xl text-emerald-400 font-bold ">About</h1>
-    <div className="border-1 border-gray-200/50 
-    justify-center mt-5 max-w-250 ml-auto mr-auto p-6 rounded-xl">
+    <div 
+    className=" justify-center mt-5 max-w-250 ml-auto mr-auto p-6 rounded-xl">
     <p className="text-2xl text-white font-bold text-center">
     A place to log your games, create reviews, and track your wishlist!
     </p>
@@ -27,9 +30,18 @@ return(
     for the community. If you found a bug, have a suggestion, or a feedback, 
     please feel free to fill the form below or email: "gameshelfct@gmail.com". 
     </p>
+    <a 
+        href="https://docs.google.com/forms/d/e/1FAIpQLSdTgK2mTxZCxw3nPiAUVS8Gn_N3GNnydMQMJEaHgQ30rAUyNQ/viewform?usp=publish-editor"
+        target="_blank"
+        rel="noopener noreferrer"
+        className=
+        {`font-semibold ml-auto bg-emerald-400 rounded-md text-black
+        text-xl flex justify-center items-center w-50 max-2-50 max-h-10 h-10 p-3 
+        mr-auto border-green-800 border-2 mt-5 hover:bg-emerald-700`}>
+        Send Email
+    </a>
     </div>
     </div>
     </div>        
 )
 }
-

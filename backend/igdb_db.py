@@ -49,7 +49,7 @@ def _population_pre ():
 
     #Variable
     limit = 500
-    offset = 0
+    offset = 17285
 
     # Fetching the token
     access_token = _get_access_token(client_id, client_sec)
@@ -191,21 +191,6 @@ def _population_pre ():
                     #IGDB id
                     igdb_id = game.get('id')
 
-                    #Age rating information
-                    age_ratings = game.get("age_ratings", [])
-                    age_rating = None
-                    age_category = None
-
-                    for rating in age_ratings:
-                        if rating.get("category") == 1:   # ESRB
-                            age_rating = rating.get("rating")
-                            age_category = rating.get("category")
-                            break
-
-                    if age_rating is None and age_ratings:
-                        age_rating = age_ratings[0].get("rating")
-                        age_category = age_ratings[0].get("category")
-
                     #Check if game already exists
                     existing_game = database.query(Items).filter(Items.igdb_id
                                                              == igdb_id).first()
@@ -218,8 +203,6 @@ def _population_pre ():
                         new_game= Items(
                             item_name = name,
                             igdb_id = igdb_id,
-                            age_rating = age_rating,
-                            age_category = age_category,
                             platform = all_platforms,
                             genre = all_genres,
                             small_cover = url_scover,
