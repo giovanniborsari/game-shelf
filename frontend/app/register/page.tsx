@@ -16,6 +16,25 @@ const [bio, setBio] = useState("");
 const [picture, setPicture] = useState("");
 const [confirmPassword, setConfirmPassword] = useState("");
 
+const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const token = localStorage.getItem("token") ?? "";
+
+  const res = await fetch(`${API_URL}/upload/profile-picture`, {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${token}` },
+    body: formData
+  });
+
+  const data = await res.json();
+  setPicture(data.url);
+};
+
 return(
     <div className="min-h-screen bg-gray-900 flex flex-col items-center"> 
     <TopBar/>
@@ -74,12 +93,23 @@ return(
     ></textarea>
     <h1 className="text-white text-2xl font-bold mr-auto p-2">
         Profile Picture</h1>
+
+    {picture && (
+    <img src={picture} alt="Preview" 
+    className="w-24 h-24 rounded-full object-cover mb-2" />
+    )}
+
+    <label className="bg-white text-gray-900 font-bold py-2 px-4 
+    rounded cursor-pointer hover:bg-emerald-500 transition-colors min-w-xl 
+    flex items-center justify-center">
+    Choose Profile Picture
     <input
     type="file"
-    className="bg-white min-w-xl min-h-10 text-black text-xl font-semibold 
-    p-2 items-center flex justify-center"
-    //Implement it later, when adding aws
+    accept="image/*"
+    className="hidden"
+     onChange={handleUpload}
     ></input>
+    </label>
     <br></br>
     <button 
     onClick={() => {
@@ -98,8 +128,7 @@ return(
         password:password,
         email:email,
         bio:bio,
-        picture:""
-        //Implement picture when adding aws
+        picture:picture
         })
     })
     .then(res => res.json())

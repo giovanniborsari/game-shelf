@@ -1,4 +1,7 @@
-from fastapi import FastAPI, Query, Depends
+import os
+
+from fastapi import FastAPI, File, Query, Depends, UploadFile
+from supabase import create_client
 from database import SessionLocal
 from models import *
 from pydantic import BaseModel
@@ -769,3 +772,36 @@ def db_test():
         return {"status": "connected", "user_count": count}
     except Exception as e:
         return {"status": "error", "detail": str(e)}
+
+@app.post("/upload/profile-picture", dependencies=[Depends(GameShelfBearer())])
+async def upload_profile_picture(
+    file: UploadFile = File(...),
+    token: str = Depends(GameShelfBearer())
+):
+    user_id = get_user_id_from_token(token)
+    
+    supabase = create_client(
+        os.getenv("SUPABASE_URL"), # type: ignore
+        os.getenv("SUPABASE_KEY") # type: ignore
+    )
+    
+    file_content = await file.read()
+    filename = f"{user_id}_{file.filename}"
+    
+    supabase.storage.from_("profile-pictures").upload(
+        filename,
+        file_content,
+        {"content-type": file.content_type} # type: ignore
+    )
+    
+    url = supabase.storage.from_("profile-pictures").get_public_url(filename)
+    
+    database = SessionLocal()
+    try:
+        user = database.query(User).filter(User.user_id == user_id).first()
+        user.profile_picture = url # type: ignore
+        database.commit()
+    finally:
+        database.close()
+    
+    return {"url": url}
