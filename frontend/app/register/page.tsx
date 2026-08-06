@@ -15,25 +15,7 @@ const [email, setEmail] = useState("");
 const [bio, setBio] = useState("");
 const [picture, setPicture] = useState("");
 const [confirmPassword, setConfirmPassword] = useState("");
-
-const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  const formData = new FormData();
-  formData.append("file", file);
-
-  const token = localStorage.getItem("token") ?? "";
-
-  const res = await fetch(`${API_URL}/upload/profile-picture`, {
-    method: "POST",
-    headers: { "Authorization": `Bearer ${token}` },
-    body: formData
-  });
-
-  const data = await res.json();
-  setPicture(data.url);
-};
+const [pictureFile, setPictureFile] = useState<File | null>(null);
 
 return(
     <div className="min-h-screen bg-gray-900 flex flex-col items-center"> 
@@ -107,7 +89,13 @@ return(
     type="file"
     accept="image/*"
     className="hidden"
-     onChange={handleUpload}
+    onChange={(e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+    setPictureFile(file);
+    setPicture(URL.createObjectURL(file));
+    }
+    }}
     ></input>
     </label>
     <br></br>
@@ -133,9 +121,22 @@ return(
     })
     .then(res => res.json())
     .then(data => {
-      if (data.access_token) {
-        localStorage.setItem("token", data.access_token);
+        if (data.access_token) {
+          localStorage.setItem("token", data.access_token);
+          if (pictureFile) {    
+          const formData = new FormData();
+          formData.append("file", pictureFile);
+
+          fetch(`${API_URL}/upload/profile-picture`, {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${data.access_token}` },
+          body: formData
+        })
+        .then(res => res.json())
+        .then(() => router.push("/user/me"));
+        } else {
         router.push("/user/me");
+        }
       } else {
         setError(data.Error);
       }
