@@ -133,7 +133,10 @@ return(
           body: formData
         })
         .then(res => res.json())
-        .then(() => router.push("/user/me"));
+        .then(() => router.push("/user/me"))
+        .catch(() => {
+        router.push("/user/me"); 
+        });
         } else {
         router.push("/user/me");
         }
