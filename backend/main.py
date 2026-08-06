@@ -788,13 +788,13 @@ async def upload_profile_picture(
     file_content = await file.read()
     filename = f"{user_id}_{file.filename}"
     
-    supabase.storage.from_("profile-pictures").upload(
+    supabase.storage.from_("profile-pics").upload(
         filename,
         file_content,
         {"content-type": file.content_type} # type: ignore
     )
     
-    url = supabase.storage.from_("profile-pictures").get_public_url(filename)
+    url = supabase.storage.from_("profile-pics").get_public_url(filename)
     
     database = SessionLocal()
     try:
