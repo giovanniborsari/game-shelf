@@ -26,7 +26,7 @@ useEffect(() => {
     }
     })
     .then(res => {
-    if (res.status === 403) {
+    if (res.status === 401 || res.status === 403) {
       localStorage.removeItem("token");
       router.push("/login");
       return;
