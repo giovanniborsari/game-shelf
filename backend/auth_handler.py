@@ -19,7 +19,7 @@ def encode_jwt(user_id: int) -> Dict[str,str]:
 
     payload = {
         "user_id": str(user_id),
-        "expires": time.time() + 18000
+        "expires": time.time() + 100000
     }
 
     #Creates a safe url string

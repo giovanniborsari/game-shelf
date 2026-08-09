@@ -78,7 +78,7 @@ return(
 
     {picture && (
     <img src={picture} alt="Preview" 
-    className="w-24 h-24 rounded-full object-cover mb-2" />
+    className="w-24 h-24 rounded-xl object-cover mb-2" />
     )}
 
     <label className="bg-white text-gray-900 font-bold py-2 px-4 

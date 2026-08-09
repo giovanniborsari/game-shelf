@@ -28,11 +28,20 @@ export default function TopBar() {
         hover:text-emerald-400">
           About
         </a>
-        <a href={!isLoggedIn ? "/login" : "/user/me" } 
+        { isLoggedIn && (
+        <a href={"/user/me" } 
         className="text-xl font-bold text-gray-300 p-4 
         hover:text-emerald-400">
           MyProfile
         </a>
+        )}
+        {!isLoggedIn && (
+        <a href={"/login" } 
+        className="text-xl font-bold text-gray-300 p-4 
+        hover:text-emerald-400">
+          Login
+        </a>
+        )}
       </nav>
     </header>
   );
