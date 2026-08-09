@@ -6,7 +6,7 @@ from database import SessionLocal
 from models import *
 from pydantic import BaseModel
 from datetime import datetime
-from users import add_user
+from users import add_user, update_user
 from password import _check_pwd
 from auth_handler import encode_jwt, get_user_id_from_token
 from jwt_bearer import GameShelfBearer
@@ -29,6 +29,11 @@ class FormattedUserRegister(BaseModel):
     username: str
     email: str
     password: str
+    bio: str | None = None
+    picture: str | None = None
+
+class FormattedUserUpdate(BaseModel):
+    username: str
     bio: str | None = None
     picture: str | None = None
 
@@ -133,6 +138,18 @@ def register_user(request: FormattedUserRegister):
     finally:
         database.close()
 
+@app.post("/auth/update", dependencies=[Depends(GameShelfBearer())])
+def update_user_endpoint(request: FormattedUserUpdate, 
+                token: str = Depends(GameShelfBearer())):
+
+    user_id = get_user_id_from_token(token)
+
+    success, message = update_user(
+        request.username, #type: ignore
+        request.bio, #type: ignore
+        request.picture, #type: ignore
+        user_id #type: ignore
+    )
 
 @app.post("/auth/login")
 def user_login (request : FormattedPWDRequest):
@@ -805,3 +822,7 @@ async def upload_profile_picture(
         database.close()
     
     return {"url": url}
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
