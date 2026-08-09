@@ -825,5 +825,6 @@ async def upload_profile_picture(
     return {"url": url}
 
 @app.get("/health")
+@app.head("/health")
 def health_check():
     return {"status": "ok"}
