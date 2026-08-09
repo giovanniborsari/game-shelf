@@ -4,9 +4,9 @@ import TopBar from "../components/TopBar";
 import { useRouter } from "next/navigation";
 import { API_URL } from "../utils/api";
 import BottomBar from "../components/BottomBar";
-import { saveToken } from "../utils/auth";
+import { getToken, saveToken } from "../utils/auth";
 
-export default function Register(){
+export default function UpdateProfile(){
 
 const router = useRouter();
 const [error, setError] = useState("");
@@ -23,7 +23,7 @@ return(
     <h1 className= "text-white text-3xl font-bold p-2 "> 
         Welcome to GameShelf!</h1>
     <h2 className= "text-white text-xl font-semibold p-2 "> 
-        Create your account</h2>
+        Update your profile</h2>
     <br></br>
     <h1 className="text-white text-2xl font-bold mr-auto p-2">Username</h1>
     <input 
@@ -72,9 +72,12 @@ return(
     <button 
     onClick={() => {
     {error && <p className="text-red-500 mt-2">{error}</p>}
+
+    const token = getToken()?? "";
     fetch(`${API_URL}/update`, {
       method: "POST",
       headers: {
+        "Authorization": `Bearer ${token }`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
@@ -85,28 +88,25 @@ return(
     })
     .then(res => res.json())
     .then(data => {
-        if (data.access_token) {
-          saveToken(data.access_token);
-          if (pictureFile) {    
-          const formData = new FormData();
-          formData.append("file", pictureFile);
+        if (data.success) {
+            if (pictureFile) {
+            const token = getToken() ?? "";
+            const formData = new FormData();
+            formData.append("file", pictureFile);
 
-          fetch(`${API_URL}/upload/profile-picture`, {
-          method: "POST",
-          headers: { "Authorization": `Bearer ${data.access_token}` },
-          body: formData
-        })
-        .then(res => res.json())
-        .then(() => router.push("/user/me"))
-        .catch(() => {
-        router.push("/user/me"); 
-        });
+            fetch(`${API_URL}/upload/profile-picture`, {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${token}` },
+                body: formData
+            })
+            .then(() => router.push("/user/me"))
+            .catch(() => router.push("/user/me"));
+            } else {
+            router.push("/user/me");
+            }
         } else {
-        router.push("/user/me");
+            setError(data.message || "Update failed");
         }
-      } else {
-        setError(data.Error);
-      }
     })
     }}
     className="flex-1 bg-emerald-400 
@@ -114,6 +114,13 @@ return(
     transition-colors min-w-xl min-h-10">
     Update
     </button>
+    <button onClick={()=>{
+        router.push("/user/me")
+    }}
+    className="flex-1 bg-red-600 mt-2
+    hover:bg-red-700 text-white font-bold py-2 px-4 rounded 
+    transition-colors min-w-xl min-h-10">
+    Cancel</button>
     </div>
     <BottomBar/>
     </div>

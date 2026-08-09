@@ -97,9 +97,10 @@ def update_user(username: str, bio:str, picture:str, user_id: int):
     database = SessionLocal()
 
     try:
-        #Search username in the actual database, return False if search == None
-        search_user = database.query(User).filter(User.username == username)\
-            .first() is not None
+        search_user = database.query(User).filter(
+            User.username == username,
+            User.user_id != user_id  # exclude current user
+            ).first() is not None
         if search_user:
             return False, "Username already being used!"
         

@@ -3,7 +3,7 @@ import BottomBar from "@/app/components/BottomBar";
 import ProfileRow from "@/app/components/ProfileRow";
 import TopBar from "@/app/components/TopBar";
 import { API_URL } from "@/app/utils/api";
-import { clearToken } from "@/app/utils/auth";
+import { clearToken, getToken } from "@/app/utils/auth";
 import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
@@ -23,7 +23,7 @@ const [me, setMe] = useState<meDetails | null>(null);
 const [showLogOut, setShowLogOut] = useState(false);
 
 useEffect(() => {
-    const token = localStorage.getItem("token") ?? "";
+    const token = getToken()?? "";
     fetch(`${API_URL}/user/me`,{
     headers: {
       "Authorization": `Bearer ${token }`
@@ -31,7 +31,7 @@ useEffect(() => {
     })
     .then(res => {
     if (res.status === 401 || res.status === 403) {
-      localStorage.removeItem("token");
+      clearToken();
       router.push("/login");
       return;
     }

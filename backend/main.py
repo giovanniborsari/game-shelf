@@ -150,6 +150,7 @@ def update_user_endpoint(request: FormattedUserUpdate,
         request.picture, #type: ignore
         user_id #type: ignore
     )
+    return {"success": success, "message": message}
 
 @app.post("/auth/login")
 def user_login (request : FormattedPWDRequest):
