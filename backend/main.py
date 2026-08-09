@@ -138,7 +138,7 @@ def register_user(request: FormattedUserRegister):
     finally:
         database.close()
 
-@app.post("/auth/update", dependencies=[Depends(GameShelfBearer())])
+@app.post("/update", dependencies=[Depends(GameShelfBearer())])
 def update_user_endpoint(request: FormattedUserUpdate, 
                 token: str = Depends(GameShelfBearer())):
 

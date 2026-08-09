@@ -88,6 +88,7 @@ return(
             Do you want to log out ?</p>
         <div className="flex flex-row items-center gap-2 m-2 justify-center">
         <button onClick={() => {
+            console.log("button clicked");
             router.push("/update");
         }}
         className="bg-emerald-400 w-35 h-10 rounded-xl hover:bg-emerald-700

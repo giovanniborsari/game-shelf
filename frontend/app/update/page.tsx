@@ -11,11 +11,8 @@ export default function Register(){
 const router = useRouter();
 const [error, setError] = useState("");
 const [username, setUsername] = useState("");
-const [password, setPassword] = useState("");
-const [email, setEmail] = useState("");
 const [bio, setBio] = useState("");
 const [picture, setPicture] = useState("");
-const [confirmPassword, setConfirmPassword] = useState("");
 const [pictureFile, setPictureFile] = useState<File | null>(null);
 
 return(
@@ -36,34 +33,6 @@ return(
     className="bg-white min-w-xl min-h-10 text-black text-xl font-semibold 
     p-2"
     placeholder="Username"
-    ></input>
-    <h1 className="text-white text-2xl font-bold mr-auto p-2">Email</h1>
-    <input 
-    type="email"
-    value={email}
-    onChange={(e) => setEmail(e.target.value)}
-    className="bg-white min-w-xl min-h-10 text-black text-xl font-semibold 
-    p-2"
-    placeholder="email@gameshelf.com"
-    ></input>
-    <h1 className="text-white text-2xl font-bold mr-auto p-2">Password</h1>
-    <input 
-    type="password"
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-    className="bg-white min-w-xl min-h-10 text-black text-xl font-semibold 
-    p-2"
-    placeholder="Password"
-    ></input>
-    <h1 className="text-white text-2xl font-bold mr-auto p-2">
-        Confirm your Password</h1>
-    <input 
-    type="password"
-    value={confirmPassword}
-    onChange={(e) => setConfirmPassword(e.target.value)}
-    className="bg-white min-w-xl min-h-10 text-black text-xl font-semibold 
-    p-2"
-    placeholder="Password"
     ></input>
     <h1 className="text-white text-2xl font-bold mr-auto p-2">
         Add your Bio</h1>
@@ -102,20 +71,14 @@ return(
     <br></br>
     <button 
     onClick={() => {
-    if (password !== confirmPassword) {
-    setError("Passwords do not match!");
-    return;
-    }
     {error && <p className="text-red-500 mt-2">{error}</p>}
-    fetch(`${API_URL}/auth/register`, {
+    fetch(`${API_URL}/update`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
         username:username,
-        password:password,
-        email:email,
         bio:bio,
         picture:picture
         })
