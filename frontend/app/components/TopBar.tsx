@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
+import { getToken } from "../utils/auth";
 
 export default function TopBar() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem("token"));
+  setIsLoggedIn(!!getToken());
   }, []);
 
   return (

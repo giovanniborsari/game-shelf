@@ -4,6 +4,7 @@ import TopBar from "../components/TopBar";
 import { useRouter } from "next/navigation";
 import { API_URL } from "../utils/api";
 import BottomBar from "../components/BottomBar";
+import { saveToken } from "../utils/auth";
 
 export default function Register(){
 
@@ -122,7 +123,7 @@ return(
     .then(res => res.json())
     .then(data => {
         if (data.access_token) {
-          localStorage.setItem("token", data.access_token);
+          saveToken(data.access_token);
           if (pictureFile) {    
           const formData = new FormData();
           formData.append("file", pictureFile);

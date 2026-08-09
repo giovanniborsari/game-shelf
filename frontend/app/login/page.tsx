@@ -4,6 +4,7 @@ import TopBar from "../components/TopBar";
 import { useRouter } from "next/navigation";
 import { API_URL } from "../utils/api";
 import BottomBar from "../components/BottomBar";
+import { saveToken } from "../utils/auth";
 
 export default function Login(){
     const router = useRouter();
@@ -50,7 +51,7 @@ export default function Login(){
     .then(res => res.json())
     .then(data => {
       if (data.access_token) {
-        localStorage.setItem("token", data.access_token);
+        saveToken(data.access_token);;
         router.push("user/me");
       } else {
         setError(data.Error);
