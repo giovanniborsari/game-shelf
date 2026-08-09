@@ -88,8 +88,8 @@ return(
             Do you want to log out ?</p>
         <div className="flex flex-row items-center gap-2 m-2 justify-center">
         <button onClick={() => {
-            console.log("button clicked");
-            router.push("/update");
+            clearToken();
+            router.push("/login");
         }}
         className="bg-emerald-400 w-35 h-10 rounded-xl hover:bg-emerald-700
         border-2 border-black"
@@ -102,10 +102,13 @@ return(
         </div>
         </div>
         )}
-        <a className="bg-gray-600 w-30 h-10 border-2 border-black rounded-xl
+        <button onClick={() => {
+            router.push("/update");
+        }}
+        className="bg-gray-600 w-30 h-10 border-2 border-black rounded-xl
         ml-auto hover:bg-gray-800 flex items-center justify-center 
         font-semibold"> 
-        Edit</a>
+        Edit</button>
         </div>
         </div>
         </div>
