@@ -323,7 +323,6 @@ def update_user_endpoint(request: FormattedUserUpdate,
 def user_login (request : FormattedPWDRequest):
     """
     Login to the user account.
-    
     Validates input and login user.
 
     Args:
@@ -364,37 +363,71 @@ def get_items(page:int = 1,
               genre: str|None = None,
               min_rating: float|None = None,
               max_rating: float|None = None):
-    
+
+    """
+    Returns items in the database according to fiters setted.
+
+    Args:
+        page (int) : Current items page
+        limit (int) : Limit of items per page (default is 36)
+        search (str) : Word searching filter
+        platform (str) : Game platform searching filter
+        genre (str) : Genre platform searching filter
+        min_rating (str) : Min official game rating searching filter
+        max_rating (str) : Max official game rating searching filter
+
+    Returns:
+        dict: {
+            items: list of formatted game objects,
+            total: total number of matching games,
+            page: current page number,
+            pages: total number of available pages
+        }
+    """ 
+
+    #Initialize variables and database
     skip = (page - 1) * limit
     database = SessionLocal()
     formatted_items = []
 
-    try:        
+    try:    
+        #Query all items from the database    
         query = database.query(Items)
         
-        #Filtering options  
+        #Filtering options 
+        
+        #Filter query by platform id
         if platform:
-            platform_ids = [int(p) for p in platform.split(",") if p.strip().isdigit()]
+            platform_ids = \
+                [int(p) for p in platform.split(",") if p.strip().isdigit()]
             if platform_ids:
                 query = query.join(Platform_Games, Platform_Games.game_id 
                     == Items.item_id).\
                         where(Platform_Games.platform_id.in_(platform_ids))
 
+        #Filter query by genre id
         if genre:
             genre_ids = [int(g) for g in genre.split(",") if g.strip().isdigit()]
             if genre_ids:
                 query = query.join(Genre_Games, Genre_Games.game_id 
                     == Items.item_id).where(Genre_Games.genre_id.in_(genre_ids))
-            
+
+        #Filter query by word search
         if search:
-            query = query.filter(Items.item_name.ilike(f"%{search}%"))    
+            query = query.filter(Items.item_name.ilike(f"%{search}%"))   
+
+        #Filter query by min rating official grade 
         if min_rating is not None:
             query = query.filter(Items.rating >= min_rating)
+
+        #Filter query by max rating official grade 
         if max_rating is not None:
             query = query.filter(Items.rating <= max_rating)
 
+        # Apply pagination — skip to the right page and limit results
         items = query.offset(skip).limit(limit).all()
-        
+
+        #Generates Formatted Items to be returned to the frontend
         for item in items:
             new_item = FormattedItem(
                 game_id = item.item_id, #type:ignore
@@ -410,14 +443,18 @@ def get_items(page:int = 1,
             
             formatted_items.append(new_item) #type: ignore
 
+        #Counts how many games are available after filtering
         total = query.count()
 
+        #Return the formatted items, total number of games, current page, and 
+        #total pages
         return {
         "items": formatted_items,
         "total": total,
         "page": page,
         "pages": (total + limit - 1) // limit
         }
+    #Always closes the database
     finally:
         database.close()
 
@@ -429,37 +466,72 @@ def get_items_big_cover(page:int = 1,
               genre: str|None = None,
               min_rating: float|None = None,
               max_rating: float|None = None):
-    
+
+    """
+    Returns items in the database according to fiters setted.
+    Game Cover returned has a higher image quality
+
+    Args:
+        page (int) : Current items page
+        limit (int) : Limit of items per page (default is 36)
+        search (str) : Word searching filter
+        platform (str) : Game platform searching filter
+        genre (str) : Genre platform searching filter
+        min_rating (str) : Min official game rating searching filter
+        max_rating (str) : Max official game rating searching filter
+
+    Returns:
+        dict: {
+            items: list of formatted game objects,
+            total: total number of matching games,
+            page: current page number,
+            pages: total number of available pages
+        }
+    """ 
+
+    #Initialize variables and database
     skip = (page - 1) * limit
     database = SessionLocal()
     formatted_items = []
 
-    try:        
+    try:    
+        #Query all items from the database    
         query = database.query(Items)
         
-        #Filtering options  
+        #Filtering options 
+        
+        #Filter query by platform id
         if platform:
-            platform_ids = [int(p) for p in platform.split(",") if p.strip().isdigit()]
+            platform_ids = \
+                [int(p) for p in platform.split(",") if p.strip().isdigit()]
             if platform_ids:
                 query = query.join(Platform_Games, Platform_Games.game_id 
                     == Items.item_id).\
                         where(Platform_Games.platform_id.in_(platform_ids))
 
+        #Filter query by genre id
         if genre:
             genre_ids = [int(g) for g in genre.split(",") if g.strip().isdigit()]
             if genre_ids:
                 query = query.join(Genre_Games, Genre_Games.game_id 
                     == Items.item_id).where(Genre_Games.genre_id.in_(genre_ids))
-            
+
+        #Filter query by word search
         if search:
-            query = query.filter(Items.item_name.ilike(f"%{search}%"))     
+            query = query.filter(Items.item_name.ilike(f"%{search}%"))   
+
+        #Filter query by min rating official grade 
         if min_rating is not None:
             query = query.filter(Items.rating >= min_rating)
+
+        #Filter query by max rating official grade 
         if max_rating is not None:
             query = query.filter(Items.rating <= max_rating)
 
+        # Apply pagination — skip to the right page and limit results
         items = query.offset(skip).limit(limit).all()
-        
+
+        #Generates Formatted Items to be returned to the frontend
         for item in items:
             new_item = FormattedItem(
                 game_id = item.item_id, #type:ignore
@@ -475,24 +547,43 @@ def get_items_big_cover(page:int = 1,
             
             formatted_items.append(new_item) #type: ignore
 
+        #Counts how many games are available after filtering
         total = query.count()
 
+        #Return the formatted items, total number of games, current page, and 
+        #total pages
         return {
         "items": formatted_items,
         "total": total,
         "page": page,
         "pages": (total + limit - 1) // limit
         }
+    #Always closes the database
     finally:
         database.close()
 
 @app.get("/items/get_id/{id}")
 def get_item_id(id: int):
+    """
+    Returns an specific game by id
+
+    Args:
+        id (int) : game's id
+
+    Returns:
+        FormattedItem : desired game
+        Error message if item was not found
+    """ 
+
+    #Starts the database
     database = SessionLocal()
+
+    #Query the specific item
     item = database.query(Items).filter(Items.item_id == id).first()
 
     try:
         if item is not None:
+            #Creates new FormattedItem 
             desired_game = FormattedItem(
                 game_id = item.item_id, #type:ignore
                 game_title = item.item_name, #type: ignore
@@ -504,9 +595,12 @@ def get_item_id(id: int):
                 game_cover = item.big_cover, #type: ignore
                 game_art = item.art #type: ignore
             )
+            #Returns the desired game
             return desired_game
         else:
-            return "Item not found, do you want to add a new game to our database?"
+            #Returns an error message if item was not found
+            return "Item not found!"
+    #Always closes the database
     finally:
         database.close()
 
@@ -514,13 +608,27 @@ def get_item_id(id: int):
 @app.post("/collection/add", dependencies=[Depends(GameShelfBearer())])
 def add_to_collection(item: FormattedAddItemCollection, 
                       token: str = Depends(GameShelfBearer())):
-    
+
+    """
+    Returns an specific game by id
+
+    Args:
+        item (FormattedAddItemCollection) : Game's information to add in the 
+            collection
+        token (str) : User's authentification token
+
+    Returns:
+        dict : success (true or false) and descriptive message
+    """ 
+
+    #Gets user's id from authentification token
     user_id = get_user_id_from_token(token)
-   
+
+    #Tries to add item to collection
     success, message = add_item_collection(user_id, item.platform, #type: ignore
                        item.item_id, item.user_rating, item.notes, #type: ignore 
                        item.played) #type: ignore
-    
+    #Returns success? and message
     return {"success": success, "message": message}
 
 @app.post("/collection/edit", dependencies=[Depends(GameShelfBearer())])
