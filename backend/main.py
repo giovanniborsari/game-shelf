@@ -249,9 +249,23 @@ app.add_middleware(
 def root():
     return {"message": "Game Shelf is running!"} 
 
+#---------------------------------Users Methods---------------------------------
 @app.post("/auth/register")
 def register_user(request: FormattedUserRegister):
+    """
+    Creates a new user account.
+    
+    Validates input, hashes the password, and stores the user in the database.
+    Returns a JWT token on success so the user is automatically logged in.
 
+    Args:
+        request (FormattedUserRegister): username, email, password, bio, picture
+
+    Returns:
+        dict: access_token on success, error message on failure
+    """
+
+    #Creates a new user to add
     success, message = add_user(
         request.username,
         request.email,
@@ -261,48 +275,87 @@ def register_user(request: FormattedUserRegister):
     )
 
     try:
+        #Starts the database
         database= SessionLocal()
+        #Adds user to the database if success equals to true
         if success:
             user = database.query(User).filter(User.\
                                         username == request.username).first()
+            #Returns encoded JWT Bearer token
             return encode_jwt(user.user_id) #type: ignore
         else:
+            #Returns the error message if success equals to false
             return {"Error": f"{message}"}
+    #Always closes the database
     finally:
         database.close()
 
 @app.post("/update", dependencies=[Depends(GameShelfBearer())])
 def update_user_endpoint(request: FormattedUserUpdate, 
                 token: str = Depends(GameShelfBearer())):
+    """
+    Updates user account.
+    
+    Validates input and stores the user's updated information in the database.
 
+    Args:
+        request (FormattedUserUpdate): username, bio, picture
+        token (str) : token that confirms the user is logged in
+
+    Returns:
+        dict: True or False followed by a descriptive message
+    """
+
+    #Gets the user id from access token
     user_id = get_user_id_from_token(token)
 
+    #Updates the user with new information
     success, message = update_user(
         request.username, #type: ignore
         request.bio, #type: ignore
         request.picture, #type: ignore
         user_id #type: ignore
     )
+    #Returns success plus a descriptive message
     return {"success": success, "message": message}
 
 @app.post("/auth/login")
 def user_login (request : FormattedPWDRequest):
+    """
+    Login to the user account.
+    
+    Validates input and login user.
+
+    Args:
+        request (FormattedPWDRequest): username and password
+        
+
+    Returns:
+        dict: Encoded JWT Bearer token, or False with a descriptive message in 
+        case of failure
+    """
+
+    #Checks user's input
     success = _check_pwd(
         request.username,
         request.password
     )
 
     try:
+        #Starts the database
         database = SessionLocal()
+        #Returns JWT token in case of success
         if success:
             user = database.query(User).filter(User.\
                                         username == request.username).first()
             return encode_jwt(user.user_id) #type: ignore
         else:
             return {"Error": "Wrong username or password. Try Again!"}
+    #Always close the database
     finally:
         database.close()
 
+#--------------------------------Items Methods----------------------------------
 @app.get("/items/")
 def get_items(page:int = 1, 
               limit: int = 36,
@@ -457,6 +510,7 @@ def get_item_id(id: int):
     finally:
         database.close()
 
+#--------------------------------Collection Methods-----------------------------
 @app.post("/collection/add", dependencies=[Depends(GameShelfBearer())])
 def add_to_collection(item: FormattedAddItemCollection, 
                       token: str = Depends(GameShelfBearer())):
@@ -564,6 +618,7 @@ def show_collection_id(id:int):
     finally:
         database.close()
 
+#--------------------------------Wishlist Methods-------------------------------
 @app.post("/wishlist/add", dependencies=[Depends(GameShelfBearer())])
 def add_to_wishlist(item: FormattedAddItemWishlist, 
                       token: str = Depends(GameShelfBearer())):
@@ -664,6 +719,7 @@ def show_whishlist_id(id:int):
     finally:
         database.close()
 
+#---------------------------------User Methods----------------------------------
 @app.get("/user/me", dependencies=[Depends(GameShelfBearer())])
 def user_me (token: str = Depends(GameShelfBearer())):
 
@@ -750,6 +806,40 @@ def get_users(page:int = 1, limit: int = 36,search: str|None = None):
     finally:
         database.close()
 
+@app.post("/upload/profile-picture", dependencies=[Depends(GameShelfBearer())])
+async def upload_profile_picture(
+    file: UploadFile = File(...),
+    token: str = Depends(GameShelfBearer())
+):
+    user_id = get_user_id_from_token(token)
+    
+    supabase = create_client(
+        os.getenv("SUPABASE_URL"), # type: ignore
+        os.getenv("SUPABASE_KEY") # type: ignore
+    )
+    
+    file_content = await file.read()
+    filename = f"{user_id}_{file.filename}"
+    
+    supabase.storage.from_("profile-pics").upload(
+        filename,
+        file_content,
+        {"content-type": file.content_type} # type: ignore
+    )
+    
+    url = supabase.storage.from_("profile-pics").get_public_url(filename)
+    
+    database = SessionLocal()
+    try:
+        user = database.query(User).filter(User.user_id == user_id).first()
+        user.profile_picture = url # type: ignore
+        database.commit()
+    finally:
+        database.close()
+    
+    return {"url": url}
+
+#--------------------------------Review Methods---------------------------------
 @app.get("/game/reviews")
 def game_reviews (game_id: int):
 
@@ -913,6 +1003,7 @@ def collection_delete_id(game_id: int, token: str = Depends(GameShelfBearer())):
     finally:
         database.close()
 
+#--------------------------------Test Methods-----------------------------------
 @app.get("/db-test")
 def db_test():
     try:
@@ -923,39 +1014,6 @@ def db_test():
         return {"status": "connected", "user_count": count}
     except Exception as e:
         return {"status": "error", "detail": str(e)}
-
-@app.post("/upload/profile-picture", dependencies=[Depends(GameShelfBearer())])
-async def upload_profile_picture(
-    file: UploadFile = File(...),
-    token: str = Depends(GameShelfBearer())
-):
-    user_id = get_user_id_from_token(token)
-    
-    supabase = create_client(
-        os.getenv("SUPABASE_URL"), # type: ignore
-        os.getenv("SUPABASE_KEY") # type: ignore
-    )
-    
-    file_content = await file.read()
-    filename = f"{user_id}_{file.filename}"
-    
-    supabase.storage.from_("profile-pics").upload(
-        filename,
-        file_content,
-        {"content-type": file.content_type} # type: ignore
-    )
-    
-    url = supabase.storage.from_("profile-pics").get_public_url(filename)
-    
-    database = SessionLocal()
-    try:
-        user = database.query(User).filter(User.user_id == user_id).first()
-        user.profile_picture = url # type: ignore
-        database.commit()
-    finally:
-        database.close()
-    
-    return {"url": url}
 
 @app.get("/health")
 @app.head("/health")
