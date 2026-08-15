@@ -49,7 +49,7 @@ def _population_pre ():
 
     #Variable
     limit = 500
-    offset = 200000
+    offset = 368560
 
     # Fetching the token
     access_token = _get_access_token(client_id, client_sec)

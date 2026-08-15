@@ -10,11 +10,30 @@ load_dotenv() #reads .env file and loads it to python
 SECRET_JWT = os.getenv("S_JWT")
 SECRET_ALG = os.getenv("S_ALG")
 
+""" 
+    Wraps the JWT token string in a dictionary.
+
+    Attributes:
+        token: user's access token 
+
+    Return:
+        dict: A dictionary containing the access token 
+"""
 def ret_token(token: str):
     return {
         "access_token": token
     }
 
+""" 
+    Creates and signs a JWT for a user after login or registration
+    Token contain user's id and an expiration timestamp
+
+    Attributes:
+        user_id (int): The unique identifier of the user being authenticated
+
+    Return:
+        dict: A dictionary with the user JWT token string 
+"""
 def encode_jwt(user_id: int) -> Dict[str,str]:
 
     payload = {
@@ -27,6 +46,16 @@ def encode_jwt(user_id: int) -> Dict[str,str]:
 
     return ret_token(token)
 
+""" 
+    Decodes and check if an incoming JWT token is valid
+
+    Attributes:
+        token (str): The JWT token string sent by the frontend
+
+    Return:
+        dict: The decoded payload if the token is valid and not expired.
+              Returns None if expired, empty dict if invalid or tampered.
+"""
 def decode_jwt(token: str) -> dict:
     try:
         #Decode token 
