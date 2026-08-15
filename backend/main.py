@@ -1,5 +1,15 @@
-import os
+"""
+GameShelf API - Main Application Entry Point
 
+This module defines all FastAPI routes and middleware for the GameShelf
+application. It handles authentication, game data, collections, wishlists,
+user profiles, and image uploads.
+
+Author: Giovanni Macri Borsari
+Deployed at: https://game-shelf-ulpv.onrender.com
+"""
+
+import os
 from fastapi import FastAPI, File, Query, Depends, UploadFile
 from supabase import create_client
 from database import SessionLocal
@@ -15,6 +25,20 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import or_
 
 class FormattedItem(BaseModel):
+    """
+    Represents a game item to be added in the Items table.
+    
+    Attributes: 
+        game_id (int) : The game's unique id
+        game_title (str) : The game's title
+        game_platform (str) : Platforms that the game is available
+        game_genre (str) : Game's genres
+        game_rating (float) : Game's official rating
+        game_release_date (str) : Game's release date
+        game_description (str) : Game's description
+        game_cover (str) : Url to the game's cover
+        game_art (str) : Url to a background game art
+    """
     game_id: int
     game_title: str
     game_platforms: str | None
@@ -26,6 +50,16 @@ class FormattedItem(BaseModel):
     game_art:str | None
 
 class FormattedUserRegister(BaseModel):
+    """
+    Represents a user to be added in the Users table during registration.
+    
+    Attributes:
+        username (str) : The user's unique display name
+        email (str) : The user's account email
+        password (str) : The user's plain text password (hashed server-side)
+        bio (str) : The user's profile bio
+        picture (str) : URL to the user's profile picture
+    """
     username: str
     email: str
     password: str
@@ -33,15 +67,41 @@ class FormattedUserRegister(BaseModel):
     picture: str | None = None
 
 class FormattedUserUpdate(BaseModel):
+    """
+    Represents a user to be updated in the Users table.
+    
+    Attributes:
+        username (str) : The user's unique display name
+        bio (str) : The user's profile bio
+        picture (str) : URL to the user's profile picture
+
+    """
     username: str
     bio: str | None = None
     picture: str | None = None
 
 class FormattedPWDRequest(BaseModel):
+    """
+    Represents login credentials submitted by the user.
+    
+    Attributes:
+        username (str): The user's unique display name
+        password (str): The user's plain text password (hashed server-side)
+    """
     username: str
     password: str
 
 class FormattedAddItemCollection(BaseModel):
+    """
+    Represents a game item to be added in the Collection table.
+        
+    Attributes: 
+        item_id (int) : The item's unique id
+        platform (str) : Platforms that the game is owned/played
+        user_rating (int) : User's assigned rating to the game
+        notes (str) : User's notes/review to the game
+        played (bool) : Flags if the user played the game
+    """
     item_id: int
     platform:str | None = None
     user_rating: int | None = None
@@ -49,15 +109,45 @@ class FormattedAddItemCollection(BaseModel):
     played: bool |None = False
 
 class FormattedAddItemWishlist(BaseModel):
+    """
+    Represents a game item to be added in the Wishlist table.
+            
+    Attributes: 
+        item_id (int) : The item's unique id
+        platform (str) : Platforms that the user wants to acquire the game
+    """
     item_id: int
     platform: str | None = None
 
 class FormattedEditItemWishlist(BaseModel):
+    """
+    Represents a game item to be edited in the Wishlist table.
+                
+    Attributes: 
+        item_id (int) : The item's unique id
+        platform (str) : Platforms that the user wants to acquire the game
+        bought (bool) : Flags if the user bought the game
+    """
     item_id: int
     platform: str | None = None
     bought: bool | None = False
 
 class FormattedWishlistItem(BaseModel):
+    """
+    Represents a game item to be returned from the Wishlist table.
+                    
+    Attributes: 
+        wishlist_user (str) : User's unique username
+        game_id (int) : Game's unique identification number
+        game_title (str) : Game's title
+        game_cover (str) : Game's cover URL
+        game_platform (str) : Platforms that the user wants to acquire the game
+        release (datetime) : Game's release date
+        date (datetime) : Date when the game was added to the wishlist
+        game_rating (float) : Official game rating
+        bought (bool) : Flags if the user bought the game 
+        notes (str) : User's notes to the game
+    """
     wishlist_user: str
     game_id: int
     game_title: str
@@ -70,6 +160,22 @@ class FormattedWishlistItem(BaseModel):
     notes: str| None = None
 
 class FormattedCollectionItem(BaseModel):
+    """
+    Represents a game item to be returned from the Collection table.
+                    
+    Attributes: 
+        collection_user (str) : User's unique username
+        game_id (int) : Game's unique identification number
+        game_title (str) : Game's title
+        game_cover (str) : Game's cover URL
+        game_platform (str) : Platforms that the user played the game
+        release (datetime) : Game's release date
+        date (datetime) : Date when the game was added to the collection list
+        game_rating (float) : Official game rating
+        game_rating (float) : User's game rating
+        played (bool) : Flags if the user played the game 
+        game_notes (str) : User's notes to the game
+    """
     collection_user: str
     game_id: int
     game_title: str
@@ -83,6 +189,16 @@ class FormattedCollectionItem(BaseModel):
     game_notes: str| None = None
 
 class FormattedUser(BaseModel):
+    """
+    Represents a user to be returned from the Users table.
+                    
+    Attributes: 
+        user_id (int) : User's unique identification number
+        username (str) : User's unique display name
+        bio (str) : User's profile bio
+        profile_pic (str) : User's profile pic URL
+        crated (datetime) : Timestamp of when the profile was created
+    """
     user_id: int
     username: str
     bio: str|None = None
@@ -90,6 +206,19 @@ class FormattedUser(BaseModel):
     created: datetime
 
 class FormattedGameReviews (BaseModel):
+    """
+    Represents a game review to be returned.
+                    
+    Attributes: 
+        game_id (int) : Games's unique identification number
+        user_id (int) : User's unique identification number
+        user (str) : User's unique display name
+        user_rating (str) : User's rating assigned to the game
+        platform (str) : Platform the game was played
+        date (datetime) : Timestamp of when the review was created
+        played (bool) : Flags if the game was played
+        notes (str) : User's review to the game
+    """
     game_id: int
     user_id:int
     user: str
@@ -101,6 +230,10 @@ class FormattedGameReviews (BaseModel):
 
 
 app = FastAPI()
+
+#---------CORS MIDDLEWARE-------------------------------------------------------
+# Allows the frontend (Vercel) to communicate with this backend
+# Without this, browsers block cross-origin requests for security
 
 app.add_middleware(
     CORSMiddleware,
