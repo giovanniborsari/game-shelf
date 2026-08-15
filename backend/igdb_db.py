@@ -260,6 +260,10 @@ def _population_pre ():
     #Always close the database
     database.close()
 
+"""
+    Populates a database with platform ids, to be used by _population_pre method
+
+"""
 def _platform_id_pop ():
 
     PLATFORMS = [
@@ -496,6 +500,10 @@ def _platform_id_pop ():
     finally:
         database.close()
 
+"""
+    Populates a database with genre ids, to be used by _population_pre method
+
+"""
 def _genre_id_pop ():
 
     GENRES = [
@@ -539,4 +547,4 @@ def _genre_id_pop ():
         database.close()
 #_genre_id_pop()
 #_platform_id_pop()
-_population_pre()
+#_population_pre()
