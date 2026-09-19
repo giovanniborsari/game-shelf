@@ -111,11 +111,8 @@ def _population_pre ():
                             renamed_name = PLATFORM_MAP.get\
                                 (original_name, original_name)
                             
-                            #Add to platform table
-                            query_plat = database.query(Platform_Id).\
-                            filter(Platform_Id.name == renamed_name).first()
-                            
-                            #Force it to be a string and append the platform name to it 
+                            #Force it to be a string and append the platform 
+                            # name to it 
                             platform_names.append(renamed_name)
                     #Join then together if there is a platform, unknown if not
                     if platform_names:
@@ -130,7 +127,8 @@ def _population_pre ():
                     for g in genres_data:
                         #Check is 'g' is a dictionary and has a name key
                         if isinstance(g,dict) and g.get('name'):
-                            #Force it to be a string and append the platform name to it
+                            #Force it to be a string and append the platform 
+                            # name to it
                             genre_names.append(str(g.get('name')))
                     #Join then together if there is a platform, unknown if not
                     if genre_names:
@@ -250,41 +248,68 @@ def _population_pre ():
 def link_platform(platform_list, game_id, database):
     #Link with platform_items table
     try:
+        # Convert comma-separated string to list if string is passed
+        if isinstance(platform_list, str):
+            platform_list = [
+                p.strip() for p in platform_list.split(",") if p.strip()
+            ]
+
         for plat_name in platform_list:
             query_plat = database.query(Platform_Id)\
                         .filter(Platform_Id.name == plat_name).first()
             if query_plat:
-                new_link = Platform_Games(
-                    platform_id = query_plat.id,
-                    game_id = game_id
+                # Check for existing link to prevent duplicate rows
+                existing_link = (
+                    database.query(Platform_Games)
+                    .filter_by(platform_id=query_plat.id, game_id=game_id)
+                    .first()
                 )
-                database.add(new_link)
+
+                if not existing_link:
+                    new_link = Platform_Games(
+                        platform_id=query_plat.id, game_id=game_id
+                    )
+                    database.add(new_link)
+
         database.commit()
         return True
-    
-    except Exception as e:
-        print("Unexpected error during linking")
-        print(f"Error {e}")
-        return False
 
+    except Exception as e:
+        database.rollback()  # Clean up failed transaction state
+        print(f"Unexpected error during platform linking: {e}")
+        return False
+    
 def link_genre(genre_list, game_id, database):
     #Link with platform_items table
     try:
+        if isinstance(genre_list, str):
+            genre_list = [
+                g.strip() for g in genre_list.split(",") if g.strip()
+            ]
+
         for genre_name in genre_list:
             query_gen = database.query(Genre_Id)\
                         .filter(Genre_Id.name == genre_name).first()
             if query_gen:
-                new_link = Genre_Games(
-                    genre_id = query_gen.id,
-                    game_id = game_id
+                # Check for existing link to prevent duplicate rows
+                existing_link = (
+                    database.query(Genre_Games)
+                    .filter_by(genre_id=query_gen.id, game_id=game_id)
+                    .first()
                 )
-                database.add(new_link)
+
+                if not existing_link:
+                    new_link = Genre_Games(
+                        genre_id=query_gen.id, game_id=game_id
+                    )
+                    database.add(new_link)
+
         database.commit()
         return True
-    
+
     except Exception as e:
-        print("Unexpected error during linking")
-        print(f"Error {e}")
+        database.rollback()  # Clean up failed transaction state
+        print(f"Unexpected error during genre linking: {e}")
         return False
 
 def update_game(igdb_id, name, all_platforms, all_genres, url_scover, url_bcover
