@@ -10,19 +10,22 @@ Deployed at: https://game-shelf-ulpv.onrender.com
 """
 
 import os
-from fastapi import FastAPI, File, Query, Depends, UploadFile
-from supabase import create_client
-from database import SessionLocal
-from models import *
-from pydantic import BaseModel
 from datetime import datetime
-from users import add_user, update_user
-from password import _check_pwd
+
 from auth_handler import encode_jwt, get_user_id_from_token
+from database import SessionLocal
+from fastapi import Depends, FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from igdb_db import *
+from igdb_db import _population_pre
 from jwt_bearer import GameShelfBearer
 from lists_methods import *
-from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import or_
+from models import *
+from password import _check_pwd
+from pydantic import BaseModel
+from supabase import create_client
+from users import add_user, update_user
+
 
 class FormattedItem(BaseModel):
     """
@@ -1127,3 +1130,45 @@ def db_test():
 @app.head("/health")
 def health_check():
     return {"status": "ok"}
+
+@app.api_route("/db-health", methods=["GET", "HEAD"])
+def db_health():
+    """
+    Keeps Supabase active AND updates game data from IGDB once per hour.
+    Called periodically by UptimeRobot.
+    """
+    database = SessionLocal()
+    try:
+        log = database.query(UpdateLog).first()
+        one_hour = 3600
+
+        if log is None:
+            log = UpdateLog(
+                last_update=datetime.now(timezone.utc),
+                games_updated=0,
+                games_added=0,
+                current_offset=0
+            )
+            database.add(log)
+            database.commit()
+            _population_pre(get_new_releases_query())
+            return {"status": "ok", "message": "First update complete"}
+
+        time_since = (datetime.now(timezone.utc) - log.last_update).total_seconds()
+
+        if time_since < one_hour:
+            return {
+                "status": "ok",
+                "message": f"Next update in {int((one_hour - time_since) / 60)} minutes"
+            }
+
+        _population_pre(get_new_releases_query())
+        log.last_update = datetime.now(timezone.utc) # type: ignore
+        database.commit()
+
+        return {"status": "ok", "message": "Database updated successfully"}
+
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+    finally:
+        database.close()

@@ -1,18 +1,38 @@
-import requests
-from models import Genre_Games, Genre_Id, Items, Platform_Games, Platform_Id
-from dotenv import load_dotenv
-from typing import List, Dict
 import os
-import json
-from database import SessionLocal
-from datetime import datetime
 import time
+from datetime import datetime
+
+import requests
+from database import SessionLocal
+from dotenv import load_dotenv
+from models import Genre_Games, Genre_Id, Items, Platform_Games, Platform_Id
 
 load_dotenv() #reads .env file and loads it to python
 
 client_id = os.getenv("CLIENT_ID")
 client_sec = os.getenv("CLIENT_SECRET")
 
+#Query variables
+std_query = """
+        fields id, name, platforms.name, genres.name, total_rating, 
+        cover.image_id, first_release_date, artworks.image_id, summary, 
+        age_ratings.rating, age_ratings.category;
+        sort id asc;
+        """
+#Games from the past 5 weeks
+def get_new_releases_query():
+    """
+    Generates a query for games updated in the past 5 weeks.
+    Called as a function so the timestamp is always current.
+    """
+    five_weeks_ago = int(time.time()) - 3024000
+    return f"""
+        fields id, name, platforms.name, genres.name, total_rating, 
+        cover.image_id, first_release_date, artworks.image_id, summary;
+        where updated_at > {five_weeks_ago};
+        sort updated_at desc;
+        """
+ 
 def _get_access_token(client_id, secret_id):
 
     """
@@ -39,7 +59,7 @@ def _get_access_token(client_id, secret_id):
     else:
         raise Exception(f"Failed to authenticate: {response.text}")
 
-def _population_pre ():
+def _population_pre (query):
     """
     Method used to get data from IGDB database and feed my own "game_shelf" 
     database, this method is not supposed to be used often since it 
@@ -47,9 +67,13 @@ def _population_pre ():
     """
     database = SessionLocal()
 
-    #Variable
-    limit = 500
-    offset = 371950
+    #Variable limit and offset, used for query
+    if query == std_query:
+        limit = 500
+        offset = 371950
+    else:
+        limit = 5
+        offset = 0
 
     # Fetching the token
     access_token = _get_access_token(client_id, client_sec)
@@ -68,14 +92,8 @@ def _population_pre ():
     while True :
 
         #Define what the method is going to get from IGDB database
-        query_body = f"""
-        fields id, name, platforms.name, genres.name, total_rating, 
-        cover.image_id, first_release_date, artworks.image_id, summary, 
-        age_ratings.rating, age_ratings.category;
-        sort id asc;
-        offset {offset};
-        limit {limit};
-        """
+        query_body = query + (f"offset {offset}; limit {limit};")
+        
         response = requests.post(url, headers = header, data = query_body)
         print(response.status_code)
         #Response status equals 200 == success
@@ -650,4 +668,4 @@ def _genre_id_pop ():
         database.close()
 #_genre_id_pop()
 #_platform_id_pop()
-_population_pre()
+_population_pre(get_new_releases_query())
