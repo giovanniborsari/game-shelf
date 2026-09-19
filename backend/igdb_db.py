@@ -222,27 +222,11 @@ def _population_pre ():
                         database.refresh(new_game)  
                         
                         #Link with platform_items table
-                        for plat_name in platform_names:
-                            query_plat = database.query(Platform_Id)\
-                                .filter(Platform_Id.name == plat_name).first()
-                            if query_plat:
-                                new_link = Platform_Games(
-                                    platform_id = query_plat.id,
-                                    game_id = new_game.item_id
-                                )
-                                database.add(new_link)
-                        database.commit()
+                        link_platform(platform_names, new_game.item_id, database)
 
                         #Link with genre_items table
-                        for gen_name in genre_names:
-                            query_gen = database.query(Genre_Id)\
-                                .filter(Genre_Id.name == gen_name).first()
-                            if query_gen:
-                                new_link = Genre_Games(
-                                    genre_id = query_gen.id,
-                                    game_id = new_game.item_id
-                                )
-                                database.add(new_link)
+                        link_genre(genre_names, new_game.item_id, database)
+
                         database.commit()
                         
                 except Exception as e:
@@ -262,6 +246,46 @@ def _population_pre ():
                 
     #Always close the database
     database.close()
+
+def link_platform(platform_list, game_id, database):
+    #Link with platform_items table
+    try:
+        for plat_name in platform_list:
+            query_plat = database.query(Platform_Id)\
+                        .filter(Platform_Id.name == plat_name).first()
+            if query_plat:
+                new_link = Platform_Games(
+                    platform_id = query_plat.id,
+                    game_id = game_id
+                )
+                database.add(new_link)
+        database.commit()
+        return True
+    
+    except Exception as e:
+        print("Unexpected error during linking")
+        print(f"Error {e}")
+        return False
+
+def link_genre(genre_list, game_id, database):
+    #Link with platform_items table
+    try:
+        for genre_name in genre_list:
+            query_gen = database.query(Genre_Id)\
+                        .filter(Genre_Id.name == genre_name).first()
+            if query_gen:
+                new_link = Genre_Games(
+                    genre_id = query_gen.id,
+                    game_id = game_id
+                )
+                database.add(new_link)
+        database.commit()
+        return True
+    
+    except Exception as e:
+        print("Unexpected error during linking")
+        print(f"Error {e}")
+        return False
 
 def update_game(igdb_id, name, all_platforms, all_genres, url_scover, url_bcover
                 , game_rating, date, desc, url_art, database):
@@ -308,9 +332,11 @@ def update_game(igdb_id, name, all_platforms, all_genres, url_scover, url_bcover
         if (game.art != url_art):
             game.art = url_art 
 
+        link_platform(all_platforms, game.item_id, database)
+        link_genre(all_genres, game.item_id, database)
         #Commit game changes
         database.commit()  
-        
+
         return True  
 """
     Populates a database with platform ids, to be used by _population_pre method
