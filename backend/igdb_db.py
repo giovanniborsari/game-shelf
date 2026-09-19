@@ -49,7 +49,7 @@ def _population_pre ():
 
     #Variable
     limit = 500
-    offset = 368560
+    offset = 371950
 
     # Fetching the token
     access_token = _get_access_token(client_id, client_sec)
@@ -196,6 +196,9 @@ def _population_pre ():
                                                              == igdb_id).first()
                     #Update item if it already exists
                     if existing_game:
+                        update_game(igdb_id,name, all_platforms, all_genres,
+                                    url_scover, url_bcover, game_rating,
+                                    date, desc, url_art, database)
                         print(f'{name} is already in the database')                   
         
                     else:
@@ -260,6 +263,55 @@ def _population_pre ():
     #Always close the database
     database.close()
 
+def update_game(igdb_id, name, all_platforms, all_genres, url_scover, url_bcover
+                , game_rating, date, desc, url_art, database):
+
+    game = database.query(Items).filter(Items.igdb_id == igdb_id).first()
+
+    if game is None:
+        print("Id is not present in the database, impossible to update!")
+        return False
+    else:
+        #Update name if different
+        if (game.item_name != name):
+            game.item_name = name
+
+        #Update platforms if different
+        if (game.platform != all_platforms):
+            game.platform = all_platforms
+
+        #Update genres if different
+        if (game.genre != all_genres):
+            game.genre = all_genres
+
+        #Update small cover if different
+        if (game.small_cover != url_scover):
+            game.small_cover = url_scover
+
+        #Update big cover if different
+        if (game.big_cover != url_bcover):
+            game.big_cover = url_bcover   
+
+        #Update rating if different
+        if (game.rating != game_rating):
+            game.rating = game_rating 
+
+        #Update release date if different
+        if (game.release_date != date):
+            game.release_date = date 
+
+        #Update description if different
+        if (game.description != desc):
+            game.description = desc 
+
+        #Update description if different
+        if (game.art != url_art):
+            game.art = url_art 
+
+        #Commit game changes
+        database.commit()  
+        
+        return True  
 """
     Populates a database with platform ids, to be used by _population_pre method
 
@@ -547,4 +599,4 @@ def _genre_id_pop ():
         database.close()
 #_genre_id_pop()
 #_platform_id_pop()
-#_population_pre()
+_population_pre()

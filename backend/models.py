@@ -187,9 +187,11 @@ class UpdateLog(Base):
         last_update: Timestamp of the last successful IGDB update
         games_updated: How many games were updated in the last run
         games_added: How many new games were added in the last run
+        current_offset: Current position in the IGDB query for pagination
     """
     __tablename__ = "update_log"
     id = Column(Integer, primary_key=True)
     last_update = Column(DateTime(timezone=True), nullable=False)
     games_updated = Column(Integer, default=0)
     games_added = Column(Integer, default=0)
+    current_offset = Column(Integer, default=0)

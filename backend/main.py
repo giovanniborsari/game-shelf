@@ -628,7 +628,7 @@ def add_to_collection(item: FormattedAddItemCollection,
     success, message = add_item_collection(user_id, item.platform, #type: ignore
                        item.item_id, item.user_rating, item.notes, #type: ignore 
                        item.played) #type: ignore
-    #Returns success? and message
+    #Returns success? and messagehea
     return {"success": success, "message": message}
 
 @app.post("/collection/edit", dependencies=[Depends(GameShelfBearer())])
