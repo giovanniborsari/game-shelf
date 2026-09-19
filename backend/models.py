@@ -176,3 +176,20 @@ class Genre_Games(Base):
     id = Column(Integer, primary_key=True)
     genre_id = Column(Integer, ForeignKey("genre_id.id"), nullable=False)
     game_id = Column(Integer, ForeignKey("items.item_id"), nullable=False)
+
+class UpdateLog(Base):
+    """
+    Tracks the last time the database was updated from IGDB.
+    Used to prevent redundant API calls and throttle updates to once per day.
+    
+    Attributes:
+        id: Primary key
+        last_update: Timestamp of the last successful IGDB update
+        games_updated: How many games were updated in the last run
+        games_added: How many new games were added in the last run
+    """
+    __tablename__ = "update_log"
+    id = Column(Integer, primary_key=True)
+    last_update = Column(DateTime(timezone=True), nullable=False)
+    games_updated = Column(Integer, default=0)
+    games_added = Column(Integer, default=0)
