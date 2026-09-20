@@ -670,4 +670,4 @@ def _genre_id_pop ():
         database.close()
 #_genre_id_pop()
 #_platform_id_pop()
-_population_pre(get_new_releases_query())
+#_population_pre(get_new_releases_query())
