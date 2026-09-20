@@ -74,7 +74,7 @@ def _population_pre (query):
         limit = 500
         offset = 371950
     else:
-        limit = 500
+        limit = 5
         offset = 0
 
     # Fetching the token
