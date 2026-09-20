@@ -25,13 +25,15 @@ def get_new_releases_query():
     Generates a query for games updated in the past 5 weeks.
     Called as a function so the timestamp is always current.
     """
-    five_weeks_ago = int(time.time()) - 3024000
-    return f"""
+    two_months_ago = int(time.time()) - 86400  
+    query = f"""
         fields id, name, platforms.name, genres.name, total_rating, 
         cover.image_id, first_release_date, artworks.image_id, summary;
-        where updated_at > {five_weeks_ago};
-        sort updated_at desc;
+        where first_release_date > {two_months_ago};
+        sort first_release_date desc;
         """
+    print(f"Query being sent: {query}")  
+    return query
  
 def _get_access_token(client_id, secret_id):
 
@@ -72,7 +74,7 @@ def _population_pre (query):
         limit = 500
         offset = 371950
     else:
-        limit = 5
+        limit = 500
         offset = 0
 
     # Fetching the token
