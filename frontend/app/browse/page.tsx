@@ -59,20 +59,39 @@ const [filters, setFilters] = useState<FilterState>({
 
 let gameCardGrid = games.map((game) => <GameCard key={game.game_id} {...game}/>);
 
-if (!loaded) return <p className="text-white">Loading games...</p>;
-if (!games || games.length == 0) {
-        return (
-        <div className="min-h-screen bg-gray-900">
-            <TopBar/>
-            <div className="flex flex-row w-full px-6">
-              <div className="w-90 shrink-0">
-                <FilteringCol onFilterChange={handleFilterChange} />
-              </div>
-            <p className="text-white">No games found.</p>
-            </div>
-            </div>
-        )
-    }
+if (!loaded) {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white flex flex-col">
+        <TopBar />
+        <div className="flex flex-col md:flex-row w-full px-4 sm:px-6 gap-6 my-4 flex-1">
+          <div className="w-full md:w-80 shrink-0">
+            <FilteringCol onFilterChange={handleFilterChange} />
+          </div>
+          <div className="flex-1 flex justify-center items-center py-12">
+            <p className="text-white text-lg">Loading games...</p>
+          </div>
+        </div>
+        <BottomBar />
+      </div>
+    );
+}
+
+if (!games || games.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white flex flex-col">
+        <TopBar />
+        <div className="flex flex-col md:flex-row w-full px-4 sm:px-6 gap-6 my-4 flex-1">
+          <div className="w-full md:w-80 shrink-0">
+            <FilteringCol onFilterChange={handleFilterChange} />
+          </div>
+          <div className="flex-1 flex justify-center items-center py-12">
+            <p className="text-white text-xl font-medium">No games found.</p>
+          </div>
+        </div>
+        <BottomBar />
+      </div>
+    );
+  }
 
 
 return (
@@ -112,7 +131,7 @@ return (
 export default function Browse() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gray-900 text-white p-6">
+      <div className="min-h-screen bg-gray-900 text-white p-6 w-auto">
         Loading page...
       </div>
     }>
