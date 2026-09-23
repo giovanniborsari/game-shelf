@@ -78,14 +78,14 @@ if (!games || games.length == 0) {
 return (
     <div className="min-h-screen bg-gray-900">
       <TopBar/>
-      <div className="flex flex-row w-full px-6">
-        <div className="w-90 shrink-0">
+      <div className="flex flex-col md:flex-row w-full px-6">
+        <div className="w-90 shrink-0 mb-4">
             <FilteringCol onFilterChange={handleFilterChange} />
         </div>
         <div className="flex-1 flex flex-col justify-center items-center">
         <div className= "justify-center flex flex-col items-center gap-1 p-6 \
-        border-2 border-emerald-400 w-2xl rounded-lg">
-        <h2 className="text-2xl font-bold text-emerald-400 mb-4">Users</h2>
+        border-2 border-emerald-400 w-full max-w-2xl rounded-lg">
+        <h2 className="text-2xl font-bold text-emerald-400 mb-4 mt">Users</h2>
           {gameCardGrid}
         </div>
         </div>

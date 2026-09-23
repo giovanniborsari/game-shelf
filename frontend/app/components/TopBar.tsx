@@ -17,7 +17,7 @@ export default function TopBar() {
       hover:text-emerald-400">
         GameShelf</a>
       
-      <nav className="flex flex-row ml-auto mr-auto space-x-auto">
+      <nav className="flex flex-row ml-auto mr-4 space-x-auto">
         <a href="/browse" className="text-xl font-bold text-gray-300 p-4
       hover:text-emerald-400">
           Games
