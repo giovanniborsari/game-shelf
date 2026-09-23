@@ -11,12 +11,13 @@ export default function TopBar() {
   }, []);
 
   return (
-    <header className="flex flex-row h-24 items-center w-full bg-gray-900 ">
+    <header className="flex flex-col md:flex-row h-auto md:h-24
+       items-center w-full bg-gray-900 ">
       <a href="/home" className="text-3xl font-bold text-gray-300 p-6 
       hover:text-emerald-400">
         GameShelf</a>
       
-      <nav className="flex flex-row ml-auto mr-4 space-x-2">
+      <nav className="flex flex-row ml-auto mr-auto space-x-auto">
         <a href="/browse" className="text-xl font-bold text-gray-300 p-4
       hover:text-emerald-400">
           Games
